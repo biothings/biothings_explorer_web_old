@@ -1,0 +1,162 @@
+{
+    "root": {
+        "@context": {
+            "cadd": "http://schema.myvariant.info/datasource/cadd",
+            "clinvar": "http://schema.myvariant.info/datasource/clinvar",
+            "dbnsfp": "http://schema.myvariant.info/datasource/dbnsfp",
+            "dbsnp": "http://schema.myvariant.info/datasource/dbsnp",
+            "docm": "http://schema.myvariant.info/datasource/docm",
+            "emv": "http://schema.myvariant.info/datasource/emv",
+            "evs": "http://schema.myvariant.info/datasource/evs",
+            "gwassnps": "http://schema.myvariant.info/datasource/gwassnps",
+            "mutdb": "http://schema.myvariant.info/datasource/mutdb",
+            "grasp": "http://schema.myvariant.info/datasource/grasp",
+            "snpeff": "http://schema.myvariant.info/datasource/snpeff",
+            "gene": "http://schema.myvariant.info/datanode/gene",
+            "rcv": "http://schema.myvariant.info/datanode/rcv",
+            "conditions": "http://schema.myvariant.info/datanode/conditions",
+            "identifiers": "http://schema.myvariant.info/datanode/identifiers",
+            "uniprot": "http://schema.myvariant.info/datanode/uniprot",
+            "ensembl": "http://schema.myvariant.info/datanode/ensembl",
+            "ann": "http://schema.myvariant.info/datanode/ann",
+            "lof": "http://schema.myvariant.info/datanode/lof",
+            "nmd": "http://schema.myvariant.info/datanode/nmd",
+            "gtex": "http://schema.myvariant.info/datanode/gtex",
+            "publication": "http://schema.myvariant.info/datanode/publication"
+        }
+    },
+    "cadd/gene": {
+        "@context": {
+            "gene_id": "http://identifiers.org/ensembl.gene/",
+            "feature_id": "http://identifiers.org/ensembl.transcript/",
+            "genename": "http://identifiers.org/hgnc.symbol/",
+            "ccds_id": "http://identifiers.org/ccds/"
+        }
+    },
+    "clinvar": {
+        "@context": {
+            "uniprot": "http://identifiers.org/uniprot/",
+            "omim": "http://identifiers.org/omim/",
+            "rsid": "http://identifiers.org/dbsnp/"
+        }
+    },
+    "clinvar/rcv": {
+        "@context": {
+            "accession": "http://identifers.org/clinvar/"
+        }
+    },
+    "clinvar/rcv/conditions/identifiers": {
+        "@context": {
+            "omim": "http://identifiers.org/omim/",
+            "efo": "http://identifiers.org/efo/",
+            "orphanet": "http://identifiers.org/orphanet/"
+        }
+    },
+    "clinvar/gene": {
+        "@context": {
+            "symbol": "http://identifiers.org/hgnc.symbol/",
+            "id": "http://identifiers.org/hgnc/"
+        }
+    },
+    "dbnsfp": {
+        "@context": {
+            "rsid": "http://identifiers.org/dbsnp/",
+            "genename": "http://identifiers.org/hgnc.symbol/"
+        }
+    },
+    "dbnsfp/clinvar": {
+        "@context": {
+            "rs": "http://identifiers.org/dbsnp/"
+        }
+    },
+    "dbnsfp/ensembl": {
+        "@context": {
+            "geneid": "http://identifiers.org/ensembl.gene/",
+            "proteinid": "http://identifiers.org/ensembl.protein/",
+            "transcriptid": "http://identifiers.org/ensembl.transcript"
+        }
+    },
+    "dbnsfp/gtex": {
+        "@context": {
+            "gene": "http://identifiers.org/ensembl.gene/"
+        }
+    },
+    "dbnsfp/uniprot": {
+        "@context": {
+            "acc": "http://identifiers.org/uniprot/"
+        }
+    },
+    "dbsnp": {
+        "@context": {
+            "rsid": "http://identifiers.org/dbsnp/"
+        }
+    },
+    "dbsnp/gene": {
+        "@context": {
+            "symbol": "http://identifiers.org/hgnc.symbol/",
+            "geneid": "http://identifiers.org/hgnc/"
+        }
+    },
+    "docm": {
+        "@context": {
+            "ensembl_gene_id": "http://identifiers.org/ensembl.gene/",
+            "default_gene_name": "http://identifiers.org/hgnc.symbol/",
+            "genename": "http://identifiers.org/hgnc.symbol/",
+            "pubmed_id": "http://identifiers.org/pubmed/"
+        }
+    },
+    "emv/gene": {
+        "@context": {
+            "symbol": "http://identifiers.org/hgnc.symbol/",
+            "id": "http://identifiers.org/hgnc/"
+        }
+    },
+    "evs": {
+        "@context": {
+            "rsid": "http://identifiers.org/dbsnp/"
+        }
+    },
+    "evs/gene": {
+        "@context": {
+            "symbol": "http://identifiers.org/hgnc.symbol/",
+            "accession": "http://identifiers.org/refseq/"
+        }
+    },
+    "grasp": {
+        "@context": {
+            "rsid": "http://identifiers.org/dbsnp/"
+        }
+    },
+    "grasp/publication": {
+        "@context": {
+            "snpid": "http://identifiers.org/dbsnp/"
+        }
+    },
+    "gwassnps": {
+        "@context": {
+            "rsid": "http://identifiers.org/dbsnp/",
+            "genename": "http://identifiers.org/hgnc.symbol/",
+            "pubmed": "http://identifiers.org/pubmed/"
+        }
+    },
+    "mutdb": {
+        "@context": {
+            "rsid": "http://identifiers.org/dbsnp/"
+        }
+    },
+    "snpeff/lof": {
+        "@context": {
+            "genename": "http://identifiers.org/hgnc.symbol/"
+        }
+    },
+    "snpeff/ann": {
+        "@context": {
+            "genename": "http://identifiers.org/hgnc.symbol/"
+        }
+    },
+    "snpeff/nmd": {
+        "@context": {
+            "genename": "http://identifiers.org/hgnc.symbol/"
+        }
+    }
+}

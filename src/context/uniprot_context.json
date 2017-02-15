@@ -1,0 +1,13 @@
+{
+    "root": {
+        "@context": {
+            "features": "http://schema.uniprot.info/datasource/features",
+            "xrefs": "http://schema.uniprot.info/datanode/xrefs"
+        }
+    },
+    "features/xrefs": {
+        "@context": {
+            "id": "http://identifiers.org/dbsnp/"
+        }
+    }
+}
