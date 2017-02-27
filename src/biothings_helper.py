@@ -61,7 +61,7 @@ def find_query_api(_type):
 
 '''
 given an annotate API name and ID
-find all fileds in the annotate results that 
+find all fileds in the annotate results that
 could be further linked to other APIs
 '''
 def find_xref(api, id):
@@ -91,7 +91,8 @@ def find_xref(api, id):
             return xref
 
 def find_query_id_list(api, type, value):
-	_uri = AVAILABLE_IDS[type]["uri"]
-	query_parameters = compose_query_parameter_from_uri(_uri, value, api)
-	return ClientRedirect().get_id_list(api, query_parameters, fetch_all=False)
-
+    _uri = AVAILABLE_IDS[type]["uri"]
+    query_parameters = compose_query_parameter_from_uri(_uri, value, api)
+    ids = ClientRedirect().get_id_list(api, query_parameters, fetch_all=False)
+    results = {'type': AVAILABLE_API_SOURCES[api]['annotate_ids'][0], 'ids': ids}
+    return results

@@ -4,6 +4,15 @@ node = 0
 edge = 0
 
 '''
+initialize a cytoscape graph
+reset node and edge id
+'''
+
+def initialize(_type, _id):
+    node = 0
+    edge = 0
+    return node_constructor(_id, _type, 'field_name', 'field_name')
+'''
 Given symbol, type, kwargs info
 construct the node for cytoscape
 and update the node number
@@ -66,3 +75,14 @@ def query_handler(data):
 	_type = data['kwargs_type']
 	query_ids = find_query_id_list(_api, _type, _id)
 	return query_ids
+
+def id_handler(data):
+    add_nodes_edges = []
+    _id = data['id']
+    _type = data['type']
+    _parent = data['parent']
+    _node = node_constructor(_id, 'field_name', _type, 'field_name')
+    add_nodes_edges.append(_node)
+    add_nodes_edges.append(edge_constructor(_node['data']['id'], _parent))
+    return add_nodes_edges
+

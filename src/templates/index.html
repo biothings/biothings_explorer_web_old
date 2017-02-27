@@ -4,37 +4,125 @@
 
 <head>
     <meta charset="utf-8"></meta>
-    <title>Tutorial 1: Getting Started</title>
+    <title>Biothings Explorer</title>
     <script src="../static/js/cytoscape.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </head>
 
 <style>
-    #graph {
-      height: 100vh;
+    body { 
+      font: 8px helvetica neue, helvetica, arial, sans-serif;
       width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #graph {
+      height: 400px;
+      width: 500px;
     }
     #cy {
         display: inline-block;
-        width: 70%;
-        height: 100%;
-        position: relative;
-        top: 0px;
+        width: 80%;
+        height: 80%;
+        position: absolute;
+        top: 2em;
         left: 0px;
+        right: 0px;
+        bottom: 3em;
+    }
+    #controlPanel {
+      margin-top: 0.5em;
+      height: 70%; ;
+
     }
     #content {
+      display: inline-block;
+    }
+    #biothings-header {
+      background-color: grey;
+      height: 10%;
+    }
+    #id-list {
+      font: 1em;
+      overflow: scroll;
+    }
+    #input {
+      height: 10%;
+      margin-top: 0.5em;
+    }
+    .form-group {
+      height: 20%;
+      width: 30%;
       display: inline-block;
     }
 
 </style>
 
 <body>
-    <div id='graph'>
-      <div id='cy'></div>
-      <div id='content'>
-        <p>hello</p>
+    <div id="biothings-header">
+      <div class="container">
+        <h3> Biothings Explorer </h3>
+      </div>
+    </div>
+    <div class="container">
+    <div id="input">
+      <form action="#" class="form-inline">
+        <div class="form-group">
+          <label for="id_type">ID TYPE</label>
+          <input class="form-control" id="id_type" placeholder="hgnc_gene_id">
+        </div>
+        <div class="form-group">
+          <label for="id_name">ID</label>
+          <input class="form-control" id="id_name" placeholder="2212">
+        </div>
+        <button onclick="initialize()" type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+    </div>
+    <div class="container">
+      <div class="row" id ="controlPanel">
+        <div class="col-xs-8">
+          <div class="panel-group" id="accordion_query">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a>Explorer</a>
+                </h4>
+              </div>
+              <div class="panel-body" id="graph">
+                <div id='cy'></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-4">
+          <div class="panel panel-danger" title="Choose the id you want to explore">
+            <div class="panel-heading">
+              <h3 class="panel-title">Related IDs</h3>
+            </div>
+            <div class="panel-body">
+              <div class="row">
+                <p>
+                  <b>Choose the id you want to explore further</b>
+                </p>
+                <select class="select-container" multiple id ="variant-candidate" name="selections">
+                </select>
+                <div class="panel-group">
+                  <div class="panel panel-default" id="id-list">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <script src="../static/js/script.js"></script>
-
 </body>
