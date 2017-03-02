@@ -1,35 +1,36 @@
+
 $(function(){
-    var cy = cytoscape({
-    container: document.getElementById('cy'),
-    elements: [
-        {'data': {'id': 'n0', 'symbol': '2212', 'type': 'field_name', 'kwargs': 'hgnc_gene_id', 'kwargs_type': 'field_name'},'position': {x:-300, y: 100},'locked': true}],
-    style: [
-        {
-          'selector': "node[type = 'field_name']",
-          'style': {
-              'shape': 'hexagon',
-              'background-color': 'red',
-              'label': 'data(symbol)'
-          }
-        },
-        {
-          'selector': "node[type = 'annotate_api']",
-          'style': {
-              'shape': 'circle',
-              'background-color': 'blue',
-              'label': 'data(symbol)'
-          }
-        },
-        {
-          'selector': "node[type = 'query_api']",
-          'style': {
-              'shape': 'circle',
-              'background-color': 'green',
-              'label': 'data(symbol)'
-          }
-        },],
-    layout: {name: 'breadthfirst'}
-});
+  var cy = cytoscape({
+  container: document.getElementById('cy'),
+  elements: [
+      {'data': {'id': 'n0', 'symbol': '2212', 'type': 'field_name', 'kwargs': 'hgnc_gene_id', 'kwargs_type': 'field_name'},'position': {x:-300, y: 100},'locked': true}],
+  style: [
+      {
+        'selector': "node[type = 'field_name']",
+        'style': {
+            'shape': 'hexagon',
+            'background-color': 'red',
+            'label': 'data(symbol)'
+        }
+      },
+      {
+        'selector': "node[type = 'annotate_api']",
+        'style': {
+            'shape': 'circle',
+            'background-color': 'blue',
+            'label': 'data(symbol)'
+        }
+      },
+      {
+        'selector': "node[type = 'query_api']",
+        'style': {
+            'shape': 'circle',
+            'background-color': 'green',
+            'label': 'data(symbol)'
+        }
+      },],
+  layout: {name: 'breadthfirst'}
+  });
 
 cy.on('click', 'node', function(evt){
   var node = evt.cyTarget;
