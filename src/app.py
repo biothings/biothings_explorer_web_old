@@ -13,7 +13,7 @@ from  tornado.escape import json_encode
 
 from tornado.options import define, options
 
-from utils import field_handler, annotate_handler, query_handler, id_handler, initialize
+from utils import field_handler, annotate_handler, query_handler, id_handler, initialize, filter_handler
  
 class MainHandler(tornado.web.RequestHandler):
 	def get(self):
@@ -84,6 +84,14 @@ class InitializeHandler(tornado.web.RequestHandler):
 
         self.write(json.dumps(response_to_send))
 
+class FilterHandler(tornado.web.RequestHandler):
+
+    def post(self):
+        json_obj = json_decode(self.request.body)
+        response_to_send = filter_handler(json_obj)
+        pprint.pprint(response_to_send)
+        self.write(json.dumps(response_to_send))
+
 class Application(tornado.web.Application):
 
     def __init__(self):
@@ -93,7 +101,8 @@ class Application(tornado.web.Application):
             (r"/annotate/", AnnotateHandler),
             (r"/query/", QueryHandler),
             (r"/id/", IdHandler),
-            (r"/initialize/", InitializeHandler)
+            (r"/initialize/", InitializeHandler),
+            (r"/filter/", FilterHandler)
         ]
         settings = dict(
             debug=True,
@@ -104,7 +113,7 @@ class Application(tornado.web.Application):
 
 def main():
     app = Application()
-    app.listen(8877)
+    app.listen(8870)
     tornado.ioloop.IOLoop.instance().start()
 
 

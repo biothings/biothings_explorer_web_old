@@ -31,8 +31,12 @@ body {
   background-color: grey;
   height: 10%;
 }
+#idlist {
+  height: 70%;
+}
+
 #id-list {
-  font: 1em;
+  font-size: 1em;
   overflow: scroll;
 }
 #input {
@@ -40,8 +44,41 @@ body {
   margin-top: 0.5em;
 }
 .form-group {
-  height: 20%;
-  width: 30%;
   display: inline-block;
+  margin-left: 2%;
+}
+/*
+Filter part
+*/
+#filter {
+  font: 0.5rem;
+}
+.filter-small {
+  width: 20%;
+}
+.filter-medium {
+  width: 30%;
+}
+.filter-large {
+  width: 40%;
+}
+.form-control {
+  font-size: 0.8rem;
+}
+#updateButton {
+  margin-left: 1%;
+}
+.glyphicon {
+  cursor: pointer;
 }
 
+#candidate {
+  text-align: center;
+  width: 100%;
+  overflow: scroll;
+}
+#addAllButton {
+  display: block;
+  text-align: center;
+  margin:2% auto;
+}

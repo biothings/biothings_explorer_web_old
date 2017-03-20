@@ -1,9 +1,51 @@
 
+var query_info
 $(function(){
+  /*
+  For query results, 
+  add selected candidate id onto the graph
+  */
+  function add_candidate_id_to_cy(type, node){
+    $("#candidate").on('change', function(e){
+      info = {'id': this.value, 'type': type, 'parent': node.data()['id']};
+      $.ajax(
+      {
+        url: '/id/',
+        type: 'POST',
+        data: JSON.stringify(info),
+        success: function (jsonResponse){
+          var objresponse = JSON.parse(jsonResponse);
+          cy.add(objresponse);
+          cy.layout({name: 'breadthfirst'});
+        }
+      });
+    });
+  }
+  /*
+  For query results,
+  add all candidate ids onto the graph
+  */
+  function add_all_ids_to_cy(ids, type, node){
+    $("#addAllButton").on('click', function(){
+      for (var i=0; i<ids.length; i++){
+        info = {'id': ids[i], 'type': type, 'parent': node.data()['id']};
+        $.ajax(
+        {
+          url: '/id/',
+          type: 'POST',
+          data: JSON.stringify(info),
+          success: function (jsonResponse){
+            var objresponse = JSON.parse(jsonResponse);
+            cy.add(objresponse);
+            cy.layout({name: 'breadthfirst'});
+          }
+        });
+      };
+    });
+  }
+  //initialize cytoscape graph, define node styles based on type
   var cy = cytoscape({
   container: document.getElementById('cy'),
-  elements: [
-      {'data': {'id': 'n0', 'symbol': '2212', 'type': 'field_name', 'kwargs': 'hgnc_gene_id', 'kwargs_type': 'field_name'},'position': {x:-300, y: 100},'locked': true}],
   style: [
       {
         'selector': "node[type = 'field_name']",
@@ -28,12 +70,58 @@ $(function(){
             'background-color': 'green',
             'label': 'data(symbol)'
         }
-      },],
-  layout: {name: 'breadthfirst'}
+      }]
+  });
+  /*
+  when click submit button in the 'input' div, 
+  read user input 'id_type' and 'id', 
+  empty the visualization div first,
+  then get data from backend through 'initialize' tornado handler,
+  and display node on the visulization div.
+  */
+  $("#submitButton").on('click', function() {
+    //get user input 'id_type' and 'id_name, and construct 'data' object
+    var type = $("#id_type").val();
+    var id = $("#id_name").val();
+    var data = {'type': type, 'id': id};
+    //fetch data from backend through 'initialize' handler,
+    if (data) {
+      $.ajax(
+        {
+          url: '/initialize/',
+          type: 'POST',
+          data: JSON.stringify(data),
+          success: function (jsonResponse){
+            cy.elements().remove();
+            var objresponse = JSON.parse(jsonResponse);
+            //display the results on the graph
+            cy.add(objresponse);
+            cy.layout({name: 'breadthfirst'});
+          },
+          error: function (error) {
+            console.log(error);
+          }
+        })
+    }
   });
 
+
+/*
+This part deals with graph user interaction,
+when clicking the node, first determine the node type,
+1> If the node type is 'field_name', e.g. 'hgnc_gene_id'.
+   Call the 'field' tornado handler, return all available APIs
+   related to this field_name, and display on the graph
+2> If the node type is 'annotate_api', e.g. 'mygene.info',
+   Call the 'annotate' tornado handler, return a collapsible list,
+   listing all ids available for further exploration 
+   in the annotation resource
+3> If the node type is 'query_api', e.g. 'mygene.info',
+   Call the 'query' tornado handler, and return a selection list
+*/
 cy.on('click', 'node', function(evt){
   var node = evt.cyTarget;
+  // This part deals with node type = 'field_name'
   if (node.data()['type'] == 'field_name'){
     $.ajax(
       {
@@ -49,114 +137,228 @@ cy.on('click', 'node', function(evt){
             console.log(error)
         }
     });
+  // The following part deals with node type = 'annotate_api'
   } else if(node.data()['type'] == 'annotate_api'){
     $.ajax(
-      {
-        url: '/annotate/',
-        type: 'POST',
-        data: JSON.stringify(node.data()),
-        success: function (jsonResponse) {
-            var objresponse = JSON.parse(jsonResponse);
-            console.log(objresponse)
-            types = Object.keys(objresponse)
-            $("#variant-candidate").empty();
-            $("#id-list").empty();
-            for (var i=0; i<types.length; i++){
-
-              var dom_id1 = "#collapse" + i
-              var domid = 'collapse' + i
-              var domid1 = 'collapse_' + i
-              $("#id-list").append("<div class='panel-heading'><h4 class='panel-title'><a data-toggle='collapse' href=" + dom_id1
-                + ">"+ types[i] + "</h4></div><div id=" + domid + " class='panel-collapse collapse'><ul class='list-group' id=" + types[i] + "></ul></div>");
-              ids = objresponse[types[i]];
-              for (var j=0; j<ids.length; j++){
-                var dom_id = "#" + types[i];
-                $(dom_id).append("<li class='list-group-item'>" + ids[j] + "</li>")
-              };
-              };
-              $('.list-group li').on('click', function(e){
-                info = {'id': $(this).text(), 'type': $(this).closest('ul').attr('id'), 'parent': node.data()['id']};
-                console.log(info);
-                $.ajax(
-                {
-                  url: '/id/',
-                  type: 'POST',
-                  data: JSON.stringify(info),
-                  success: function (jsonResponse){
-                    var objresponse = JSON.parse(jsonResponse);
-                    cy.add(objresponse);
-                    cy.layout({name: 'breadthfirst'});
-                  }
-                })
-              })
-            },
-        error: function (error) {
-            console.log(error)
-        }
+    {
+      url: '/annotate/',
+      type: 'POST',
+      data: JSON.stringify(node.data()),
+      success: function (jsonResponse) {
+        var objresponse = JSON.parse(jsonResponse);
+        append_annotate_results(objresponse);
+        $('.list-group li').on('click', function(e){
+          info = {'id': $(this).text(), 'type': $(this).closest('ul').attr('id'), 'parent': node.data()['id']};
+          console.log(info);
+          $.ajax(
+          {
+            url: '/id/',
+            type: 'POST',
+            data: JSON.stringify(info),
+            success: function (jsonResponse){
+              var objresponse = JSON.parse(jsonResponse);
+              cy.add(objresponse);
+              cy.layout({name: 'breadthfirst'});
+            }
+          })
+        })
+      },
+      error: function (error) {
+          console.log(error)
+      }
     });
+    // The following part deals with node type = 'query_api'
   } else if(node.data()['type'] == 'query_api'){
+    query_info = node.data();
     $.ajax(
-      {
-        url: '/query/',
-        type: 'POST',
-        data: JSON.stringify(node.data()),
-        success: function (jsonResponse) {
-            var objresponse = JSON.parse(jsonResponse);
-            ids = objresponse['ids']
-            type = objresponse['type']
-            $("#variant-candidate").empty();
-            $("#id-list").empty();
-            for (var i=0; i<ids.length; i++){
-              id_escape = ids[i].replace('>', "&gt;");
-              $("#variant-candidate").append("<option class='list-group-item variant-selections' value=" + id_escape + ">" + ids[i] + "</option>")
-  }         $("#variant-candidate").on('change', function(e){
-              info = {'id': this.value, 'type': type, 'parent': node.data()['id']};
-              $.ajax(
-              {
-                url: '/id/',
-                type: 'POST',
-                data: JSON.stringify(info),
-                success: function (jsonResponse){
-                  var objresponse = JSON.parse(jsonResponse);
-                  cy.add(objresponse);
-                  cy.layout({name: 'breadthfirst'});
-                }
-              })
-            })
-        },
-        error: function (error) {
-            console.log(error)
-        }
+    {
+      url: '/query/',
+      type: 'POST',
+      data: JSON.stringify(node.data()),
+      success: function (jsonResponse) {
+        var objresponse = JSON.parse(jsonResponse);
+        ids = objresponse['ids'];
+        type = objresponse['type'];
+        append_query_results(objresponse);
+        add_candidate_id_to_cy(type, node);
+        add_all_ids_to_cy(ids, type, node);
+        field_name_autocomplete(query_info);
+        $("#updateButton").on('click', function(){
+          var para_combine = '';
+          for (i=0; i<= filter_index; i++) {
+            para_combine += composePara(i);
+          }
+          query_info['para'] = para_combine;
+          $.ajax(
+          {
+            url: '/filter/',
+            type: 'POST',
+            data: JSON.stringify(query_info),
+            success: function (jsonResponse) {
+              var objresponse = JSON.parse(jsonResponse);
+              ids = objresponse['ids'];
+              type = objresponse['type'];
+              append_query_results(objresponse);
+              add_candidate_id_to_cy(type, node);
+              add_all_ids_to_cy(ids, type, node);
+            },
+            error: function (error) {
+                console.log(error)
+            }
+          })
+        });
+      },
+      error: function (error) {
+          console.log(error)
+      }
     })
   }
+});
 })
+
+
+
+
+
+function appendFieldNameHtml(index){
+  html = '<div class="form-group filter-larger"><label for="field_name' + index + '">Field_name</label><input class="form-control" id="field_name' + index + '" placeholder="dbnsfp.eigen.phred"></div>'
+  return html
+}
+
+function appendCompareHtml(index){
+  html = '<div class="form-group filter-small"><label for="compare' + index + '">Compare</label><select class="form-control" id="compare' + index + '"><option value=":>">></option><option value=":<"><</option><option value=":">=</option></select></div>'
+  return html
+}
+
+function appendFieldValueHtml(index){
+  html = '<div class="form-group filter-medium"><label for="field_value' + index + '">Field_value</label><input class="form-control" id="field_value' + index + '" placeholder="20"></div>'
+  return html
+}
+
+function appendPlusIcon(index){
+  html = '<span class="glyphicon glyphicon-plus" id="plus' + index + '" aria-hidden="true"></span>'
+  return html
+}
+
+function appendRowInFilter(index){
+  html = '<div class="row">' + appendFieldNameHtml(index) + appendCompareHtml(index) + appendFieldValueHtml(index) + '</div>'
+  return html
+}
+
+function composePara(index){
+  var field_name_id = '#field_name' + index;
+  var compare_id = '#compare' + index;
+  var field_value_id = '#field_value' + index;
+  var fieldname = $(field_name_id).val();
+  var compare = $(compare_id).val();
+  var fieldvalue = $(field_value_id).val();
+  var para = ' AND ' + fieldname + compare + fieldvalue;
+  return para
+}
+var available_ids = ['hgnc_gene_id', 'hgnc_gene_symbol', 'hgvs_id', 'dbsnp_id', 'drugbank_id', 'pubchem_id'];
+$(function(){
+  $.getJSON('http://myvariant.info/v1/metadata/fields', function(data){
+    field_names = Object.keys(data);
+      $("[id^='field_name']").autocomplete({
+        source: [field_names]
+    })
+  })
+  $("#id_type").autocomplete({
+    source: [available_ids]
+  })
 })
-function initialize(){
-  alert('button clicked!');
-  var _type = $("#id_type").val();
-  var _id = $("#id_name").val();
-  alert(_type);
-  alert(_id);
-  var data = {'type': _type, 'id': _id};
-  $.ajax(
-  {
-    url: '/initialize/',
-    type: 'POST',
-    data: JSON.stringify(data),
-    success: function (jsonResponse){
-      var objresponse = JSON.parse(jsonResponse);
-      cy.add(objresponse);
-      cy.layout({name: 'breadthfirst'});
-    },
-    error: function (error) {
-      console.log(error);
-    }
+var filter_index = 0;
+function add_filter(){
+  $('#addButton').on('click', function(){
+    $('.glyphicon').remove();
+    filter_index++;
+    $(appendRowInFilter(filter_index)).insertBefore("#addButton");
   });
 }
 
+function field_name_autocomplete(query_info){
+  if (query_info.symbol == 'myvariant.info'){
+    console.log(query_info.symbol);
+    url = 'http://myvariant.info/v1/metadata/fields'
+  } else if (query_info.symbol == 'mygene.info'){
+    console.log(query_info.symbol);
+    url = 'http://mygene.info/v3/metadata/fields'
+  } else if (query_info.symbol == 'mydrug.info'){
+    url = 'http://c.biothings.io/v1/metadata/fields'
+  } else {
+    url = null
+  }
+  $.getJSON(url, function(data){
+  field_names = Object.keys(data);
+    $("[id^='field_name']").autocomplete({
+      source: [field_names]
+    })
+  })
+}
 
+/*
+This function only deal with the 'results' div,
+It is designed to display the annotate results from the backend onto the 'results' div
+The JSON doc from annotate results include id_types, e.g. uniprot_id
+and id_value, e.g. P301312.
+The function first create a collapsible list for each id_type, 
+then under each collapsible list, include the id_value as its child(ren)
+*/
+function append_annotate_results(objresponse){
+  //Get all types of ids from the results, e.g. uniprot_id, wikipathways_id
+  types = Object.keys(objresponse);
+  // empty the div first
+  $("#result-list").empty();
+  // loop through each of the id_type, add as a collapsible list in 'id-list' div
+  for (var i=0; i<types.length; i++){
+    var dom_id1 = "#collapse" + i
+    var domid = 'collapse' + i
+    var domid1 = 'collapse_' + i
+    $("#result-list").append("<div class='panel-heading'><h4 class='panel-title'><a data-toggle='collapse' href=" + dom_id1
+      + ">"+ types[i] + "</h4></div><div id=" + domid + " class='panel-collapse collapse'><ul class='list-group' id=" + types[i] + "></ul></div>");
+    // loop through each id under a specific id_type, add as a list under the 'id_type' collapsible list
+    ids = objresponse[types[i]];
+    for (var j=0; j<ids.length; j++){
+      var dom_id = "#" + types[i];
+      $(dom_id).append("<li class='list-group-item'>" + ids[j] + "</li>")
+    };
+  };
+}
 
-
+/*
+This function only deal with the 'results' div,
+It is designed to display the query results from the backend onto the 'results' div
+The JSON doc from annotate results only include ids from the query result.
+The function frist create a select
+then for each id, include under the select as an option
+*/
+function append_query_results(objresponse){
+  var ids = objresponse['ids'];
+  //clean the result div         
+  $("#result-list").empty();
+  $("addAllButton").remove();
+  $("#pagination").twbsPagination('destroy');
+  //append a select section to the 'result-list' div
+  $("#result-list").append('<div class="panel panel-default"><select class="select-container" multiple id ="candidate" name="selections"></select></div>');
+  //add pagination, each page displaying 10 records,
+  $('#pagination').twbsPagination({
+      totalPages: Math.ceil(ids.length/10),
+      visiblePages: 3,
+      prev: '<<',
+      next: '>>',
+      onPageClick: function (event, page) {
+        $("#candidate").empty();
+        for (var i=(page*10-10); i<page*10; i++){
+          if (i<ids.length){
+            id_escape = ids[i].replace('>', "&gt;");
+            $("#candidate").append("<option class='list-group-item variant-selections' value=" + id_escape + ">" + ids[i] + "</option>")
+          }
+        };
+      }
+    });
+  // append an 'addallbutton'
+  $("#result-list").append('<button id="addAllButton" type="submit" class="btn btn-primary">Add all</button>'); 
+}
 
     /*
     $.ajax({

@@ -14,19 +14,21 @@
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    <link rel="stylesheet" type="text/css" href="home.css">
+    <link type="text/css" rel="stylesheet" href="../static/css/jquery.autocomplete.css">
+    <script src="../static/js/jquery.twbsPagination.js" type="text/javascript"></script>
+    <script src="../static/js/jquery.autocomplete.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="../static/css/home.css">
 </head>
 
 
 <body>
     <div id="biothings-header">
-      <div class="container">
+      <div class="container header">
         <h3> Biothings Explorer </h3>
       </div>
     </div>
-    <div class="container">
+    <div class="container input">
     <div id="input">
-      <form action="#" class="form-inline">
         <div class="form-group">
           <label for="id_type">ID TYPE</label>
           <input class="form-control" id="id_type" placeholder="hgnc_gene_id">
@@ -35,18 +37,17 @@
           <label for="id_name">ID</label>
           <input class="form-control" id="id_name" placeholder="2212">
         </div>
-        <button onclick="initialize()" type="submit" class="btn btn-primary">Submit</button>
-      </form>
+        <button id="submitButton" type="submit" class="btn btn-primary">Submit</button>
     </div>
     </div>
-    <div class="container">
+    <div class="container display">
       <div class="row" id ="controlPanel">
         <div class="col-xs-8">
           <div class="panel-group" id="accordion_query">
-            <div class="panel panel-default">
+            <div class="panel panel-success">
               <div class="panel-heading">
                 <h4 class="panel-title">
-                  <a>Explorer</a>
+                  <a>Visualization</a>
                 </h4>
               </div>
               <div class="panel-body" id="graph">
@@ -56,22 +57,69 @@
           </div>
         </div>
         <div class="col-xs-4">
-          <div class="panel panel-danger" title="Choose the id you want to explore">
+          <div class="panel panel-danger" id="idlist" title="Choose the id you want to explore">
             <div class="panel-heading">
-              <h3 class="panel-title">Related IDs</h3>
+              <h3 class="panel-title">Results</h3>
             </div>
             <div class="panel-body">
               <div class="row">
-                <p>
-                  <b>Choose the id you want to explore further</b>
-                </p>
-                <select class="select-container" multiple id ="variant-candidate" name="selections">
-                </select>
-                <div class="panel-group">
+                <div class="panel-group" id="result-list">
+                <!--
+                  <select class="select-container" multiple id ="variant-candidate" name="selections">
+                  </select>
+                </div>
+                <div class="panel-group" id="">
                   <div class="panel panel-default" id="id-list">
                   </div>
+                  -->
+                </div>
+                <div>
+                  <nav aria-label="Page navigation">
+                      <ul class="pagination" id="pagination"></ul>
+                  </nav>
                 </div>
               </div>
+            </div>
+          </div>
+          <div class="panel panel-info" id="filter" title="Choose the filter">
+            <div class="panel-heading">
+              <h3 class="panel-title">Filters</h3>
+            </div>
+            <div class="panel-body filter-constructor">
+              <div class="row">
+              <!--
+                <div class="form-group filter-small">
+                  <label for="logic">logic</label>
+                  <select class="form-control" id="logic">
+                    <option>AND</option>
+                    <option>OR</option>
+                    <option>EXISTS</option>
+                  </select>
+                </div>
+              -->
+                <div class="form-group filter-larger">
+                  <label for="field_name0">Field_name</label>
+                  <input class="form-control" id="field_name0" placeholder="dbnsfp.eigen.phred">
+                </div>
+                <div class="form-group filter-small">
+                  <label for="compare0">Compare</label>
+                  <select class="form-control" id="compare0">
+                    <option value=":>">></option>
+                    <option value=":<"><</option>
+                    <option value=":">=</option>
+                  </select>
+                </div>
+                <div class="form-group filter-medium">
+                  <label for="field_value0">Field_value</label>
+                  <input class="form-control" id="field_value0" placeholder="20">
+                </div>
+                <!--
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                -->
+              </div>
+              <button id="addButton" type="submit" class="btn btn-primary">Add</button>
+              <button id="updateButton" type="submit" class="btn btn-primary">Update</button>
+
             </div>
           </div>
         </div>
@@ -79,3 +127,8 @@
     </div>
     <script src="../static/js/script.js"></script>
 </body>
+
+<script>
+
+</script>
+</html>

@@ -93,6 +93,14 @@ def find_xref(api, id):
 def find_query_id_list(api, type, value):
     _uri = AVAILABLE_IDS[type]["uri"]
     query_parameters = compose_query_parameter_from_uri(_uri, value, api)
-    ids = ClientRedirect().get_id_list(api, query_parameters, fetch_all=False)
+    ids = ClientRedirect().get_id_list(api, query_parameters)
     results = {'type': AVAILABLE_API_SOURCES[api]['annotate_ids'][0], 'ids': ids}
     return results
+
+def find_query_id_list_for_filter(api, type, value, para):
+    _uri = AVAILABLE_IDS[type]["uri"]
+    query_parameters = '(' + compose_query_parameter_from_uri(_uri, value, api) + ')' + ' ' + para
+    ids =  ClientRedirect().get_id_list(api, query_parameters)
+    results = {'type': AVAILABLE_API_SOURCES[api]['annotate_ids'][0], 'ids': ids}
+    return results
+

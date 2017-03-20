@@ -1,4 +1,4 @@
-from biothings_helper import find_annotate_api, find_query_api, find_xref, find_query_id_list
+from biothings_helper import find_annotate_api, find_query_api, find_xref, find_query_id_list, find_query_id_list_for_filter
 
 node = 0
 edge = 0
@@ -11,7 +11,7 @@ reset node and edge id
 def initialize(_type, _id):
     node = 0
     edge = 0
-    return node_constructor(_id, _type, 'field_name', 'field_name')
+    return node_constructor(_id, 'field_name', _type, 'field_name')
 '''
 Given symbol, type, kwargs info
 construct the node for cytoscape
@@ -75,6 +75,14 @@ def query_handler(data):
 	_type = data['kwargs_type']
 	query_ids = find_query_id_list(_api, _type, _id)
 	return query_ids
+
+def filter_handler(data):
+    _api = data['symbol']
+    _id = data['kwargs']
+    _type = data['kwargs_type']
+    _para = data['para']
+    query_ids = find_query_id_list_for_filter(_api, _type, _id, _para)
+    return query_ids
 
 def id_handler(data):
     add_nodes_edges = []
