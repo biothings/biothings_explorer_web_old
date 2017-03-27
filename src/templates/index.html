@@ -23,9 +23,7 @@
 
 <body>
     <div id="biothings-header">
-      <div class="container header">
-        <h3> Biothings Explorer </h3>
-      </div>
+      <h3> Biothings Explorer </h3>
     </div>
     <div class="container input">
     <div id="input">
@@ -42,20 +40,20 @@
     </div>
     <div class="container display">
       <div class="row" id ="controlPanel">
-        <div class="col-xs-8">
-          <div class="panel-group" id="accordion_query">
-            <div class="panel panel-success">
-              <div class="panel-heading">
-                <h4 class="panel-title">
-                  <a>Visualization</a>
-                </h4>
-              </div>
-              <div class="panel-body" id="graph">
-                <div id='cy'></div>
-              </div>
-            </div>
+        <!--
+        This part is for the filters and layout
+        filters: id and value filter
+        layout: for cy graph
+        -->
+        <!--
+        <aside class="inpage__aside">
+          <h2 class="content-prime-title">Filters</h2>
+          <div class="filters filters--id">
+            <h3 class="filters__title">IDs</h3>
+            
           </div>
-        </div>
+        </aside>
+        -->
         <div class="col-xs-4">
           <div class="panel panel-danger" id="idlist" title="Choose the id you want to explore">
             <div class="panel-heading">
@@ -86,8 +84,10 @@
               <h3 class="panel-title">Filters</h3>
             </div>
             <div class="panel-body filter-constructor">
-              <div class="row">
+              <div id="filter_list">
               <!--
+              <div class="row">
+              
                 <div class="form-group filter-small">
                   <label for="logic">logic</label>
                   <select class="form-control" id="logic">
@@ -97,6 +97,7 @@
                   </select>
                 </div>
               -->
+                <!--
                 <div class="form-group filter-larger">
                   <label for="field_name0">Field_name</label>
                   <input class="form-control" id="field_name0" placeholder="dbnsfp.eigen.phred">
@@ -113,6 +114,7 @@
                   <label for="field_value0">Field_value</label>
                   <input class="form-control" id="field_value0" placeholder="20">
                 </div>
+                -->
                 <!--
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 -->
@@ -123,6 +125,33 @@
             </div>
           </div>
         </div>
+        <div class="col-xs-8">
+          <div class="panel-group" id="accordion_query">
+            <div class="panel panel-success">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a>Visualization</a>
+                </h4>
+              </div>
+              <div class="panel-body" id="graph">
+                <div id='cy'></div>
+              </div>
+            </div>
+          </div>
+          <div class="panel-group">
+            <div class="panel panel-warning">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a>Action Logs</a>
+                </h4>
+              </div>
+              <div class="panel-body">
+                <div id="log"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
     <script src="../static/js/script.js"></script>

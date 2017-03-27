@@ -65,6 +65,7 @@ find all fileds in the annotate results that
 could be further linked to other APIs
 '''
 def find_xref(api, id):
+    response = {}
     xref = {}
     if 'annotate_syntax' in AVAILABLE_API_SOURCES[api]:
         _url = AVAILABLE_API_SOURCES[api]["annotate_syntax"].replace("*", str(id))
@@ -88,19 +89,22 @@ def find_xref(api, id):
                             xref[_id].append(value)
                         else:
                             xref.update({_id: [value]})
-            return xref
+            response = {'url': _url, 'xref': xref}
+            return response
 
 def find_query_id_list(api, type, value):
     _uri = AVAILABLE_IDS[type]["uri"]
     query_parameters = compose_query_parameter_from_uri(_uri, value, api)
     ids = ClientRedirect().get_id_list(api, query_parameters)
-    results = {'type': AVAILABLE_API_SOURCES[api]['annotate_ids'][0], 'ids': ids}
+    _url = AVAILABLE_API_SOURCES[api]["query_syntax"].replace("*", query_parameters)
+    results = {'type': AVAILABLE_API_SOURCES[api]['annotate_ids'][0], 'ids': ids, 'url': _url}
     return results
 
 def find_query_id_list_for_filter(api, type, value, para):
     _uri = AVAILABLE_IDS[type]["uri"]
     query_parameters = '(' + compose_query_parameter_from_uri(_uri, value, api) + ')' + ' ' + para
     ids =  ClientRedirect().get_id_list(api, query_parameters)
-    results = {'type': AVAILABLE_API_SOURCES[api]['annotate_ids'][0], 'ids': ids}
+    _url = AVAILABLE_API_SOURCES[api]["query_syntax"].replace("*", query_parameters)
+    results = {'type': AVAILABLE_API_SOURCES[api]['annotate_ids'][0], 'ids': ids, 'url': _url}
     return results
 

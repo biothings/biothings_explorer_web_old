@@ -16,7 +16,9 @@ $(function(){
         success: function (jsonResponse){
           var objresponse = JSON.parse(jsonResponse);
           cy.add(objresponse);
+          $("#log").prepend('<p>Add ' + info['type'] + ' (' + info['id'] + ') to the graph</p>')
           cy.layout({name: 'breadthfirst'});
+          cy.center( cy.$('#' + objresponse[0]['data']['id'] + ', #' + info['parent']) );         
         }
       });
     });
@@ -38,6 +40,16 @@ $(function(){
             var objresponse = JSON.parse(jsonResponse);
             cy.add(objresponse);
             cy.layout({name: 'breadthfirst'});
+            /*
+            center_nodes = ''
+            for (var j=0; j<objresponse.length; j++){
+              if ('type' in objresponse[j]['data']){
+                center_nodes = center_nodes + '#' + objresponse[i]['data']['id'] + ', ';
+              }
+            };
+            center_nodes = center_nodes.slice(0, -2);
+            cy.center(center_nodes);
+            */
           }
         });
       };
@@ -96,6 +108,7 @@ $(function(){
             var objresponse = JSON.parse(jsonResponse);
             //display the results on the graph
             cy.add(objresponse);
+            $("#log").prepend('<p>Initialization: Add ' + type + ' (' + id + ') to the graph</p>')
             cy.layout({name: 'breadthfirst'});
           },
           error: function (error) {
@@ -132,6 +145,7 @@ cy.on('click', 'node', function(evt){
             var objresponse = JSON.parse(jsonResponse);
             cy.add(objresponse);
             cy.layout({name: 'breadthfirst'});
+            $("#log").prepend('<p>Listing APIs related to ' + node.data()['kwargs'] + ' (' + node.data()['symbol'] + ')</p>');
         },
         error: function (error) {
             console.log(error)
@@ -139,6 +153,7 @@ cy.on('click', 'node', function(evt){
     });
   // The following part deals with node type = 'annotate_api'
   } else if(node.data()['type'] == 'annotate_api'){
+    console.log(node.data());
     $.ajax(
     {
       url: '/annotate/',
@@ -146,7 +161,8 @@ cy.on('click', 'node', function(evt){
       data: JSON.stringify(node.data()),
       success: function (jsonResponse) {
         var objresponse = JSON.parse(jsonResponse);
-        append_annotate_results(objresponse);
+        append_annotate_results(objresponse['xref']);
+        $("#log").prepend('<p>Annotate ' + node.data()['kwargs_type'] + ' (' + node.data()['kwargs'] + ') using ' + node.data()['symbol'] + ' : <a href="' + objresponse['url'] + '">' + objresponse['url'] + '</p>')
         $('.list-group li').on('click', function(e){
           info = {'id': $(this).text(), 'type': $(this).closest('ul').attr('id'), 'parent': node.data()['id']};
           console.log(info);
@@ -158,6 +174,7 @@ cy.on('click', 'node', function(evt){
             success: function (jsonResponse){
               var objresponse = JSON.parse(jsonResponse);
               cy.add(objresponse);
+              $("#log").prepend('<p>Add ' + info['type'] + ' (' + info['id'] + ') to the graph</p>')
               cy.layout({name: 'breadthfirst'});
             }
           })
@@ -179,6 +196,11 @@ cy.on('click', 'node', function(evt){
         var objresponse = JSON.parse(jsonResponse);
         ids = objresponse['ids'];
         type = objresponse['type'];
+        $("#log").prepend('<p>Query ' + node.data()['kwargs_type'] + ' (' + node.data()['kwargs'] + ') using ' + node.data()['symbol'] + ' : <a href="' + objresponse['url'] + '">' + objresponse['url'] + '</p>')
+        $("#filter_list").append(appendRowInFilter(filter_index));
+        field_name_autocomplete(query_info);
+        $("#filter").show();
+        add_filter();
         append_query_results(objresponse);
         add_candidate_id_to_cy(type, node);
         add_all_ids_to_cy(ids, type, node);
@@ -189,6 +211,10 @@ cy.on('click', 'node', function(evt){
             para_combine += composePara(i);
           }
           query_info['para'] = para_combine;
+          // after clicking update, reinitialize filter index
+          filter_index = 0;
+          $("#filter_list").empty();
+          $("#filter").hide();
           $.ajax(
           {
             url: '/filter/',
@@ -198,6 +224,7 @@ cy.on('click', 'node', function(evt){
               var objresponse = JSON.parse(jsonResponse);
               ids = objresponse['ids'];
               type = objresponse['type'];
+              $("#log").prepend('<p>Filter the query results for ' + node.data()['kwargs_type'] + ' (' + node.data()['kwargs'] + ') from ' + node.data()['symbol'] + ' : <a href="' + objresponse['url'] + '">' + objresponse['url'] + '</p>')
               append_query_results(objresponse);
               add_candidate_id_to_cy(type, node);
               add_all_ids_to_cy(ids, type, node);
@@ -268,13 +295,15 @@ $(function(){
   })
 })
 var filter_index = 0;
+
 function add_filter(){
   $('#addButton').on('click', function(){
-    $('.glyphicon').remove();
     filter_index++;
-    $(appendRowInFilter(filter_index)).insertBefore("#addButton");
+    $("#filter_list").append(appendRowInFilter(filter_index));
+    field_name_autocomplete(query_info);
   });
 }
+
 
 function field_name_autocomplete(query_info){
   if (query_info.symbol == 'myvariant.info'){

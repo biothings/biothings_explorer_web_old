@@ -1,13 +1,37 @@
 
 body { 
   font: 8px helvetica neue, helvetica, arial, sans-serif;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
+  overflow: scroll;
 }
+/*
+header part
+*/
+#biothings-header {
+  background-color: grey;
+  height: 10%;
+}
+#biothings-header h3 {
+  font-size: 400%;
+  color: white;
+  margin-left: 10%;
+}
+/*
+Initialization Part
+*/
+#input {
+  height: 10%;
+  margin-top: 2em;
+}
+.form-group {
+  display: inline-block;
+  margin-right: 1.5%;
+}
+/*
+Visualization part
+*/
 #graph {
   height: 400px;
-  width: 500px;
+  width: 550px;
 }
 #cy {
     display: inline-block;
@@ -27,10 +51,7 @@ body {
 #content {
   display: inline-block;
 }
-#biothings-header {
-  background-color: grey;
-  height: 10%;
-}
+
 #idlist {
   height: 70%;
 }
@@ -39,19 +60,13 @@ body {
   font-size: 1em;
   overflow: scroll;
 }
-#input {
-  height: 10%;
-  margin-top: 0.5em;
-}
-.form-group {
-  display: inline-block;
-  margin-left: 2%;
-}
+
 /*
 Filter part
 */
 #filter {
   font: 0.5rem;
+  display: none;
 }
 .filter-small {
   width: 20%;
@@ -65,13 +80,19 @@ Filter part
 .form-control {
   font-size: 0.8rem;
 }
+#filter_list {
+  margin-left: 1%;
+}
+#filter_list .row{
+  margin-left: 0.5%;
+}
 #updateButton {
   margin-left: 1%;
 }
-.glyphicon {
-  cursor: pointer;
-}
 
+/*
+results part
+*/
 #candidate {
   text-align: center;
   width: 100%;
@@ -82,3 +103,14 @@ Filter part
   text-align: center;
   margin:2% auto;
 }
+#result-list .panel-heading {
+  border-color: #ddd;
+  border-style: solid;
+  border-width: 1px;
+}
+
+#result-list {
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2)
+}
+
+
