@@ -55,15 +55,49 @@ $(function(){
       };
     });
   }
+  //highlight the path between two ids, e.g. how to connect between dbsnp_id and wikipathway_id
+  function highlightpath(){
+    _id1 = $('#Select1').find(":selected").text();
+    _id2 = $('#Select2').find(":selected").text();
+    console.log(_id2);
+    cy.$().removeClass('highlighted');
+    var dijkstra = cy.elements().dijkstra('#' + _id1);
+    var bfs = dijkstra.pathTo( cy.$('#' + _id2) );
+    var x=0;
+    var highlightNextEle = function(){
+      var el=bfs[x];
+      el.addClass('highlighted');
+      if(x<bfs.length-1){
+        x++;
+        setTimeout(highlightNextEle, 500);
+      }
+    };
+    highlightNextEle();
+  };
   //initialize cytoscape graph, define node styles based on type
   var cy = cytoscape({
   container: document.getElementById('cy'),
   style: [
       {
+        'selector': "node",
+        'style': {
+          'font-size': '12px',
+          'text-valign': 'top',
+          'text-halign': 'center',
+          'background-color': '#555',
+          'color': 'black',
+          'overlay-padding': '6px',
+          'z-index': '10',
+          'width': '18px',
+          'height': '18px'
+        }
+      },
+      {
         'selector': "node[type = 'field_name']",
         'style': {
-            'shape': 'hexagon',
+            'shape': 'circle',
             'background-color': 'red',
+            'font-size': '12px',
             'label': 'data(symbol)'
         }
       },
@@ -82,8 +116,92 @@ $(function(){
             'background-color': 'green',
             'label': 'data(symbol)'
         }
+      },
+      {
+        'selector': 'node:selected',
+        'style': {
+          'border-width': '10px',
+          'border-color': '#AAD8FF',
+          'border-opacity': '0.5',
+          'background-color': '#77828C',
+          'text-outline-color': '#77828C'
+        }
+      },
+      {
+        'selector': "node[type = 'id']",
+        'style': {
+            'shape': 'circle',
+            'background-color': 'green',
+            'label': 'data(id)'
+        }
+      },
+      {
+        'selector': "node[type = 'api']",
+        'style': {
+            'background-color': 'blue',
+            'label': 'data(id)'
+        }
+      },
+      {
+        'selector': "edge",
+        'style': {
+          'target-arrow-shape': 'triangle',
+          'curve-style': 'haystack',
+          'haystack-radius': '0.5',
+          'opacity': '0.4',
+          'line-color': '#bbb',
+          'overlay-padding': '3px',
+          'width': 4,
+          'target-arrow-color': '#ddd'
+        }
+      },
+      {
+        'selector': '.highlighted',
+        'style': {
+            'background-color': 'red',
+            'line-color': 'red',
+            'target-arrow-color': 'red',
+            'transition-property': 'background-color, line-color, target-arrow-color',
+            'transition-duration': '0.5s'
+        }
       }]
   });
+  /*
+  This part is for users to explore the relationship between different biological entities,
+  e.g. how to connect between hgvs_id (variant) to wikipathays_id(pathway)
+  When click 'explore relationship' button in the 'input' div,
+  empty the visualization div first,
+  get data from backend through 'relation' tornado handler,
+  and display node on the visualizaion div
+  */
+  cy.panzoom({});
+  $("#exploreButton").on('click', function() {
+    $(".cy-path").show();
+    $.ajax(
+      {
+        url: '/relation/',
+        type: 'POST',
+        success: function(jsonResponse){
+          cy.elements().remove();
+          var objresponse = JSON.parse(jsonResponse);
+          //display results on the graph
+          cy.add([
+          {'data': {'id': 'api', 'type': 'api'},'position': {x:800, y: -200},'locked': true},
+          {'data': {'id': 'id', 'type': 'id'},'position': {x:800, y: -150},'locked': true}])
+          cy.add(objresponse);
+          cy.layout({name: 'concentric'});
+
+        }
+      });
+    });
+  $("#updatePathButton").on('click', function() {
+    highlightpath();
+  });
+  $("#layout_types").on('change', function() {
+    var layout = $('#layout_types').find(":selected").text();
+    cy.layout({name: layout});
+    $("#log").prepend('<p>Change layout to ' + layout + ' style</p>')
+  })
   /*
   when click submit button in the 'input' div, 
   read user input 'id_type' and 'id', 
@@ -93,6 +211,8 @@ $(function(){
   */
   $("#submitButton").on('click', function() {
     //get user input 'id_type' and 'id_name, and construct 'data' object
+    $(".cy-path").hide();
+    $("#result-list").empty();
     var type = $("#id_type").val();
     var id = $("#id_name").val();
     var data = {'type': type, 'id': id};
@@ -108,6 +228,7 @@ $(function(){
             var objresponse = JSON.parse(jsonResponse);
             //display the results on the graph
             cy.add(objresponse);
+            $("#log").prepend('<hr>');
             $("#log").prepend('<p>Initialization: Add ' + type + ' (' + id + ') to the graph</p>')
             cy.layout({name: 'breadthfirst'});
           },
@@ -116,6 +237,51 @@ $(function(){
           }
         })
     }
+  });
+  cy.on('mouseover', 'node', function(evt) {
+    var node = evt.cyTarget;
+    node.qtip({
+      content: function(){
+        if (node.data()['type'] == 'field_name'){
+          var message = 'Click to show APIs related to ' + node.data()['kwargs'] + ' (' + node.data()['symbol'] + ')';
+          return message
+        }
+        else if (node.data()['type'] == 'annotate_api'){
+          var message = 'Click to annotate ' + node.data()['kwargs_type'] + ' (' + node.data()['kwargs'] + ') using ' + node.data()['symbol'] + '. Results shown on left.';
+          return message
+        }
+        else if (node.data()['type'] == 'query_api'){
+          var message = 'Click to query ' + node.data()['kwargs_type'] + ' (' + node.data()['kwargs'] + ') using ' + node.data()['symbol'] + '. Results shown on left.';
+          return message
+        }
+        else if (node.data()['type'] == 'api'){
+          var message = 'This node represent API (' + node.data()['id'] + ')';
+          return message
+        }
+        else if (node.data()['type'] == 'id'){
+          var message = 'This node represent ID (' + node.data()['id'] + ')';
+          return message
+        }
+      },
+      show: {
+        event: evt.type,
+        ready: true
+      },
+      hide: {
+        event: 'mouseout unfocus'
+      },
+      position: {
+        my: 'top center',
+        at: 'bottom center'
+      },
+      style: {
+        classes: 'qtip-bootstrap',
+        tip: {
+          width: 16,
+          height: 8
+        }
+      }
+    }, evt);
   });
 
 
@@ -136,6 +302,8 @@ cy.on('click', 'node', function(evt){
   var node = evt.cyTarget;
   // This part deals with node type = 'field_name'
   if (node.data()['type'] == 'field_name'){
+    //hide filter
+    $("#filter").hide();
     $.ajax(
       {
         url: '/field/',
@@ -153,7 +321,9 @@ cy.on('click', 'node', function(evt){
     });
   // The following part deals with node type = 'annotate_api'
   } else if(node.data()['type'] == 'annotate_api'){
-    console.log(node.data());
+    //hide filter
+    $("#pagination").hide();
+    $("#filter").hide();
     $.ajax(
     {
       url: '/annotate/',
@@ -165,7 +335,6 @@ cy.on('click', 'node', function(evt){
         $("#log").prepend('<p>Annotate ' + node.data()['kwargs_type'] + ' (' + node.data()['kwargs'] + ') using ' + node.data()['symbol'] + ' : <a href="' + objresponse['url'] + '">' + objresponse['url'] + '</p>')
         $('.list-group li').on('click', function(e){
           info = {'id': $(this).text(), 'type': $(this).closest('ul').attr('id'), 'parent': node.data()['id']};
-          console.log(info);
           $.ajax(
           {
             url: '/id/',
@@ -186,6 +355,7 @@ cy.on('click', 'node', function(evt){
     });
     // The following part deals with node type = 'query_api'
   } else if(node.data()['type'] == 'query_api'){
+    $("#pagination").show();
     query_info = node.data();
     $.ajax(
     {
@@ -197,20 +367,31 @@ cy.on('click', 'node', function(evt){
         ids = objresponse['ids'];
         type = objresponse['type'];
         $("#log").prepend('<p>Query ' + node.data()['kwargs_type'] + ' (' + node.data()['kwargs'] + ') using ' + node.data()['symbol'] + ' : <a href="' + objresponse['url'] + '">' + objresponse['url'] + '</p>')
+        //remove existing filters and then create new ones
+        $("#filter_list").empty();
         $("#filter_list").append(appendRowInFilter(filter_index));
         field_name_autocomplete(query_info);
         $("#filter").show();
         add_filter();
-        append_query_results(objresponse);
+        if (objresponse['ids'].length == 0){
+          $("#result-list").empty();
+          $("addAllButton").remove();
+          $("#pagination").twbsPagination('destroy');
+          $("#result-list").append("<h4>Sorry! No results found when querying " + node.data()['kwargs_type'] + ' (' + node.data()['kwargs'] + ') using ' + node.data()['symbol'] + "</h4>")
+        } else {
+        append_query_results(objresponse)};
         add_candidate_id_to_cy(type, node);
         add_all_ids_to_cy(ids, type, node);
         field_name_autocomplete(query_info);
         $("#updateButton").on('click', function(){
+          $("#pagination").show();
           var para_combine = '';
+          console.log(filter_index);
           for (i=0; i<= filter_index; i++) {
             para_combine += composePara(i);
           }
           query_info['para'] = para_combine;
+          console.log(para_combine);
           // after clicking update, reinitialize filter index
           filter_index = 0;
           $("#filter_list").empty();
@@ -225,9 +406,11 @@ cy.on('click', 'node', function(evt){
               ids = objresponse['ids'];
               type = objresponse['type'];
               $("#log").prepend('<p>Filter the query results for ' + node.data()['kwargs_type'] + ' (' + node.data()['kwargs'] + ') from ' + node.data()['symbol'] + ' : <a href="' + objresponse['url'] + '">' + objresponse['url'] + '</p>')
+              if (objresponse['ids'].length != 0) {
               append_query_results(objresponse);
               add_candidate_id_to_cy(type, node);
               add_all_ids_to_cy(ids, type, node);
+              }
             },
             error: function (error) {
                 console.log(error)
@@ -246,7 +429,9 @@ cy.on('click', 'node', function(evt){
 
 
 
-
+/*
+constructing html code to add a filter
+*/
 function appendFieldNameHtml(index){
   html = '<div class="form-group filter-larger"><label for="field_name' + index + '">Field_name</label><input class="form-control" id="field_name' + index + '" placeholder="dbnsfp.eigen.phred"></div>'
   return html
@@ -282,7 +467,23 @@ function composePara(index){
   var para = ' AND ' + fieldname + compare + fieldvalue;
   return para
 }
-var available_ids = ['hgnc_gene_id', 'hgnc_gene_symbol', 'hgvs_id', 'dbsnp_id', 'drugbank_id', 'pubchem_id'];
+
+var available_ids = ['hgnc_gene_id', 'hgnc_gene_symbol', 'hgvs_id', 'dbsnp_id', 'drugbank_id', 'pubchem_id', 'clinicaltrial_id', 'uniprot_id', 'pubchem_id', 'wikipathway_id', 'ensembl_gene_id'];
+
+/*
+function(){
+  $.ajax(
+    {
+      url: '/fetchid/',
+      type: 'POST',
+      dataType: 'json',
+      success: function (jsonResponse) {
+          available_ids = JSON.parse(jsonResponse);
+      }
+    });
+}();
+console.log(available_ids);
+*/
 $(function(){
   $.getJSON('http://myvariant.info/v1/metadata/fields', function(data){
     field_names = Object.keys(data);
@@ -294,6 +495,12 @@ $(function(){
     source: [available_ids]
   })
 })
+
+/*
+When clicking 'add' Button,
+add one row of filter below
+to allow performing complex queries
+*/
 var filter_index = 0;
 
 function add_filter(){
@@ -304,13 +511,15 @@ function add_filter(){
   });
 }
 
-
+/*
+Fetch metadata info from biothings APIs
+to provide autocomplete function when users
+input field names to filter down results
+*/
 function field_name_autocomplete(query_info){
   if (query_info.symbol == 'myvariant.info'){
-    console.log(query_info.symbol);
     url = 'http://myvariant.info/v1/metadata/fields'
   } else if (query_info.symbol == 'mygene.info'){
-    console.log(query_info.symbol);
     url = 'http://mygene.info/v3/metadata/fields'
   } else if (query_info.symbol == 'mydrug.info'){
     url = 'http://c.biothings.io/v1/metadata/fields'
@@ -405,5 +614,34 @@ function append_query_results(objresponse){
 });
 });
 */
-
-
+  $("#exploreButton").on('mouseover', 'node', function(evt) {
+    $("#exploreButton").qtip({
+    content: 'Click to explore how to connect between two ids, e.g. the path between hgvs_id and drugbank_id',
+    hide: {
+        event: 'mouseout unfocus'
+    },
+    position: {
+        target: 'mouse'
+    },
+    style: {
+      classes: 'tooltipDefault',
+      }
+    });
+  })
+      $(document).ready(function() {
+                    // Match all link elements with href attributes within the content div
+                    $('#exploreButton').qtip({
+                            content: 'Click to explore how to connect between two ids, e.g. the path between hgvs_id and drugbank_id',
+                            style: {
+                              classes: 'qtip-bootstrap',
+                              tip: {
+                                width: 16,
+                                height: 8
+                              }
+                            },
+                            position: {
+                              my: 'top center',
+                              at: 'bottom center'
+                            }
+                        });
+                    });

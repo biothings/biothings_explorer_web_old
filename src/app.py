@@ -13,7 +13,7 @@ from  tornado.escape import json_encode
 
 from tornado.options import define, options
 
-from utils import field_handler, annotate_handler, query_handler, id_handler, initialize, filter_handler
+from utils import field_handler, annotate_handler, query_handler, id_handler, initialize, filter_handler, relation_handler, fetchid_handler
  
 class MainHandler(tornado.web.RequestHandler):
 	def get(self):
@@ -92,6 +92,19 @@ class FilterHandler(tornado.web.RequestHandler):
         pprint.pprint(response_to_send)
         self.write(json.dumps(response_to_send))
 
+class RelationHandler(tornado.web.RequestHandler):
+
+    def post(self):
+        response_to_send = relation_handler()
+        pprint.pprint(response_to_send)
+        self.write(json.dumps(response_to_send))
+
+class FetchIdHandler(tornado.web.RequestHandler):
+    def post(self):
+        response_to_send = fetchid_handler()
+        pprint.pprint(response_to_send)
+        self.write(json.dumps(response_to_send))
+
 class Application(tornado.web.Application):
 
     def __init__(self):
@@ -102,7 +115,9 @@ class Application(tornado.web.Application):
             (r"/query/", QueryHandler),
             (r"/id/", IdHandler),
             (r"/initialize/", InitializeHandler),
-            (r"/filter/", FilterHandler)
+            (r"/filter/", FilterHandler),
+            (r"/relation/", RelationHandler),
+            (r"/fetchid/", FetchIdHandler)
         ]
         settings = dict(
             debug=True,
@@ -113,7 +128,7 @@ class Application(tornado.web.Application):
 
 def main():
     app = Application()
-    app.listen(8865)
+    app.listen(8853)
     tornado.ioloop.IOLoop.instance().start()
 
 

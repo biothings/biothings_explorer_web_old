@@ -5,15 +5,27 @@
 <head>
     <meta charset="utf-8"></meta>
     <title>Biothings Explorer</title>
+    <!--
     <script src="../static/js/cytoscape.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    -->
+    
 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
     <!-- Latest compiled and minified JavaScript -->
+
+    <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.js"></script>
+    <script src="http://cytoscape.github.io/cytoscape.js/api/cytoscape.js-latest/cytoscape.min.js"></script>
+    <script src="../static/js/cytoscape-qtip.js"></script>
+    <link href="../static/css/cytoscape.js-panzoom.css" rel="stylesheet" type="text/css"/>
+    <link href="../static/css/font-awesome-4.0.3/css/font-awesome.css" rel="stylesheet" type="text/css"/>
+
+    <script src="../static/js/cytoscape-panzoom.js"></script>
     <link type="text/css" rel="stylesheet" href="../static/css/jquery.autocomplete.css">
     <script src="../static/js/jquery.twbsPagination.js" type="text/javascript"></script>
     <script src="../static/js/jquery.autocomplete.js" type="text/javascript"></script>
@@ -36,6 +48,8 @@
           <input class="form-control" id="id_name" placeholder="2212">
         </div>
         <button id="submitButton" type="submit" class="btn btn-primary">Submit</button>
+  
+        <button id="exploreButton" type="submit" class="btn btn-primary">Explore Connecting Paths</button>
     </div>
     </div>
     <div class="container display">
@@ -120,8 +134,27 @@
                 -->
               </div>
               <button id="addButton" type="submit" class="btn btn-primary">Add</button>
+
               <button id="updateButton" type="submit" class="btn btn-primary">Update</button>
 
+            </div>
+          </div>
+          <div class="panel panel-default" id="layout" title="Choose the layout">
+            <div class="panel-heading">
+              <h3 class="panel-title">Layout</h3>
+            </div>
+            <div class="panel-body filter-constructor">
+              <div class="form-group">
+                <label for="layout_types">layout options</label>
+                <select class="form-control" id="layout_types">
+                  <option>breadthfirst</option>
+                  <option>grid</option>
+                  <option>circle</option>
+                  <option>concentric</option>
+                  <option>cose</option>
+                </select>
+              </div>
+              <button id="updateLayoutButton" type="submit" class="btn btn-primary">Update</button>
             </div>
           </div>
         </div>
@@ -134,11 +167,44 @@
                 </h4>
               </div>
               <div class="panel-body" id="graph">
+                <div class='cy-path' stype='position: absolute'>
+                  <div class="form-group explore-path">
+                    <label for="Select1">Staring ID</label>
+                    <select class="form-control" id="Select1">
+                      <option>dbsnp_id</option>
+                      <option>clinicaltrial_id</option>
+                      <option>wikipathway_id</option>
+                      <option>hgnc_gene_symbol</option>
+                      <option>ensembl_gene_id</option>
+                      <option>drugbank_id</option>
+                      <option>pubmed_id</option>
+                      <option>uniprot_id</option>
+                      <option>hgvs_id</option>
+                    </select>
+                  </div>
+                  <div class="form-group explore-path">
+                    <label for="Select2">End ID</label>
+                    <select class="form-control" id="Select2">
+                      <option>dbsnp_id</option>
+                      <option>clinicaltrial_id</option>
+                      <option>wikipathway_id</option>
+                      <option>hgnc_gene_symbol</option>
+                      <option>ensembl_gene_id</option>
+                      <option>drugbank_id</option>
+                      <option>pubmed_id</option>
+                      <option>uniprot_id</option>
+                      <option>hgvs_id</option>
+                    </select>
+                  </div>
+                  <button id="updatePathButton" type="submit" class="btn btn-primary explore-path">Update Path</button> 
+                </div>
                 <div id='cy'></div>
+
               </div>
+           
             </div>
           </div>
-          <div class="panel-group">
+          <div class="panel-group log-panel">
             <div class="panel panel-warning">
               <div class="panel-heading">
                 <h4 class="panel-title">

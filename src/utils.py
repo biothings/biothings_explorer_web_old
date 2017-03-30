@@ -1,5 +1,5 @@
 from biothings_helper import find_annotate_api, find_query_api, find_xref, find_query_id_list, find_query_id_list_for_filter
-
+from config import AVAILABLE_IDS, AVAILABLE_API_SOURCES
 node = 0
 edge = 0
 
@@ -93,4 +93,27 @@ def id_handler(data):
     add_nodes_edges.append(_node)
     add_nodes_edges.append(edge_constructor(_node['data']['id'], _parent))
     return add_nodes_edges
+
+def relation_handler():
+    add_nodes_edges = []
+    relation_edge = 0
+    for _id in AVAILABLE_IDS.keys():
+        add_nodes_edges.append({'data': {'id': _id, 'type': 'id'}})
+    for _api in AVAILABLE_API_SOURCES.keys():
+        add_nodes_edges.append({'data': {'id': _api, 'type': 'api'}})
+        if 'annotate_ids' in AVAILABLE_API_SOURCES[_api]:
+            for annotate_id in AVAILABLE_API_SOURCES[_api]['annotate_ids']:
+                add_nodes_edges.append({'data': {'id': relation_edge, 'source': annotate_id, 'target': _api}})
+                relation_edge += 1
+        if 'query_ids' in AVAILABLE_API_SOURCES[_api]:
+            for query_id in AVAILABLE_API_SOURCES[_api]['query_ids']:
+                add_nodes_edges.append({'data': {'id': relation_edge, 'source': query_id, 'target': _api}})
+                relation_edge += 1
+    return add_nodes_edges
+
+'''
+Get all available ids for explore from config file
+'''
+def fetchid_handler():
+    return list(AVAILABLE_IDS.keys())
 
