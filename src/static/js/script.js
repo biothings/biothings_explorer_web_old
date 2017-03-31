@@ -17,7 +17,7 @@ $(function(){
           var objresponse = JSON.parse(jsonResponse);
           cy.add(objresponse);
           $("#log").prepend('<p>Add ' + info['type'] + ' (' + info['id'] + ') to the graph</p>')
-          cy.layout({name: 'breadthfirst'});
+          cy.layout({name: 'core'});
           cy.center( cy.$('#' + objresponse[0]['data']['id'] + ', #' + info['parent']) );         
         }
       });
@@ -39,7 +39,7 @@ $(function(){
           success: function (jsonResponse){
             var objresponse = JSON.parse(jsonResponse);
             cy.add(objresponse);
-            cy.layout({name: 'breadthfirst'});
+            cy.layout({name: 'core'});
             /*
             center_nodes = ''
             for (var j=0; j<objresponse.length; j++){
@@ -230,7 +230,7 @@ $(function(){
             cy.add(objresponse);
             $("#log").prepend('<hr>');
             $("#log").prepend('<p>Initialization: Add ' + type + ' (' + id + ') to the graph</p>')
-            cy.layout({name: 'breadthfirst'});
+            cy.layout({name: 'core'});
           },
           error: function (error) {
             console.log(error);
@@ -312,7 +312,7 @@ cy.on('click', 'node', function(evt){
         success: function (jsonResponse) {
             var objresponse = JSON.parse(jsonResponse);
             cy.add(objresponse);
-            cy.layout({name: 'breadthfirst'});
+            cy.layout({name: 'core'});
             $("#log").prepend('<p>Listing APIs related to ' + node.data()['kwargs'] + ' (' + node.data()['symbol'] + ')</p>');
         },
         error: function (error) {
@@ -344,7 +344,7 @@ cy.on('click', 'node', function(evt){
               var objresponse = JSON.parse(jsonResponse);
               cy.add(objresponse);
               $("#log").prepend('<p>Add ' + info['type'] + ' (' + info['id'] + ') to the graph</p>')
-              cy.layout({name: 'breadthfirst'});
+              cy.layout({name: 'core'});
             }
           })
         })
