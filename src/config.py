@@ -2,7 +2,7 @@ AVAILABLE_IDS= {"ensembl_gene_id": {
 	"uri": "http://identifiers.org/ensembl.gene/",
 	"example": "ENSG00000139618"
 },
- "hgnc_gene_id": {
+ "entrez_gene_id": {
  	"uri": "http://identifiers.org/hgnc/",
  	"example": 1017
  },
@@ -44,7 +44,7 @@ AVAILABLE_IDS= {"ensembl_gene_id": {
  }}
 
 AVAILABLE_API_SOURCES={"mygene.info": {
- 	"annotate_ids": ["hgnc_gene_id", "ensembl_gene_id"],
+ 	"annotate_ids": ["entrez_gene_id", "ensembl_gene_id"],
  	"query_ids": ["uniprot_id", "ensembl_gene_id", "hgnc_gene_symbol", "wikipathway_id", "pubmed_id"],
  	"annotate_syntax": "http://mygene.info/v3/gene/*",
  	"query_syntax": "http://mygene.info/v3/query?q=*",
@@ -64,7 +64,7 @@ AVAILABLE_API_SOURCES={"mygene.info": {
  },
   "myvariant.info": {
   	"annotate_ids": ["hgvs_id"],
-  	"query_ids": ["hgnc_gene_id", "hgnc_gene_symbol", "ensembl_gene_id", "dbsnp_id", "pubmed_id", "uniprot_id"],
+  	"query_ids": ["entrez_gene_id", "hgnc_gene_symbol", "ensembl_gene_id", "dbsnp_id", "pubmed_id", "uniprot_id"],
   	"annotate_syntax": "http://myvariant.info/v1/variant/*",
   	"query_syntax": "http://myvariant.info/v1/query?q=*",
   	"jsonld": {

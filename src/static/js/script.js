@@ -17,7 +17,7 @@ $(function(){
           var objresponse = JSON.parse(jsonResponse);
           cy.add(objresponse);
           $("#log").prepend('<p>Add ' + info['type'] + ' (' + info['id'] + ') to the graph</p>')
-          cy.layout({name: 'core'});
+          cy.layout({name: 'cose'});
           cy.center( cy.$('#' + objresponse[0]['data']['id'] + ', #' + info['parent']) );         
         }
       });
@@ -39,7 +39,7 @@ $(function(){
           success: function (jsonResponse){
             var objresponse = JSON.parse(jsonResponse);
             cy.add(objresponse);
-            cy.layout({name: 'core'});
+            cy.layout({name: 'cose'});
             /*
             center_nodes = ''
             for (var j=0; j<objresponse.length; j++){
@@ -230,7 +230,7 @@ $(function(){
             cy.add(objresponse);
             $("#log").prepend('<hr>');
             $("#log").prepend('<p>Initialization: Add ' + type + ' (' + id + ') to the graph</p>')
-            cy.layout({name: 'core'});
+            cy.layout({name: 'cose'});
           },
           error: function (error) {
             console.log(error);
@@ -288,7 +288,7 @@ $(function(){
 /*
 This part deals with graph user interaction,
 when clicking the node, first determine the node type,
-1> If the node type is 'field_name', e.g. 'hgnc_gene_id'.
+1> If the node type is 'field_name', e.g. 'entrez_gene_id'.
    Call the 'field' tornado handler, return all available APIs
    related to this field_name, and display on the graph
 2> If the node type is 'annotate_api', e.g. 'mygene.info',
@@ -312,7 +312,7 @@ cy.on('click', 'node', function(evt){
         success: function (jsonResponse) {
             var objresponse = JSON.parse(jsonResponse);
             cy.add(objresponse);
-            cy.layout({name: 'core'});
+            cy.layout({name: 'cose'});
             $("#log").prepend('<p>Listing APIs related to ' + node.data()['kwargs'] + ' (' + node.data()['symbol'] + ')</p>');
         },
         error: function (error) {
@@ -324,6 +324,7 @@ cy.on('click', 'node', function(evt){
     //hide filter
     $("#pagination").hide();
     $("#filter").hide();
+    $("#idlist").addClass("loading");
     $.ajax(
     {
       url: '/annotate/',
@@ -332,6 +333,7 @@ cy.on('click', 'node', function(evt){
       success: function (jsonResponse) {
         var objresponse = JSON.parse(jsonResponse);
         append_annotate_results(objresponse['xref']);
+        $("#idlist").removeClass("loading")
         $("#log").prepend('<p>Annotate ' + node.data()['kwargs_type'] + ' (' + node.data()['kwargs'] + ') using ' + node.data()['symbol'] + ' : <a href="' + objresponse['url'] + '">' + objresponse['url'] + '</p>')
         $('.list-group li').on('click', function(e){
           info = {'id': $(this).text(), 'type': $(this).closest('ul').attr('id'), 'parent': node.data()['id']};
@@ -344,7 +346,7 @@ cy.on('click', 'node', function(evt){
               var objresponse = JSON.parse(jsonResponse);
               cy.add(objresponse);
               $("#log").prepend('<p>Add ' + info['type'] + ' (' + info['id'] + ') to the graph</p>')
-              cy.layout({name: 'core'});
+              cy.layout({name: 'cose'});
             }
           })
         })
@@ -355,6 +357,7 @@ cy.on('click', 'node', function(evt){
     });
     // The following part deals with node type = 'query_api'
   } else if(node.data()['type'] == 'query_api'){
+    $("#idlist").addClass("loading");
     $("#pagination").show();
     query_info = node.data();
     $.ajax(
@@ -380,6 +383,7 @@ cy.on('click', 'node', function(evt){
           $("#result-list").append("<h4>Sorry! No results found when querying " + node.data()['kwargs_type'] + ' (' + node.data()['kwargs'] + ') using ' + node.data()['symbol'] + "</h4>")
         } else {
         append_query_results(objresponse)};
+        $("#idlist").removeClass("loading");
         add_candidate_id_to_cy(type, node);
         add_all_ids_to_cy(ids, type, node);
         field_name_autocomplete(query_info);
@@ -468,7 +472,7 @@ function composePara(index){
   return para
 }
 
-var available_ids = ['hgnc_gene_id', 'hgnc_gene_symbol', 'hgvs_id', 'dbsnp_id', 'drugbank_id', 'pubchem_id', 'clinicaltrial_id', 'uniprot_id', 'pubchem_id', 'wikipathway_id', 'ensembl_gene_id'];
+var available_ids = ['entrez_gene_id', 'hgnc_gene_symbol', 'hgvs_id', 'dbsnp_id', 'drugbank_id', 'pubchem_id', 'clinicaltrial_id', 'uniprot_id', 'pubchem_id', 'wikipathway_id', 'ensembl_gene_id'];
 
 /*
 function(){
@@ -552,13 +556,17 @@ function append_annotate_results(objresponse){
     var dom_id1 = "#collapse" + i
     var domid = 'collapse' + i
     var domid1 = 'collapse_' + i
-    $("#result-list").append("<div class='panel-heading'><h4 class='panel-title'><a data-toggle='collapse' href=" + dom_id1
-      + ">"+ types[i] + "</h4></div><div id=" + domid + " class='panel-collapse collapse'><ul class='list-group' id=" + types[i] + "></ul></div>");
-    // loop through each id under a specific id_type, add as a list under the 'id_type' collapsible list
     ids = objresponse[types[i]];
+    $("#result-list").append("<div class='panel-heading'><h4 class='panel-title'><a data-toggle='collapse' href=" + dom_id1
+      + ">"+ types[i] + " (" +  ids.length + ")" + "</h4></div><div id=" + domid + " class='panel-collapse collapse'><ul class='list-group' id=" + types[i] + "></ul></div>");
+    // loop through each id under a specific id_type, add as a list under the 'id_type' collapsible list
+    
     for (var j=0; j<ids.length; j++){
       var dom_id = "#" + types[i];
+      /*
       $(dom_id).append("<li class='list-group-item'>" + ids[j] + "</li>")
+      */
+      $(dom_id).append("<li class='list-group-item'> <label class='form-check-label'><input class='form-check-input' type='checkbox'>" + ids[j] + "</label>")
     };
   };
 }
@@ -594,6 +602,7 @@ function append_query_results(objresponse){
         };
       }
     });
+  $("#result-list").prepend('<h4> Total number of IDs found: ' + ids.length + '</h4>')
   // append an 'addallbutton'
   $("#result-list").append('<button id="addAllButton" type="submit" class="btn btn-primary">Add all</button>'); 
 }
