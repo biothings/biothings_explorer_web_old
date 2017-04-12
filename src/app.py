@@ -10,14 +10,14 @@ import json
 import pprint
 from  tornado.escape import json_decode
 from  tornado.escape import json_encode
-
 from tornado.options import define, options
 
 from utils import field_handler, annotate_handler, query_handler, id_handler, initialize, filter_handler, relation_handler, fetchid_handler
  
 class MainHandler(tornado.web.RequestHandler):
-	def get(self):
-		self.render("index.html", messages=None)
+    @tornado.web.addslash
+    def get(self):
+        self.render("index.html", messages=None)
 
 class FieldHandler(tornado.web.RequestHandler):
 
@@ -109,7 +109,7 @@ class Application(tornado.web.Application):
 
     def __init__(self):
         handlers = [
-            (r"/explorer/", MainHandler),
+            (r"/explorer/?", MainHandler),
             (r"/explorer/field/", FieldHandler),
             (r"/explorer/annotate/", AnnotateHandler),
             (r"/explorer/query/", QueryHandler),
