@@ -109,15 +109,15 @@ class Application(tornado.web.Application):
 
     def __init__(self):
         handlers = [
-            (r"/", MainHandler),
-            (r"/field/", FieldHandler),
-            (r"/annotate/", AnnotateHandler),
-            (r"/query/", QueryHandler),
-            (r"/id/", IdHandler),
-            (r"/initialize/", InitializeHandler),
-            (r"/filter/", FilterHandler),
-            (r"/relation/", RelationHandler),
-            (r"/fetchid/", FetchIdHandler)
+            (r"/explore/", MainHandler),
+            (r"/explore/field/", FieldHandler),
+            (r"/explore/annotate/", AnnotateHandler),
+            (r"/explore/query/", QueryHandler),
+            (r"/explore/id/", IdHandler),
+            (r"/explore/initialize/", InitializeHandler),
+            (r"/explore/filter/", FilterHandler),
+            (r"/explore/relation/", RelationHandler),
+            (r"/explore/fetchid/", FetchIdHandler)
         ]
         settings = dict(
             debug=True,
@@ -128,7 +128,7 @@ class Application(tornado.web.Application):
 
 def main():
     app = Application()
-    app.listen(8849)
+    app.listen(8853)
     tornado.ioloop.IOLoop.instance().start()
 
 

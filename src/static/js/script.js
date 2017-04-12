@@ -10,7 +10,7 @@ $(function(){
       info = {'id': this.value, 'type': type, 'parent': node.data()['id']};
       $.ajax(
       {
-        url: '/id/',
+        url: '/explore/id/',
         type: 'POST',
         data: JSON.stringify(info),
         success: function (jsonResponse){
@@ -33,7 +33,7 @@ $(function(){
         info = {'id': ids[i], 'type': type, 'parent': node.data()['id']};
         $.ajax(
         {
-          url: '/id/',
+          url: '/explore/id/',
           type: 'POST',
           data: JSON.stringify(info),
           success: function (jsonResponse){
@@ -220,7 +220,7 @@ $(function(){
     if (data) {
       $.ajax(
         {
-          url: '/initialize/',
+          url: '/explore/initialize/',
           type: 'POST',
           data: JSON.stringify(data),
           success: function (jsonResponse){
@@ -306,7 +306,7 @@ cy.on('click', 'node', function(evt){
     $("#filter").hide();
     $.ajax(
       {
-        url: '/field/',
+        url: '/explore/field/',
         type: 'POST',
         data: JSON.stringify(node.data()),
         success: function (jsonResponse) {
@@ -327,7 +327,7 @@ cy.on('click', 'node', function(evt){
     $("#idlist").addClass("loading");
     $.ajax(
     {
-      url: '/annotate/',
+      url: '/explore/annotate/',
       type: 'POST',
       data: JSON.stringify(node.data()),
       success: function (jsonResponse) {
@@ -339,7 +339,7 @@ cy.on('click', 'node', function(evt){
           info = {'id': $(this).text(), 'type': $(this).closest('ul').attr('id'), 'parent': node.data()['id']};
           $.ajax(
           {
-            url: '/id/',
+            url: '/explore/id/',
             type: 'POST',
             data: JSON.stringify(info),
             success: function (jsonResponse){
@@ -362,7 +362,7 @@ cy.on('click', 'node', function(evt){
     query_info = node.data();
     $.ajax(
     {
-      url: '/query/',
+      url: '/explore/query/',
       type: 'POST',
       data: JSON.stringify(node.data()),
       success: function (jsonResponse) {

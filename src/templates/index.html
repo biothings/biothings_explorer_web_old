@@ -20,7 +20,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.js"></script>
+    <!--
     <script src="http://cytoscape.github.io/cytoscape.js/api/cytoscape.js-latest/cytoscape.min.js"></script>
+    -->
+    <script src="../static/js/cytoscape.js"></script>
     <script src="../static/js/cytoscape-qtip.js"></script>
     <link href="../static/css/cytoscape.js-panzoom.css" rel="stylesheet" type="text/css"/>
     <link href="../static/css/font-awesome-4.0.3/css/font-awesome.css" rel="stylesheet" type="text/css"/>
@@ -41,11 +44,11 @@
     <div id="input">
         <div class="form-group">
           <label for="id_type">ID TYPE</label>
-          <input class="form-control" id="id_type" placeholder="hgnc_gene_id">
+          <input class="form-control" id="id_type" placeholder="entrez_gene_id">
         </div>
         <div class="form-group">
           <label for="id_name">ID</label>
-          <input class="form-control" id="id_name" placeholder="2212">
+          <input class="form-control" id="id_name" placeholder="1136">
         </div>
         <button id="submitButton" type="submit" class="btn btn-primary">Submit</button>
   
@@ -84,9 +87,6 @@
                   <div class="panel panel-default" id="id-list">
                   </div>
                   -->
-                </div>
-                <div id="loading">
-                  <span class="fa fa-refresh fa-spin"></span>
                 </div>
                 <div>
                   <nav aria-label="Page navigation">
@@ -157,7 +157,6 @@
                   <option>cose</option>
                 </select>
               </div>
-              <button id="updateLayoutButton" type="submit" class="btn btn-primary">Update</button>
             </div>
           </div>
         </div>
