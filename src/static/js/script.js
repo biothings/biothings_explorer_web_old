@@ -179,7 +179,7 @@ $(function(){
     $(".cy-path").show();
     $.ajax(
       {
-        url: '/relation/',
+        url: '/explore/relation/',
         type: 'POST',
         success: function(jsonResponse){
           cy.elements().remove();
@@ -402,7 +402,7 @@ cy.on('click', 'node', function(evt){
           $("#filter").hide();
           $.ajax(
           {
-            url: '/filter/',
+            url: '/explore/filter/',
             type: 'POST',
             data: JSON.stringify(query_info),
             success: function (jsonResponse) {
