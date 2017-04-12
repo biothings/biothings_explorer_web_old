@@ -10,7 +10,7 @@ $(function(){
       info = {'id': this.value, 'type': type, 'parent': node.data()['id']};
       $.ajax(
       {
-        url: '/explorer/id/',
+        url: '/id/',
         type: 'POST',
         data: JSON.stringify(info),
         success: function (jsonResponse){
@@ -33,7 +33,7 @@ $(function(){
         info = {'id': ids[i], 'type': type, 'parent': node.data()['id']};
         $.ajax(
         {
-          url: '/explorer/id/',
+          url: '/id/',
           type: 'POST',
           data: JSON.stringify(info),
           success: function (jsonResponse){
@@ -179,7 +179,7 @@ $(function(){
     $(".cy-path").show();
     $.ajax(
       {
-        url: '/explorer/relation/',
+        url: '/relation/',
         type: 'POST',
         success: function(jsonResponse){
           cy.elements().remove();
@@ -220,7 +220,7 @@ $(function(){
     if (data) {
       $.ajax(
         {
-          url: '/explorer/initialize/',
+          url: '/initialize/',
           type: 'POST',
           data: JSON.stringify(data),
           success: function (jsonResponse){
@@ -306,7 +306,7 @@ cy.on('click', 'node', function(evt){
     $("#filter").hide();
     $.ajax(
       {
-        url: '/explorer/field/',
+        url: '/field/',
         type: 'POST',
         data: JSON.stringify(node.data()),
         success: function (jsonResponse) {
@@ -327,7 +327,7 @@ cy.on('click', 'node', function(evt){
     $("#idlist").addClass("loading");
     $.ajax(
     {
-      url: '/explorer/annotate/',
+      url: '/annotate/',
       type: 'POST',
       data: JSON.stringify(node.data()),
       success: function (jsonResponse) {
@@ -339,7 +339,7 @@ cy.on('click', 'node', function(evt){
           info = {'id': $(this).text(), 'type': $(this).closest('ul').attr('id'), 'parent': node.data()['id']};
           $.ajax(
           {
-            url: '/explorer/id/',
+            url: '/id/',
             type: 'POST',
             data: JSON.stringify(info),
             success: function (jsonResponse){
@@ -362,7 +362,7 @@ cy.on('click', 'node', function(evt){
     query_info = node.data();
     $.ajax(
     {
-      url: '/explorer/query/',
+      url: '/query/',
       type: 'POST',
       data: JSON.stringify(node.data()),
       success: function (jsonResponse) {
@@ -402,7 +402,7 @@ cy.on('click', 'node', function(evt){
           $("#filter").hide();
           $.ajax(
           {
-            url: '/explorer/filter/',
+            url: '/filter/',
             type: 'POST',
             data: JSON.stringify(query_info),
             success: function (jsonResponse) {
