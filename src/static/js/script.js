@@ -220,7 +220,7 @@ $(function(){
     if (data) {
       $.ajax(
         {
-          url: '/initialize/',
+          url: './initialize/',
           type: 'POST',
           data: JSON.stringify(data),
           success: function (jsonResponse){

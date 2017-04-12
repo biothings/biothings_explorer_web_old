@@ -114,7 +114,7 @@ class Application(tornado.web.Application):
             (r"/annotate/", AnnotateHandler),
             (r"/query/", QueryHandler),
             (r"/id/", IdHandler),
-            (r"/initialize/", InitializeHandler),
+            (r"/explorer/initialize/", InitializeHandler),
             (r"/filter/", FilterHandler),
             (r"/relation/", RelationHandler),
             (r"/fetchid/", FetchIdHandler)
