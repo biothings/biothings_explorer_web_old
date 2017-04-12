@@ -109,15 +109,15 @@ class Application(tornado.web.Application):
 
     def __init__(self):
         handlers = [
-            (r"/explore/", MainHandler),
-            (r"/explore/field/", FieldHandler),
-            (r"/explore/annotate/", AnnotateHandler),
-            (r"/explore/query/", QueryHandler),
-            (r"/explore/id/", IdHandler),
-            (r"/explore/initialize/", InitializeHandler),
-            (r"/explore/filter/", FilterHandler),
-            (r"/explore/relation/", RelationHandler),
-            (r"/explore/fetchid/", FetchIdHandler)
+            (r"/explorer/", MainHandler),
+            (r"/explorer/field/", FieldHandler),
+            (r"/explorer/annotate/", AnnotateHandler),
+            (r"/explorer/query/", QueryHandler),
+            (r"/explorer/id/", IdHandler),
+            (r"/explorer/initialize/", InitializeHandler),
+            (r"/explorer/filter/", FilterHandler),
+            (r"/explorer/relation/", RelationHandler),
+            (r"/explorer/fetchid/", FetchIdHandler)
         ]
         settings = dict(
             debug=True,

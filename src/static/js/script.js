@@ -10,7 +10,7 @@ $(function(){
       info = {'id': this.value, 'type': type, 'parent': node.data()['id']};
       $.ajax(
       {
-        url: '/explore/id/',
+        url: '/explorer/id/',
         type: 'POST',
         data: JSON.stringify(info),
         success: function (jsonResponse){
@@ -33,7 +33,7 @@ $(function(){
         info = {'id': ids[i], 'type': type, 'parent': node.data()['id']};
         $.ajax(
         {
-          url: '/explore/id/',
+          url: '/explorer/id/',
           type: 'POST',
           data: JSON.stringify(info),
           success: function (jsonResponse){
@@ -167,19 +167,19 @@ $(function(){
       }]
   });
   /*
-  This part is for users to explore the relationship between different biological entities,
+  This part is for users to explorer the relationship between different biological entities,
   e.g. how to connect between hgvs_id (variant) to wikipathays_id(pathway)
-  When click 'explore relationship' button in the 'input' div,
+  When click 'explorer relationship' button in the 'input' div,
   empty the visualization div first,
   get data from backend through 'relation' tornado handler,
   and display node on the visualizaion div
   */
   cy.panzoom({});
-  $("#exploreButton").on('click', function() {
+  $("#explorerButton").on('click', function() {
     $(".cy-path").show();
     $.ajax(
       {
-        url: '/explore/relation/',
+        url: '/explorer/relation/',
         type: 'POST',
         success: function(jsonResponse){
           cy.elements().remove();
@@ -220,7 +220,7 @@ $(function(){
     if (data) {
       $.ajax(
         {
-          url: '/explore/initialize/',
+          url: '/explorer/initialize/',
           type: 'POST',
           data: JSON.stringify(data),
           success: function (jsonResponse){
@@ -306,7 +306,7 @@ cy.on('click', 'node', function(evt){
     $("#filter").hide();
     $.ajax(
       {
-        url: '/explore/field/',
+        url: '/explorer/field/',
         type: 'POST',
         data: JSON.stringify(node.data()),
         success: function (jsonResponse) {
@@ -327,7 +327,7 @@ cy.on('click', 'node', function(evt){
     $("#idlist").addClass("loading");
     $.ajax(
     {
-      url: '/explore/annotate/',
+      url: '/explorer/annotate/',
       type: 'POST',
       data: JSON.stringify(node.data()),
       success: function (jsonResponse) {
@@ -339,7 +339,7 @@ cy.on('click', 'node', function(evt){
           info = {'id': $(this).text(), 'type': $(this).closest('ul').attr('id'), 'parent': node.data()['id']};
           $.ajax(
           {
-            url: '/explore/id/',
+            url: '/explorer/id/',
             type: 'POST',
             data: JSON.stringify(info),
             success: function (jsonResponse){
@@ -362,7 +362,7 @@ cy.on('click', 'node', function(evt){
     query_info = node.data();
     $.ajax(
     {
-      url: '/explore/query/',
+      url: '/explorer/query/',
       type: 'POST',
       data: JSON.stringify(node.data()),
       success: function (jsonResponse) {
@@ -402,7 +402,7 @@ cy.on('click', 'node', function(evt){
           $("#filter").hide();
           $.ajax(
           {
-            url: '/explore/filter/',
+            url: '/explorer/filter/',
             type: 'POST',
             data: JSON.stringify(query_info),
             success: function (jsonResponse) {
@@ -623,9 +623,9 @@ function append_query_results(objresponse){
 });
 });
 */
-  $("#exploreButton").on('mouseover', 'node', function(evt) {
-    $("#exploreButton").qtip({
-    content: 'Click to explore how to connect between two ids, e.g. the path between hgvs_id and drugbank_id',
+  $("#explorerButton").on('mouseover', 'node', function(evt) {
+    $("#explorerButton").qtip({
+    content: 'Click to explorer how to connect between two ids, e.g. the path between hgvs_id and drugbank_id',
     hide: {
         event: 'mouseout unfocus'
     },
@@ -639,8 +639,8 @@ function append_query_results(objresponse){
   })
       $(document).ready(function() {
                     // Match all link elements with href attributes within the content div
-                    $('#exploreButton').qtip({
-                            content: 'Click to explore how to connect between two ids, e.g. the path between hgvs_id and drugbank_id',
+                    $('#explorerButton').qtip({
+                            content: 'Click to explorer how to connect between two ids, e.g. the path between hgvs_id and drugbank_id',
                             style: {
                               classes: 'qtip-bootstrap',
                               tip: {
