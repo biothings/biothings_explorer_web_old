@@ -1,7 +1,7 @@
 # biothings_explorer_web
 
 ### Project Website: 
-    http://biothings.io/explorer_demo/
+    http://biothings.io/explorer/
 ### Project Demo:
     https://goo.gl/sx34T2
     
