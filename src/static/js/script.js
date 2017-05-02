@@ -1,5 +1,6 @@
 
 var query_info
+var annotate_info
 $(function(){
   /*
   For query results, 
@@ -7,18 +8,17 @@ $(function(){
   */
   function add_candidate_id_to_cy(type, node){
     $("#candidate").on('change', function(e){
-      info = {'id': this.value, 'type': type, 'parent': node.data()['id']};
+      info = {'id': this.value, 'type': type, 'parent': node.data()['id'], 'relation': 'is_related_to'};
       $.ajax(
       {
-        url: '/explorer/id/',
+        url: './id/',
         type: 'POST',
         data: JSON.stringify(info),
         success: function (jsonResponse){
           var objresponse = JSON.parse(jsonResponse);
           cy.add(objresponse);
           $("#log").prepend('<p>Add ' + info['type'] + ' (' + info['id'] + ') to the graph</p>')
-          cy.layout({name: 'cose'});
-          cy.center( cy.$('#' + objresponse[0]['data']['id'] + ', #' + info['parent']) );         
+          cy.layout({name: 'cose'});       
         }
       });
     });
@@ -59,7 +59,6 @@ $(function(){
   function highlightpath(){
     _id1 = $('#Select1').find(":selected").text();
     _id2 = $('#Select2').find(":selected").text();
-    console.log(_id2);
     cy.$().removeClass('highlighted');
     var dijkstra = cy.elements().dijkstra('#' + _id1);
     var bfs = dijkstra.pathTo( cy.$('#' + _id2) );
@@ -145,6 +144,8 @@ $(function(){
       {
         'selector': "edge",
         'style': {
+          'label': 'data(label)',
+          'font-size': '10px',
           'target-arrow-shape': 'triangle',
           'curve-style': 'haystack',
           'haystack-radius': '0.5',
@@ -175,7 +176,8 @@ $(function(){
   and display node on the visualizaion div
   */
   cy.panzoom({});
-  $("#explorerButton").on('click', function() {
+  $("#exploreButton").on('click', function() {
+    console.log('click explorer');
     $(".cy-path").show();
     $.ajax(
       {
@@ -325,6 +327,7 @@ cy.on('click', 'node', function(evt){
     $("#pagination").hide();
     $("#filter").hide();
     $("#idlist").addClass("loading");
+    console.log(node.data());
     $.ajax(
     {
       url: './annotate/',
@@ -332,11 +335,18 @@ cy.on('click', 'node', function(evt){
       data: JSON.stringify(node.data()),
       success: function (jsonResponse) {
         var objresponse = JSON.parse(jsonResponse);
-        append_annotate_results(objresponse['xref']);
+        annotate_info = objresponse['xref']
+        append_annotate_results(annotate_info);
         $("#idlist").removeClass("loading")
         $("#log").prepend('<p>Annotate ' + node.data()['kwargs_type'] + ' (' + node.data()['kwargs'] + ') using ' + node.data()['symbol'] + ' : <a href="' + objresponse['url'] + '">' + objresponse['url'] + '</p>')
         $('.list-group li').on('click', function(e){
-          info = {'id': $(this).text(), 'type': $(this).closest('ul').attr('id'), 'parent': node.data()['id']};
+          var _id;
+          var _relation;
+          var _type;
+          console.log($(this).text());
+          [_id, _type, _relation] = find_relation_type_from_id(annotate_info, $(this).text())
+          info = {'id': $(this).text(), 'type': _type, 'parent': node.data()['id'], 'relation': _relation};
+          console.log(_relation);
           $.ajax(
           {
             url: './id/',
@@ -566,9 +576,24 @@ function append_annotate_results(objresponse){
       /*
       $(dom_id).append("<li class='list-group-item'>" + ids[j] + "</li>")
       */
-      $(dom_id).append("<li class='list-group-item'> <label class='form-check-label'><input class='form-check-input' type='checkbox'>" + ids[j] + "</label>")
+      $(dom_id).append("<li class='list-group-item'> <label class='form-check-label'><input class='form-check-input' value=" + ids[j][0] + " type='checkbox'>" + ids[j][1] + "</label>")
     };
   };
+}
+
+function find_relation_type_from_id(objresponse, _id){
+  types = Object.keys(objresponse);
+  //THE FIRST CHARACTER IS EMPTY SPACE
+  _id = _id.substr(1);;
+  for (var i=0; i<types.length; i++){
+    ids = objresponse[types[i]];
+    for (var j=0; j<ids.length; j++){
+      console.log(ids[j][1]);
+      if (_id == ids[j][1]){
+        return([_id, types[i], ids[j][0]])
+      }
+    }
+  }
 }
 
 /*

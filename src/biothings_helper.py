@@ -1,63 +1,89 @@
 from config import *
-from jsonld_processor import load_context, fetch_doc_from_api, jsonld_converter, nquads_transform, get_uri_value_pairs
+from jsonld_processor import load_context, fetch_doc_from_api, get_nquads_from_url, get_nquads_from_json, fetch_value_by_uri_relation, get_uri_value_relation
 from biothings_client import ClientRedirect
 
+
+def get_biothings(api, id, fields=None, fields_uri=None):
+    if fields:
+        doc = ClientRedirect().annotate(id, api, fields=fields)
+        return doc
+    elif fields_uri:
+        field_name_list = uri_to_field_name(fields_uri, api)
+        field_name = ",".join(field_name_list)
+        doc = ClientRedirect().annotate(id, api, fields=field_name)
+        return doc
+    else:
+        doc = ClientRedirect().annotate(id, api)
+        return doc
+
+def query_biothings(api, fields=None, fields_uri=None, fields_value=None, return_fields=None, return_fields_uri=None, fetch_all=True):
+    if return_fields_uri:
+        field_name_list = uri_to_field_name(return_fields_uri, api)
+        return_fields = ",".join(field_name_list)    
+    if fields:
+        query_info = fields + ': ' + fields_value
+    elif fields_uri:
+        query_field_name_list = uri_to_field_name(fields_uri, api)
+        query_info = compose_query_parameter_from_uri(fields_uri, fields_value, api)
+    return ClientRedirect().query(api, query_info, fields=return_fields, fetch_all=fetch_all)
 
 def find_id_from_uri(uri):
     for _id in AVAILABLE_IDS.keys():
         if AVAILABLE_IDS[_id]["uri"] == uri:
             return _id
 
-
-def get_uri_list(context):
-    '''
-    get uri and related path ina context file
-    '''
-    uri_path_dict = {}
-    for path, v in context.items():
-        for field_name, value in v["@context"].items():
-            new_path = path.replace("/", ".") + "." + field_name
-            if value not in uri_path_dict:
-                uri_path_dict[value] = [new_path]
-            else:
-                uri_path_dict[value].append(new_path)
-    return uri_path_dict
-
-
-def compose_query_parameter_from_uri(uri, value, api):
+def uri_to_field_name(uri, api, relation=None):
     context = load_context(api)
-    context.pop('root')
-    query_string = ''
-    if uri in get_uri_list(context):
-        path_list = get_uri_list(context)[uri]
-        for _item in path_list:
-            query_string = query_string + ' ' + _item + ':' + value + ' OR'
-    return query_string.strip(' OR')
+    if relation:
+        return [_field for _field, _uri in context["@context"].items() if uri==_uri["@type"] and relation==_uri["@id"]]
+    else:
+        return [_field for _field, _uri in context["@context"].items() if uri==_uri["@type"]]
 
-def find_id_for_xref(_id, value):
-    for _source in AVAILABLE_API_SOURCES:
-        if "query_ids" in AVAILABLE_API_SOURCES[_source] and _id in AVAILABLE_API_SOURCES[_source]["query_ids"]:
-            return {_id: value}
-        elif "annotate_ids" in AVAILABLE_API_SOURCES[_source] and _id in AVAILABLE_API_SOURCES[_source]["annotate_ids"]:
-            return {_id: value}
+def compose_query_parameter_from_uri(uri, value, api, relation=None):
+    field_name_list = uri_to_field_name(uri, api)
+    print(field_name_list)
+    string = ":" + value + " OR "
+    if len(field_name_list) >1:
+        return string.join(field_name_list)
+    else:
+        return (field_name_list[0] + ':' + value)
 
-def find_annotate_api(_type):
+def find_annotate_api_ids(_type):
     '''
     Give an ID, look through all availalble api sources,
     if the ID can be annotated by this API, return API names in a list
     '''
-    annotate_apis = []
+    api_id = {}
     for _source in AVAILABLE_API_SOURCES:
         if "annotate_ids" in AVAILABLE_API_SOURCES[_source] and _type in AVAILABLE_API_SOURCES[_source]["annotate_ids"]:
-            annotate_apis.append(_source)
-    return annotate_apis
+            api_id[_source] = AVAILABLE_API_SOURCES[_source]['query_ids']
+    return api_id
 
-def find_query_api(_type):
-    query_apis = []
+def find_query_api_ids(_type):
+    api_id = {}
     for _source in AVAILABLE_API_SOURCES:
-        if "query_ids" in AVAILABLE_API_SOURCES[_source] and _type in AVAILABLE_API_SOURCES[_source]["query_ids"]:
-            query_apis.append(_source)
-    return query_apis
+        if "query_syntax" in AVAILABLE_API_SOURCES[_source] and "query_ids" in AVAILABLE_API_SOURCES[_source] and _type in AVAILABLE_API_SOURCES[_source]["query_ids"]:
+            api_id[_source] = AVAILABLE_API_SOURCES[_source]['annotate_ids']
+    return api_id
+
+def find_value_from_output_type(api, input, output_type, output_relation=None):
+    '''
+    given an api, input value
+    return the value related to the uri
+    '''
+    url = AVAILABLE_API_SOURCES[api]['annotate_syntax'].replace("*", input)
+    json_doc = fetch_doc_from_api(url)
+    if json_doc:
+        nquads_doc = get_nquads_from_json(json_doc, url, api)
+        uri = AVAILABLE_IDS[output_type]["uri"]
+        return fetch_value_by_uri_relation(nquads_doc, uri, output_relation)
+
+def query_ids_from_output_type(api, _type, _value, input_relation=None):
+    uri = AVAILABLE_IDS[_type]["uri"]
+    query_info = compose_query_parameter_from_uri(uri, _value, api, input_relation)
+    print(query_info)
+    id_list = ClientRedirect().get_id_list(api, query_info, fetch_all=True)
+    return id_list
 
 '''
 given an annotate API name and ID
@@ -70,26 +96,9 @@ def find_xref(api, id):
     if 'annotate_syntax' in AVAILABLE_API_SOURCES[api]:
         _url = AVAILABLE_API_SOURCES[api]["annotate_syntax"].replace("*", str(id))
         if 'jsonld' in AVAILABLE_API_SOURCES[api]:
-            json_doc = fetch_doc_from_api(_url)
-            jsonld_doc = jsonld_converter(json_doc, api)
-            nquads = nquads_transform(jsonld_doc)
-            uri_value_pairs = get_uri_value_pairs(nquads)
-            for uri, value in uri_value_pairs.items():
-                _id = find_id_from_uri(uri)
-                if type(value) == list:
-                    for _value in value:
-                        if find_id_for_xref(_id, _value):
-                            if _id in xref:
-                                xref[_id].append(_value)
-                            else:
-                                xref.update({_id: [_value]})
-                else:
-                    if find_id_for_xref(_id, value):
-                        if _id in xref:
-                            xref[_id].append(value)
-                        else:
-                            xref.update({_id: [value]})
-            response = {'url': _url, 'xref': xref}
+            nquads_doc = get_nquads_from_url(_url, api)
+            uri_value_relation = get_uri_value_relation(nquads_doc)
+            response = {'url': _url, 'xref': uri_value_relation}
             return response
 
 def find_query_id_list(api, type, value):
@@ -107,4 +116,32 @@ def find_query_id_list_for_filter(api, type, value, para):
     _url = AVAILABLE_API_SOURCES[api]["query_syntax"].replace("*", query_parameters)
     results = {'type': AVAILABLE_API_SOURCES[api]['annotate_ids'][0], 'ids': ids, 'url': _url}
     return results
+
+class Biothingsexplorer():
+    def __init__(self):
+        self.jsonld_doc = None
+        self._api_value = {}
+
+    def get_json_doc(self, api, id):
+        # construct url from id
+        url = AVAILABLE_API_SOURCES[api]['annotate_syntax'].replace('*', id)
+        json_doc = fetch_doc_from_api(url)
+        context = load_context(api)
+        json_doc.update(context)
+        self.jsonld_doc = nquads_transform(json_doc)
+        return json_doc
+
+    def find_linked_apis(self):
+        uri_list = get_uri_value_pairs(self.jsonld_doc)
+        for _uri,_value in uri_list.items():
+            _id = find_id_from_uri(_uri)
+            for _api in AVAILABLE_API_SOURCES.keys():
+                if _id in AVAILABLE_API_SOURCES[_api]['annotate_ids']:
+                    self._api_value[_api] = _value
+        print('Available APIs which could be linked out is: {}'.format(self._api_value))
+
+    def explore_api(self, api, fields=None, fields_uri=None):
+        return get_biothings(api, self._api_value[api], fields=fields, fields_uri=fields_uri)
+
+
 

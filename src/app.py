@@ -108,8 +108,14 @@ class FetchIdHandler(tornado.web.RequestHandler):
 class Application(tornado.web.Application):
 
     def __init__(self):
+        settings = {
+            'debug': True,
+            'template_path': os.path.join(os.path.dirname(__file__), "templates"),
+            'static_path': os.path.join(os.path.dirname(__file__), "static")
+        }
         handlers = [
             (r"/explorer/?", MainHandler),
+            (r"/explorer/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
             (r"/explorer/field/", FieldHandler),
             (r"/explorer/annotate/", AnnotateHandler),
             (r"/explorer/query/", QueryHandler),
@@ -119,11 +125,7 @@ class Application(tornado.web.Application):
             (r"/explorer/relation/", RelationHandler),
             (r"/explorer/fetchid/", FetchIdHandler)
         ]
-        settings = dict(
-            debug=True,
-            template_path=os.path.join(os.path.dirname(__file__), "templates"),
-            static_path=os.path.join(os.path.dirname(__file__), "static")
-        )
+
         tornado.web.Application.__init__(self, handlers, **settings)
 
 def main():
