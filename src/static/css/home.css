@@ -192,6 +192,7 @@ log part
   max-height: 100px;
   overflow: scroll;
 }
+
 .log-panel {
   float: left;
   width: 613px;

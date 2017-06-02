@@ -338,7 +338,8 @@ cy.on('click', 'node', function(evt){
         annotate_info = objresponse['xref']
         append_annotate_results(annotate_info);
         $("#idlist").removeClass("loading")
-        $("#log").prepend('<p>Annotate ' + node.data()['kwargs_type'] + ' (' + node.data()['kwargs'] + ') using ' + node.data()['symbol'] + ' : <a href="' + objresponse['url'] + '">' + objresponse['url'] + '</p>')
+        $("#log").prepend('<a href="' + objresponse['url'] + '" target="_blank">' + objresponse['url'] + '</a>')
+        $("#log").prepend('<p>Annotate ' + node.data()['kwargs_type'] + ' (' + node.data()['kwargs'] + ') using ' + node.data()['symbol'] + ' :</p>')
         $('.list-group li').on('click', function(e){
           var _id;
           var _relation;
@@ -379,7 +380,8 @@ cy.on('click', 'node', function(evt){
         var objresponse = JSON.parse(jsonResponse);
         ids = objresponse['ids'];
         type = objresponse['type'];
-        $("#log").prepend('<p>Query ' + node.data()['kwargs_type'] + ' (' + node.data()['kwargs'] + ') using ' + node.data()['symbol'] + ' : <a href="' + objresponse['url'] + '">' + objresponse['url'] + '</p>')
+        $("#log").prepend('<a href="' + objresponse['url'] + '" target="_blank">' + objresponse['url'] + '</a>')
+        $("#log").prepend('<p>Query ' + node.data()['kwargs_type'] + ' (' + node.data()['kwargs'] + ') using ' + node.data()['symbol'] + ' :</p>')
         //remove existing filters and then create new ones
         $("#filter_list").empty();
         $("#filter_list").append(appendRowInFilter(filter_index));
@@ -419,7 +421,7 @@ cy.on('click', 'node', function(evt){
               var objresponse = JSON.parse(jsonResponse);
               ids = objresponse['ids'];
               type = objresponse['type'];
-              $("#log").prepend('<p>Filter the query results for ' + node.data()['kwargs_type'] + ' (' + node.data()['kwargs'] + ') from ' + node.data()['symbol'] + ' : <a href="' + objresponse['url'] + '">' + objresponse['url'] + '</p>')
+              $("#log").prepend('<p>Filter the query results for ' + node.data()['kwargs_type'] + ' (' + node.data()['kwargs'] + ') from ' + node.data()['symbol'] + ' : <a href="' + objresponse['url'] + '" target="_blank">' + objresponse['url'] + '</a></p>')
               if (objresponse['ids'].length != 0) {
               append_query_results(objresponse);
               add_candidate_id_to_cy(type, node);
