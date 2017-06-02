@@ -1,6 +1,6 @@
-from biothings_helper import find_annotate_api_ids, find_query_api_ids, find_xref, find_query_id_list, find_query_id_list_for_filter
-from config import AVAILABLE_IDS, AVAILABLE_API_SOURCES
-from jsonld_processor import load_context, find_id_from_uri
+from biothings_explorer_python_client.biothings_explorer.biothings_helper import find_annotate_api_ids, find_query_api_ids, find_xref, find_query_id_list, find_query_id_list_for_filter
+from biothings_explorer_python_client.biothings_explorer.config import AVAILABLE_IDS, AVAILABLE_API_SOURCES
+from biothings_explorer_python_client.biothings_explorer.jsonld_processor import load_context, find_id_from_uri
 
 node = 0
 edge = 0
