@@ -1,0 +1,44 @@
+{
+    "@context": {
+    	"_id": {
+            "@id": "oban:has_property",
+            "@type": "http://identifiers.org/hgnc.symbol/"
+        },
+        "inhibitor": {
+        	"@id": "oban:is_inhibited_by",
+        	"@type": "http://identifiers.org/drug.symbol/"
+        },
+        "antagonist": {
+        	"@id": "oban:is_antagonized_by",
+        	"@type": "http://identifiers.org/drug.symbol/"
+        },
+        "agonist": {
+        	"@id": "oban:is_agnoized_by",
+        	"@type": "http://identifiers.org/drug.symbol/"
+        },
+        "activator": {
+        	"@id": "oban:is_activated_by",
+        	"@type": "http://identifiers.org/drug.symbol/"
+        },
+        "modulator": {
+        	"@id": "oban:is_modulate_by",
+        	"@type": "http://identifiers.org/drug.symbol/"
+        },
+        "partial agonist": {
+        	"@id": "oban:is_partialled_agonized_by",
+        	"@type": "http://identifiers.org/drug.symbol/"
+        },
+        "partial antagonist": {
+        	"@id": "oban:is_partialled_antagonized_by",
+        	"@type": "http://identifiers.org/drug.symbol/"
+        },
+        "stimulator": {
+        	"@id": "oban:is_stimulated_by",
+        	"@type": "http://identifiers.org/drug.symbol/"
+        },
+      	"suppressor": {
+      		"@id": "oban:is_suppressed_by",
+      		"@type": "http://identifiers.org/drug.symbol/"
+      	}
+    }
+}

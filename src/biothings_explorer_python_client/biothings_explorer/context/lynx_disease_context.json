@@ -1,0 +1,16 @@
+{
+	"@context": {
+		"GeneDisease.geneId": {
+			"@id": "oban:has_property",
+			"@type": "http://identifiers.org/hgnc/"
+		},
+		"GeneDisease.ensemblId": {
+			"@id": "oban:is_related_to_disease",
+			"@type": "http://identifiers.org/disease_ontology/"
+		},
+		"GeneDisease.title": {
+			"@id": "oban:is_related_to_disease",
+			"@type": "http://identifiers.org/disease_name/"
+		}
+	}
+}
