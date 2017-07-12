@@ -1,14 +1,35 @@
 
 var query_info
 var annotate_info
-$(function(){
-  /*
-  For query results, 
-  add selected candidate id onto the graph
-  */
-  function add_candidate_id_to_cy(type, node){
-    $("#candidate").on('change', function(e){
-      info = {'id': this.value, 'type': type, 'parent': node.data()['id'], 'relation': 'is_related_to'};
+/*
+For query results, 
+add selected candidate id onto the graph
+*/
+function add_candidate_id_to_cy(type, node, cy){
+  $("#candidate").on('change', function(e){
+    info = {'id': this.value, 'type': type, 'parent': node.data()['id'], 'relation': 'is_related_to'};
+    $.ajax(
+    {
+      url: './id/',
+      type: 'POST',
+      data: JSON.stringify(info),
+      success: function (jsonResponse){
+        var objresponse = JSON.parse(jsonResponse);
+        cy.add(objresponse);
+        $("#log").prepend('<p>Add ' + info['type'] + ' (' + info['id'] + ') to the graph</p>')
+        cy.layout({name: 'concentric'});       
+      }
+    });
+  });
+}
+/*
+For query results,
+add all candidate ids onto the graph
+*/
+function add_all_ids_to_cy(ids, type, node, cy){
+  $("#addAllButton").on('click', function(){
+    for (var i=0; i<ids.length; i++){
+      info = {'id': ids[i], 'type': type, 'parent': node.data()['id']};
       $.ajax(
       {
         url: './id/',
@@ -17,44 +38,23 @@ $(function(){
         success: function (jsonResponse){
           var objresponse = JSON.parse(jsonResponse);
           cy.add(objresponse);
-          $("#log").prepend('<p>Add ' + info['type'] + ' (' + info['id'] + ') to the graph</p>')
-          cy.layout({name: 'concentric'});       
+          cy.layout({name: 'concentric'});
+          /*
+          center_nodes = ''
+          for (var j=0; j<objresponse.length; j++){
+            if ('type' in objresponse[j]['data']){
+              center_nodes = center_nodes + '#' + objresponse[i]['data']['id'] + ', ';
+            }
+          };
+          center_nodes = center_nodes.slice(0, -2);
+          cy.center(center_nodes);
+          */
         }
       });
-    });
-  }
-  /*
-  For query results,
-  add all candidate ids onto the graph
-  */
-  function add_all_ids_to_cy(ids, type, node){
-    $("#addAllButton").on('click', function(){
-      for (var i=0; i<ids.length; i++){
-        info = {'id': ids[i], 'type': type, 'parent': node.data()['id']};
-        $.ajax(
-        {
-          url: './id/',
-          type: 'POST',
-          data: JSON.stringify(info),
-          success: function (jsonResponse){
-            var objresponse = JSON.parse(jsonResponse);
-            cy.add(objresponse);
-            cy.layout({name: 'concentric'});
-            /*
-            center_nodes = ''
-            for (var j=0; j<objresponse.length; j++){
-              if ('type' in objresponse[j]['data']){
-                center_nodes = center_nodes + '#' + objresponse[i]['data']['id'] + ', ';
-              }
-            };
-            center_nodes = center_nodes.slice(0, -2);
-            cy.center(center_nodes);
-            */
-          }
-        });
-      };
-    });
-  }
+    };
+  });
+}
+$(function(){
   //highlight the path between two ids, e.g. how to connect between dbsnp_id and wikipathway_id
   function highlightpath(){
     _id1 = $('#Select1').find(":selected").text();
@@ -396,8 +396,8 @@ cy.on('click', 'node', function(evt){
         } else {
         append_query_results(objresponse)};
         $("#idlist").removeClass("loading");
-        add_candidate_id_to_cy(type, node);
-        add_all_ids_to_cy(ids, type, node);
+        add_candidate_id_to_cy(type, node, cy);
+        add_all_ids_to_cy(ids, type, node, cy);
         field_name_autocomplete(query_info);
         $("#updateButton").on('click', function(){
           $("#pagination").show();
