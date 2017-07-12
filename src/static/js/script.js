@@ -300,12 +300,15 @@ when clicking the node, first determine the node type,
 3> If the node type is 'query_api', e.g. 'mygene.info',
    Call the 'query' tornado handler, and return a selection list
 */
+var clicked_fields = [];
 cy.on('click', 'node', function(evt){
   var node = evt.cyTarget;
   // This part deals with node type = 'field_name'
-  if (node.data()['type'] == 'field_name'){
+  if (node.data()['type'] == 'field_name' && jQuery.inArray(this.id(), clicked_fields) < 0){
     //hide filter
+    clicked_fields.push(this.id());
     $("#filter").hide();
+
     $.ajax(
       {
         url: './field/',
