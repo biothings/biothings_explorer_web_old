@@ -18,7 +18,7 @@ $(function(){
           var objresponse = JSON.parse(jsonResponse);
           cy.add(objresponse);
           $("#log").prepend('<p>Add ' + info['type'] + ' (' + info['id'] + ') to the graph</p>')
-          cy.layout({name: 'cose'});       
+          cy.layout({name: 'concentric'});       
         }
       });
     });
@@ -39,7 +39,7 @@ $(function(){
           success: function (jsonResponse){
             var objresponse = JSON.parse(jsonResponse);
             cy.add(objresponse);
-            cy.layout({name: 'cose'});
+            cy.layout({name: 'concentric'});
             /*
             center_nodes = ''
             for (var j=0; j<objresponse.length; j++){
@@ -232,7 +232,7 @@ $(function(){
             cy.add(objresponse);
             $("#log").prepend('<hr>');
             $("#log").prepend('<p>Initialization: Add ' + type + ' (' + id + ') to the graph</p>')
-            cy.layout({name: 'cose'});
+            cy.layout({name: 'concentric'});
           },
           error: function (error) {
             console.log(error);
@@ -314,7 +314,7 @@ cy.on('click', 'node', function(evt){
         success: function (jsonResponse) {
             var objresponse = JSON.parse(jsonResponse);
             cy.add(objresponse);
-            cy.layout({name: 'cose'});
+            cy.layout({name: 'concentric'});
             $("#log").prepend('<p>Listing APIs related to ' + node.data()['kwargs'] + ' (' + node.data()['symbol'] + ')</p>');
         },
         error: function (error) {
@@ -357,7 +357,7 @@ cy.on('click', 'node', function(evt){
               var objresponse = JSON.parse(jsonResponse);
               cy.add(objresponse);
               $("#log").prepend('<p>Add ' + info['type'] + ' (' + info['id'] + ') to the graph</p>')
-              cy.layout({name: 'cose'});
+              cy.layout({name: 'concentric'});
             }
           })
         })
