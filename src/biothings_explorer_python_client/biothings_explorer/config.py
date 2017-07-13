@@ -1,8 +1,6 @@
-import pkg_resources
 import os.path
 import requests
 
-BUILDIN_CONTEXT_PATH = pkg_resources.resource_filename('biothings_explorer', 'context')
 
 AVAILABLE_IDS = {
     "ensembl_gene_id": {
