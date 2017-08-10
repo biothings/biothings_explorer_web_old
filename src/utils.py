@@ -106,6 +106,7 @@ def id_handler(data):
     add_nodes_edges.append(edge_constructor(_node['data']['id'], _parent, relation))
     return add_nodes_edges
 
+'''
 def relation_handler():
     add_nodes_edges = []
     relation_edge = 0
@@ -130,6 +131,155 @@ def relation_handler():
                 else:
                     print(_edge)
     return add_nodes_edges
+'''
+
+mygene_openapi = {'api': 'MyGene.info API',
+ 'desc': 'Documentation of the MyGene.info Gene Query web services. Learn more about [MyGene.info](http://mygene.info/)',
+ 'paths': [{'desc': 'Entrez or Ensembl gene id, e.g., 1017, ENSG00000170248. A retired Entrez Gene id works too if it is replaced by a new one, e.g., 245794',
+   'input': ['http://identifiers.org/ncbigene',
+    'http://identifiers.org/ensembl'],
+   'name': '/gene/{geneid}',
+   'output': ['http://identifiers.org/ec-code/',
+    'http://identifiers.org/ensembl/',
+    'http://identifiers.org/ensembl/',
+    'http://identifiers.org/ensembl/',
+    'http://identifiers.org/ncbigene/',
+    'http://identifiers.org/pubmed/']},
+  {'desc': 'Query string. Examples "CDK2", "NM_052827", "204639_at". The detailed query syntax can be found at http://docs.mygene.info/en/latest/doc/query_service.html',
+   'input': ['http://identifiers.org/hgnc.symbol/',
+    'http://identifiers.org/refseq/',
+    'http://identifiers.org/unigene/',
+    'http://identifiers.org/uniprot/',
+    'http://identifiers.org/pdb/'],
+   'name': '/query',
+   'output': ['http://identifiers.org/ec-code/',
+    'http://identifiers.org/ensembl/',
+    'http://identifiers.org/ensembl/',
+    'http://identifiers.org/ensembl/',
+    'http://identifiers.org/ncbigene/',
+    'http://identifiers.org/pubmed/']}]}
+
+myvariant_openapi = {'api': 'MyVariant.info API',
+ 'desc': 'Documentation of the MyVariant.info Variant Query web services. Learn more about [MyVariant.info](http://myvariant.info/)',
+ 'paths': [{'desc': 'Query string. Examples "CDK2", "NM_052827", "204639_at". The detailed query syntax can be found at http://docs.mygene.info/en/latest/doc/query_service.html',
+   'input': ['http://identifiers.org/hgnc.symbol/',
+    'http://identifiers.org/dbsnp/',
+    'http://identifiers.org/ensembl.gene/',
+    'http://identifiers.org/ensembl.transcript/',
+    'http://identifiers.org/ccds/',
+    'http://identifiers.org/uniprot/',
+    'http://identifiers.org/omim/',
+    'http://identifers.org/clinvar/',
+    'http://identifiers.org/omim/',
+    'http://identifiers.org/efo/',
+    'http://identifiers.org/orphanet/',
+    'http://identifiers.org/hgnc/',
+    'http://identifiers.org/ensembl.protein/',
+    'http://identifiers.org/pubmed/',
+    'http://identifiers.org/refseq/'],
+   'name': '/query',
+   'output': ['http://identifiers.org/hgvs/',
+    'http://identifiers.org/hgnc.symbol/',
+    'http://identifiers.org/dbsnp/',
+    'http://identifiers.org/ensembl.gene/',
+    'http://identifiers.org/ensembl.transcript/',
+    'http://identifiers.org/ccds/',
+    'http://identifiers.org/uniprot/',
+    'http://identifiers.org/omim/',
+    'http://identifers.org/clinvar/',
+    'http://identifiers.org/omim/',
+    'http://identifiers.org/efo/',
+    'http://identifiers.org/orphanet/',
+    "http://identifiers.org/hgnc/'",
+    'http://identifiers.org/ensembl.protein/',
+    'http://identifiers.org/pubmed/',
+    'http://identifiers.org/refseq/']},
+  {'desc': 'Entrez or Ensembl gene id, e.g., 1017, ENSG00000170248. A retired Entrez Gene id works too if it is replaced by a new one, e.g., 245794',
+   'input': ['http://identifiers.org/hgvs/', 'http://identifiers.org/dbsnp/'],
+   'name': '/variant/{variantid}',
+   'output': ['http://identifiers.org/hgnc.symbol/',
+    'http://identifiers.org/dbsnp/',
+    'http://identifiers.org/ensembl.gene/',
+    'http://identifiers.org/ensembl.transcript/',
+    'http://identifiers.org/ccds/',
+    'http://identifiers.org/uniprot/',
+    'http://identifiers.org/omim/',
+    'http://identifers.org/clinvar/',
+    'http://identifiers.org/omim/',
+    'http://identifiers.org/efo/',
+    'http://identifiers.org/orphanet/',
+    "http://identifiers.org/hgnc/'",
+    'http://identifiers.org/ensembl.protein/',
+    'http://identifiers.org/pubmed/',
+    'http://identifiers.org/refseq/']}]}
+
+mychem_openapi = {'api': 'MyChem.info API',
+ 'desc': 'Documentation of the MyChem.info Chemical Query web services. Learn more about [MyChem.info](http://mychem.info/)',
+ 'paths': [{'desc': 'Entrez or Ensembl gene id, e.g., 1017, ENSG00000170248. A retired Entrez Gene id works too if it is replaced by a new one, e.g., 245794',
+   'input': ['http://identifiers.org/drug.symbol'],
+   'name': '/drug/{drugid}',
+   'output': ['http://identifiers.org/uniprot/',
+    'http://identifiers.org/drugbank/',
+    'http://identifiers.org/dbsnp/',
+    'http://identifiers.org/pubmed/',
+    'http://identifiers.org/clinicaltrials/',
+    'http://identifiers.org/rxcui/']},
+  {'desc': 'Query string. Examples "CDK2", "NM_052827", "204639_at". The detailed query syntax can be found at http://docs.mygene.info/en/latest/doc/query_service.html',
+   'input': ['http://identifiers.org/drug.symbol',
+    'http://identifiers.org/uniprot/',
+    'http://identifiers.org/drugbank/',
+    'http://identifiers.org/dbsnp/',
+    'http://identifiers.org/pubmed/',
+    'http://identifiers.org/clinicaltrials/',
+    'http://identifiers.org/rxcui/'],
+   'name': '/query',
+   'output': ['http://identifiers.org/drug.symbol',
+    'http://identifiers.org/uniprot/',
+    'http://identifiers.org/drugbank/',
+    'http://identifiers.org/dbsnp/',
+    'http://identifiers.org/pubmed/',
+    'http://identifiers.org/clinicaltrials/',
+    'http://identifiers.org/rxcui/']}]}
+
+
+def relation_handler():
+    add_nodes_edges = []
+    relation_edge = 0
+    edges= []
+    api_list = [mygene_openapi, myvariant_openapi, mychem_openapi]
+    for _api in api_list:
+        # add a node for api
+        add_nodes_edges.append({'data': {'id': _api['api'], 'type': 'api'}})
+        for _endpoint in _api['paths']:
+            outputs = _endpoint['output']
+            # add a node for endpoint
+            add_nodes_edges.append({'data': {'id': _endpoint['name'], 'type': 'endpoint'}})
+            # add an edge between api name and endpoint name
+            add_nodes_edges.append({'data': {'id': relation_edge, 'source': _api['api'], 'target': _endpoint['name'], 'label': 'has_endpoint'}})
+            relation_edge += 1
+            # add a node for each input
+            for _input in _endpoint['input']:
+                add_nodes_edges.append({'data': {'id': _input, 'type': 'id'}})
+                _edge = {'data': {'source': _endpoint['name'], 'target': _input, 'label': 'has_input'}}
+                if _edge not in edges:
+                    _edge['data']['id'] = relation_edge
+                    add_nodes_edges.append(_edge)
+                    edges.append(_edge)
+                    relation_edge += 1
+            for _output in _endpoint['output']:
+                add_nodes_edges.append({'data': {'id': _output, 'type': 'id'}})
+                _edge = {'data': {'source': _endpoint['name'], 'target': _output, 'label': 'has_output'}}
+                if _edge not in edges:
+                    _edge['data']['id'] = relation_edge
+                    add_nodes_edges.append(_edge)
+                    edges.append(_edge)
+                    relation_edge += 1
+    return add_nodes_edges
+
+
+
+
+
 
 '''
 Get all available ids for explore from config file
