@@ -1,261 +1,162 @@
-<!doctype html>
-
+<!DOCTYPE html>
 <html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>BioThings Explorer</title>
+        <!--Import Google Icon Font-->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <!-- Compiled and minified CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/css/materialize.min.css">
+        <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.css">
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.js"></script>
+        <script src="./static/js/cytoscape.js"></script>
+        <script src="./static/js/cytoscape-qtip.js"></script>
 
-<head>
-    <meta charset="utf-8"></meta>
-    <title>BioThings Explorer</title>
-    <!--
-    <script src="../static/js/cytoscape.js"></script>
-    -->
-    
-    <link rel="stylesheet" type="text/css" href="./static/css/home.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
-    <!-- Latest compiled and minified JavaScript -->
-
-    <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.js"></script>
-    <!--
-    <script src="http://cytoscape.github.io/cytoscape.js/api/cytoscape.js-latest/cytoscape.min.js"></script>
-    -->
-    <script src="./static/js/cytoscape.js"></script>
-    <script src="./static/js/cytoscape-qtip.js"></script>
-    <link href="./static/css/cytoscape.js-panzoom.css" rel="stylesheet" type="text/css"/>
-    <link href="./static/css/font-awesome-4.0.3/css/font-awesome.css" rel="stylesheet" type="text/css"/>
-
-    <script src="./static/js/cytoscape-panzoom.js"></script>
-    <link type="text/css" rel="stylesheet" href="./static/css/jquery.autocomplete.css">
-    <script src="./static/js/jquery.twbsPagination.js" type="text/javascript"></script>
-    <script src="./static/js/jquery.autocomplete.js" type="text/javascript"></script>
-    
-</head>
-
-
-<body>
-    <div id="biothings-header">
-      <h3> BioThings Explorer </h3>
-    </div>
-    <div class="container input">
-    <div id="input">
-        <div class="form-group">
-          <label for="id_type">ID TYPE</label>
-          <input class="form-control" id="id_type" placeholder="entrez_gene_id">
-        </div>
-        <div class="form-group">
-          <label for="id_name">ID</label>
-          <input class="form-control" id="id_name" placeholder="1136">
-        </div>
-        <button id="submitButton" type="submit" class="btn btn-primary">Submit</button>
-  
-        <button id="exploreButton" type="submit" class="btn btn-primary">Explore Connecting Paths</button>
-    </div>
-    </div>
-    <div class="container display">
-      <div class="row" id ="controlPanel">
-        <!--
-        This part is for the filters and layout
-        filters: id and value filter
-        layout: for cy graph
-        -->
-        <!--
-        <aside class="inpage__aside">
-          <h2 class="content-prime-title">Filters</h2>
-          <div class="filters filters--id">
-            <h3 class="filters__title">IDs</h3>
+        <style type="text/css">
+        
+            body {
+                margin:0;
+                padding:0;
+                font-family: Sans-Serif;
+                line-height: 1.5em;
+            }
             
-          </div>
-        </aside>
-        -->
-        <div class="col-xs-4">
-          <div class="panel panel-danger" id="idlist" title="Choose the id you want to explore">
-            <div class="panel-heading">
-              <h3 class="panel-title">Results</h3>
-            </div>
-            <div class="panel-body">
-              <div class="row">
-                <div class="panel-group" id="result-list">
-                <!--
-                  <select class="select-container" multiple id ="variant-candidate" name="selections">
-                  </select>
-                </div>
-                <div class="panel-group" id="">
-                  <div class="panel panel-default" id="id-list">
-                  </div>
-                  -->
-                </div>
-                <div>
-                  <nav aria-label="Page navigation">
-                      <ul class="pagination" id="pagination"></ul>
-                  </nav>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="panel panel-info" id="filter" title="Choose the filter">
-            <div class="panel-heading">
-              <h3 class="panel-title">Filters</h3>
-            </div>
-            <div class="panel-body filter-constructor">
-              <div id="filter_list">
-              <!--
-              <div class="row">
-              
-                <div class="form-group filter-small">
-                  <label for="logic">logic</label>
-                  <select class="form-control" id="logic">
-                    <option>AND</option>
-                    <option>OR</option>
-                    <option>EXISTS</option>
-                  </select>
-                </div>
-              -->
-                <!--
-                <div class="form-group filter-larger">
-                  <label for="field_name0">Field_name</label>
-                  <input class="form-control" id="field_name0" placeholder="dbnsfp.eigen.phred">
-                </div>
-                <div class="form-group filter-small">
-                  <label for="compare0">Compare</label>
-                  <select class="form-control" id="compare0">
-                    <option value=":>">></option>
-                    <option value=":<"><</option>
-                    <option value=":">=</option>
-                  </select>
-                </div>
-                <div class="form-group filter-medium">
-                  <label for="field_value0">Field_value</label>
-                  <input class="form-control" id="field_value0" placeholder="20">
-                </div>
-                -->
-                <!--
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                -->
-              </div>
-              <button id="addButton" type="submit" class="btn btn-primary">Add</button>
+            /* This part belong to the main visualization
+                part 1: navbar;
+                part 2: cytoscape;
+            */
+            #main {
+                margin-top: 0.5%;
+            }
 
-              <button id="updateButton" type="submit" class="btn btn-primary">Update</button>
+            /*cytoscape*/
+            #cy {
+                width: 100%; /* height is set using window size*/
+                display:block;
+            }
 
-            </div>
-          </div>
-          <div class="panel panel-default" id="layout" title="Choose the layout">
-            <div class="panel-heading">
-              <h3 class="panel-title">Layout</h3>
-            </div>
-            <div class="panel-body filter-constructor">
-              <div class="form-group">
-                <label for="layout_types">layout options</label>
-                <select class="form-control" id="layout_types">
-                  <option>breadthfirst</option>
-                  <option>grid</option>
-                  <option>circle</option>
-                  <option>concentric</option>
-                  <option>cose</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-xs-8">
-          <div class="panel-group" id="accordion_query">
-            <div class="panel panel-success">
-              <div class="panel-heading">
-                <h4 class="panel-title">
-                  <a>Visualization</a>
-                </h4>
-              </div>
-              <div class="panel-body" id="graph">
-                <div class='cy-path' stype='position: absolute'>
-                  <div class="form-group explore-path">
-                    <label for="Select1">Staring ID</label>
-                    <select class="form-control" id="Select1">
-                      <option>dbsnp_id</option>
-                      <option>clinicaltrial_id</option>
-                      <option>wikipathway_id</option>
-                      <option>hgnc_gene_symbol</option>
-                      <option>entrez_gene_id</option>
-                      <option>ensembl_gene_id</option>
-                      <option>drugbank_id</option>
-                      <option>pubmed_id</option>
-                      <option>uniprot_id</option>
-                      <option>hgvs_id</option>
-                      <option>ensembl_protein_id</option>
-                      <option>ensembl_transcript_id</option>
-                      <option>gene_ontology_id</option>
-                      <option>interpro_id</option>
-                      <option>refseq_id</option>
-                      <option>sympdb_id</option>
-                      <option>reactome_id</option>
-                      <option>pharmgkb_pathway_id</option>
-                      <option>kegg_pathway_id</option>
-                      <option>biocarta_id</option>
-                      <option>drug_symbol</option>
-                      <option>symptom</option>
-                      <option>diseaseontology_id</option>
-                      <option>disease_name</option>
-                    </select>
-                  </div>
-                  <div class="form-group explore-path">
-                    <label for="Select2">End ID</label>
-                    <select class="form-control" id="Select2">
-                      <option>dbsnp_id</option>
-                      <option>clinicaltrial_id</option>
-                      <option>wikipathway_id</option>
-                      <option>hgnc_gene_symbol</option>
-                      <option>entrez_gene_id</option>
-                      <option>ensembl_gene_id</option>
-                      <option>drugbank_id</option>
-                      <option>pubmed_id</option>
-                      <option>uniprot_id</option>
-                      <option>hgvs_id</option>
-                      <option>ensembl_protein_id</option>
-                      <option>ensembl_transcript_id</option>
-                      <option>gene_ontology_id</option>
-                      <option>interpro_id</option>
-                      <option>refseq_id</option>
-                      <option>sympdb_id</option>
-                      <option>reactome_id</option>
-                      <option>pharmgkb_pathway_id</option>
-                      <option>kegg_pathway_id</option>
-                      <option>biocarta_id</option>
-                      <option>drug_symbol</option>
-                      <option>symptom</option>
-                      <option>diseaseontology_id</option>
-                      <option>disease_name</option>
-                    </select>
-                  </div>
-                  <button id="updatePathButton" type="submit" class="btn btn-primary explore-path">Update Path</button> 
+            #cy h1 {
+                display: none;
+            }
+            /* This part belongs to the side bar
+                part 1: path start/end selection;
+                part 2: id value/type selection;
+            */
+
+            .cy-path {
+                display: none;
+            }
+
+            .explore-input{
+                display: none;
+            }
+            #path_start_input {
+                display: none;
+            }
+            #footer {
+                clear: left;
+                width: 100%;
+                background: #ccc;
+                text-align: center;
+                padding: 4px 0;
+            }
+            
+        
+        </style>  
+    
+    </head>
+    
+    <body>
+
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/js/materialize.min.js"></script>        
+
+            
+        <!-- Page Layout here -->
+        <div class="row">
+
+
+          <div class="col s12" id="navbar">
+            <!--Navbar Part  -->
+            <!-- Dropdown Structure -->
+            <ul id="dropdown1" class="dropdown-content">
+                <li><a href="#!">grid</a></li>
+                <li><a href="#!">concentric</a></li>
+                <li class="divider"></li>
+                <li><a href="#!">cose</a></li>
+            </ul>
+            <nav>
+                <div class="nav-wrapper orange">
+                    <a href="#!" class="brand-logo">BioThings Explorer</a>
+                    <ul class="right hide-on-med-and-down">
+                    <li><a href="#" id="map">API MAP</a></li>
+                    <li><a href="#" id="explore">EXPLORE</a></li>
+                    <!-- Dropdown Trigger -->
+                    <li><a class="dropdown-button" href="#!" data-activates="dropdown1">Layout<i class="material-icons right">arrow_drop_down</i></a></li>
+                    </ul>
                 </div>
-                <div id='cy'></div>
-
-              </div>
-           
-            </div>
-          </div>
-          <div class="panel-group log-panel">
-            <div class="panel panel-warning">
-              <div class="panel-heading">
-                <h4 class="panel-title">
-                  <a>Action Logs</a>
-                </h4>
-              </div>
-              <div class="panel-body">
-                <div id="log"></div>
-              </div>
-            </div>
-          </div>
+            </nav>
         </div>
 
-      </div>
-    </div>
-    <script src="./static/js/script.js"></script>
-</body>
+        <div class="row">
+            <div class="col s12 m2" id="sidebar">           
+                <div class='cy-path'>
+                    <div class="input-field col s12">
+                        <select id="Select1">
+                          <option value="" disabled selected>Choose your option</option>
+                        </select>
+                        <label>Path Start</label>
+                    </div>
+                    <div class="input-field col s12">
+                        <select id="Select2">
+                          <option value="" disabled selected>Choose your option</option>
+                        </select>
+                        <label>Path End</label>
+                    </div>
+                    <button id = "updatePath" class="btn waves-effect waves-light" type="submit">Submit</button>
+                    <button id = "resetMap" class="btn waves-effect waves-light" type="submit">Reset</button>
+                    <div class="row" id="path_start_input">
+                        <form class="col s12" >
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <textarea id="textarea1" class="materialize-textarea"></textarea>
+                                    <label for="textarea1">Provide your input</label>
+                                </div>
+                            </div>
+                        </form>
+                        <button id = "userInput" class="btn waves-effect waves-light" type="submit">Find Results</button>
+                        <div id="input_container">
+                        </div>
+                    </div>
+                </div>
 
-<script>
+                <div class='explore-input'>
+                    <div class="input-field col s12">
+                        <input placeholder="hgnc.symbol" id="input-type" type="text" class="validate">
+                        <label for="input-type">Input Type</label>
+                    </div>
+                    <div class="input-field col s12">
+                        <input placeholder="CDK7" id="input-value" type="text" class="validate">
+                        <label for="input-value">Input Value</label>
+                    </div>
+                    <button id = "updateInput" class="btn waves-effect waves-light red" type="submit">Submit</button>
+                </div>
+            </div>
 
-</script>
+            <div class="col s12 m10" id="main">
+                
+                <div id='cy'>
+                    <h1 class="cy-path">Sorry no path found between the given start and end point</h1>
+                </div>
+
+            </div>
+        </div>
+        <footer id="footer" class="orange">
+            <div class="innertube">
+                <p>Footer...</p>
+            </div>
+        </footer>
+        <script src="./static/js/script.js"></script>
+    </body>
 </html>
