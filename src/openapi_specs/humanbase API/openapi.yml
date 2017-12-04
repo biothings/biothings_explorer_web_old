@@ -1,0 +1,66 @@
+openapi: 3.0.0
+info:
+  title: HumanBase REST API
+  termsOfService: http://humanbase.readthedocs.io/en/latest/citations.html
+  version: '0.1'
+  description: Data-driven predictions of gene expression, function, regulation and interactions in human
+  contact:
+    name: Aaron Wong
+    email: translator@broadinstitute.org
+    x-role: responsible developer
+    x-id: 'https://github.com/aaronkw'
+servers:
+  - url: 'http://hb.flatironinstitute.org/api'
+    description: Development server
+tags:
+  - name: gene
+  - name: functional network
+  - name: NetWAS
+  - name: translator
+paths:
+  /integrations/{tissue}/network:
+    get:
+      summary: Get the functional network for a specific gene in specified human tissue
+      parameters:
+        - required: true
+          in: query
+          x-valueType:
+            - 'http://identifiers.org/ncbigene/'
+          x-requestTemplate:
+            - valueType: 'http://identifiers.org/ncbigene/'
+              template: '{{input}}'
+          name: entrez
+          description: "Entrez Gene is the NCBI's database for gene-specific information, focusing on completely sequenced genomes, those with an active research community to contribute gene-specific information, or those that are scheduled for intense sequence analysis."
+          schema:
+            type: string
+        - required: true
+          in: path
+          x-valueType:
+            - 'http://health-lifesci.schema.org/AnatomicalStructure'
+          x-requestTemplate:
+            - valueType: 'http://health-lifesci.schema.org/AnatomicalStructure'
+              template: '/integrations/{{input}}/network'
+          name: tissue
+          description: 'tissue'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'functional network for the gene'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    genes:
+                        type: string
+                    p-value:
+                        type: number
+                        format: float
+          x-responseValueType:
+            - path: geneid
+              valueType: 'http://identifiers.org/hgnc.symbol/'
+          x-JSONLDContext:
+            'humanbase API/jsonld_context/humanbase_context.json'
