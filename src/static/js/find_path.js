@@ -8,7 +8,7 @@
 function findStartEndConnection(_start, _end, _max_api=3){
   var promise = $.ajax({
     type:"POST",
-    url: "http://localhost:8990/explorer/path",
+    url: "http://localhost:8853/explorer/path",
     data: {start: _start, end: _end, "max_api": _max_api},
     datatype: "json"
   });
@@ -23,7 +23,7 @@ function findStartEndConnection(_start, _end, _max_api=3){
 function findOutputTypeBasedOnInputType(_input){
 	var promise = $.ajax({
 		type: "POST",
-		url: "http://localhost:8990/explorer/input",
+		url: "http://localhost:8853/explorer/input",
 		data: {input: _input},
 		datatype: "json"
 	});
