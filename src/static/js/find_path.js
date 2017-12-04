@@ -8,7 +8,7 @@
 function findStartEndConnection(_start, _end, _max_api=3){
   var promise = $.ajax({
     type:"POST",
-    url: "http://localhost:8990/path",
+    url: "http://localhost:8990/explorer/path",
     data: {start: _start, end: _end, "max_api": _max_api},
     datatype: "json"
   });
@@ -23,7 +23,7 @@ function findStartEndConnection(_start, _end, _max_api=3){
 function findOutputTypeBasedOnInputType(_input){
 	var promise = $.ajax({
 		type: "POST",
-		url: "http://localhost:8990/input",
+		url: "http://localhost:8990/explorer/input",
 		data: {input: _input},
 		datatype: "json"
 	});
@@ -38,7 +38,7 @@ function findOutputTypeBasedOnInputType(_input){
 function findInputTypeBasedOnOutputType(_output){
 	var promise = $.ajax({
 		type: "POST",
-		url: "http://localhost:8853/output",
+		url: "http://localhost:8853/explorer/output",
 		data: {output: _output},
 		datatype: "json"
 	});
@@ -53,7 +53,7 @@ function findInputTypeBasedOnOutputType(_output){
 function findInputOutputBasedOnEndpoint(endpoint_name) {
 	var promise = $.ajax({
 		type: "POST",
-		url: "http://localhost:8853/endpoint",
+		url: "http://localhost:8853/explorer/endpoint",
 		data: {endpoint: endpoint_name},
 		datatype: "json"
 	});
@@ -69,7 +69,7 @@ function findInputOutputBasedOnEndpoint(endpoint_name) {
 function findOutputBasedOnInputAndPath(input_value, _path, _level) {
 	var promise = $.ajax({
 		type: "POST",
-		url: "http://localhost:8853/findoutput",
+		url: "http://localhost:8853/explorer/findoutput",
 		data: {path: JSON.stringify(_path), input: JSON.stringify(input_value), level: _level},
 		datatype: "json"
 	});

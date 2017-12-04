@@ -7,7 +7,7 @@
 */
 
 function findApiMap() {
-    var promise = $.getJSON("http://localhost:8853/apimap");
+    var promise = $.getJSON("http://localhost:8853/explorer/apimap");
     return promise;
 }
 
