@@ -1,0 +1,53 @@
+
+        
+body {
+    margin:0;
+    padding:0;
+    font-family: Sans-Serif;
+    line-height: 1.5em;
+}
+
+/*cytoscape*/
+#cy {
+    width: 100%; /* height is set using window size*/
+    height: 100%;
+    display:block;
+}
+#main {
+    margin-top: 0.5%;
+}
+/*sankey plot*/
+#plotly-div {
+    width: 100%; /* height is set using window size*/
+}
+h1 {
+  opacity: 0.5;
+  font-size: 1em;
+}
+
+/*
+header
+*/
+.brand-logo {
+  left:10;
+}
+
+/*
+sidebar
+*/
+.select-wrapper {
+    margin-left: 3%;
+    margin-right: 3%
+}
+#roadMapButton {
+  margin: 5%;
+}
+#inputOutputPathButton {
+  margin: 5%;
+}
+#explorePathButton {
+  margin: 5%;
+}
+.input-field {
+  margin: 5%;
+}
