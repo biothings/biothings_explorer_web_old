@@ -87,7 +87,7 @@ function displayOutputToCytoscape() {
             $("#log-list").append("<li class='collection-item'>" + "Step " + (_level + 1) + " ENDS!" + "</li>")
             var parsedJson = $.parseJSON(jsonResponse);
             if (_level == 0) {
-                cy = drawCytoscape("#cy", concentric_style, concentricOptions, parsedJson.cytoscape);
+                var cy = drawCytoscape("#cy", concentric_style, concentricOptions, parsedJson.cytoscape);
             } else {
                 cy.add(parsedJson.cytoscape);
                 cy.layout(concentricOptions);
