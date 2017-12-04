@@ -38,7 +38,7 @@ function findOutputTypeBasedOnInputType(_input){
 function findInputTypeBasedOnOutputType(_output){
 	var promise = $.ajax({
 		type: "POST",
-		url: "http://localhost:8990/output",
+		url: "http://localhost:8853/output",
 		data: {output: _output},
 		datatype: "json"
 	});
@@ -53,7 +53,7 @@ function findInputTypeBasedOnOutputType(_output){
 function findInputOutputBasedOnEndpoint(endpoint_name) {
 	var promise = $.ajax({
 		type: "POST",
-		url: "http://localhost:8990/endpoint",
+		url: "http://localhost:8853/endpoint",
 		data: {endpoint: endpoint_name},
 		datatype: "json"
 	});
@@ -69,7 +69,7 @@ function findInputOutputBasedOnEndpoint(endpoint_name) {
 function findOutputBasedOnInputAndPath(input_value, _path, _level) {
 	var promise = $.ajax({
 		type: "POST",
-		url: "http://localhost:8990/findoutput",
+		url: "http://localhost:8853/findoutput",
 		data: {path: JSON.stringify(_path), input: JSON.stringify(input_value), level: _level},
 		datatype: "json"
 	});

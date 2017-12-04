@@ -21,7 +21,7 @@ function addOptionFromMetaData(metadata, metadata_type, dropdown_id){
 function getMetaData(metadata_type){
   var promise = $.ajax({
     type:"GET",
-    url: "http://localhost:8990/metadata/" + metadata_type,
+    url: "http://localhost:8853/metadata/" + metadata_type,
     datatype: "json"
   });
   return promise;
