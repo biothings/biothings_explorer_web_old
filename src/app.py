@@ -21,10 +21,7 @@ class MainHandler(tornado.web.RequestHandler):
     def get(self):
         self.render("index.html", messages=None)
 
-
-
 class Application(tornado.web.Application):
-
     def __init__(self):
         settings = {
             'debug': True,
