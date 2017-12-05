@@ -66,7 +66,7 @@ def find_edge_label(G, source, target, relation=None):
 # }    
 # Issue: plotly fails to work if there are too many nodes
 ###########################################################################    
-def networkx_to_plotly(edges, duplicates_allowed_input=[], duplicates_allowed_output=[]):
+def networkx_to_plotly(edges, duplicates_not_allowed=[]):
     input_list = []
     output_list = []
     # initialize the output json doc
@@ -74,17 +74,37 @@ def networkx_to_plotly(edges, duplicates_allowed_input=[], duplicates_allowed_ou
     # loop through each edge, load the first element into source
     # and load the second element into target
     # load all unique elements to the nodes
+    idx = 0
+    input_idx = {}
+    output_idx = {}
     for _edge in edges:
-        if _edge[0] in duplicates_allowed_input or _edge[0] not in output_json['labels']:
+        if _edge[0] in duplicates_not_allowed:
+            if _edge[0] not in output_json['labels']:
+                input_idx[_edge[0]] = idx
+                output_idx[_edge[0]] = idx
+                idx += 1
+                output_json['labels'].append(_edge[0])
+        elif _edge[0] not in input_idx:
+            input_idx[_edge[0]] = idx
+            idx += 1
             output_json['labels'].append(_edge[0])
-        source_idx = [i for i, x in enumerate(output_json['labels']) if x == _edge[0]]
-        output_json['source'].append(source_idx[-1])
-        if _edge[1] in duplicates_allowed_output or _edge[1] not in output_json['labels']:
+        output_json['source'].append(input_idx[_edge[0]])
+        if _edge[1] in duplicates_not_allowed:
+            if _edge[1] not in output_json['labels']:
+                input_idx[_edge[1]] = idx
+                output_idx[_edge[1]] = idx
+                idx += 1
+                output_json['labels'].append(_edge[1])
+        elif _edge[1] not in output_idx:
+            output_idx[_edge[1]] = idx
+            idx += 1
             output_json['labels'].append(_edge[1])
-        target_idx = [i for i, x in enumerate(output_json['labels']) if x == _edge[1]]
-        output_json['target'].append(target_idx[-1])
+        output_json['target'].append(output_idx[_edge[1]])
         output_json['edge_labels'].append(_edge[2])
-    output_json['value'] = [1] * len(output_json['source'])
+        if type(_edge[2]) == list:
+            output_json['value'].append(1*len(_edge[2]))
+        else:
+            output_json['value'].append(1)
     return output_json
 
 ###########################################################################   
@@ -166,7 +186,7 @@ class ConnectingInputHandler(BaseHandler):
                 outputs = bt_explorer.api_map.successors(_endpoint)
                 if outputs:
                     edges.extend([(_endpoint, _output, find_edge_label(bt_explorer.api_map, _endpoint, _output)) for _output in outputs])
-        plotly_results = networkx_to_plotly(edges, duplicates_allowed_output=[_item['preferred_name'] for _item in list(bt_explorer.registry.bioentity_info.values())])
+        plotly_results = networkx_to_plotly(edges, duplicates_not_allowed=bt_explorer.registry.endpoint_info.keys())
         self.write(json.dumps({"plotly": plotly_results}))
 
 class ConnectingOutputHandler(BaseHandler):
@@ -181,7 +201,7 @@ class ConnectingOutputHandler(BaseHandler):
                 inputs = [_input for _input in inputs if bt_explorer.api_map.node[_input]['type'] == 'bioentity']
                 if inputs:
                     edges.extend([(_input, _endpoint, find_edge_label(bt_explorer.api_map, _input, _endpoint)) for _input in inputs])
-        plotly_results = networkx_to_plotly(edges, duplicates_allowed_input=[_item['preferred_name'] for _item in list(bt_explorer.registry.bioentity_info.values())])
+        plotly_results = networkx_to_plotly(edges, duplicates_not_allowed=bt_explorer.registry.endpoint_info.keys())
         self.write(json.dumps({"plotly": plotly_results}))
 
 class ApiMapHandler(BaseHandler):
