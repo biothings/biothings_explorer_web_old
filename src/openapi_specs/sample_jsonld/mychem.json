@@ -1,0 +1,914 @@
+{
+	"@context": {
+		"@version": 1.1,
+		"@base": "http://identifiers.org/inchikey/",
+		"term": "http://biothings.io/terms/mychem/",
+		"_id": "@id",
+        "aeolus": {
+            "@type": "@id",
+            "@id": "term:has_annotation",
+            "@context": {
+                "gene": {
+                    "@type": "@id",
+                    "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "@context": {
+                        "@base": "http://identifiers.org/rxcui/"
+                    }
+                },
+                "unii": {
+                    "@type": "@id",
+                    "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "@context": {
+                        "@base": "http://identifiers.org/unii/"
+                    }
+                },
+                "inchikey": {
+                    "@type": "@id",
+                    "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "@context": {
+                        "@base": "http://identifiers.org/inchikey/"
+                    }
+                }
+            }
+        },
+		"drugcentral": {
+			"@type": "@id",
+			"@id": "term:has_annotation",
+			"@context": {
+				"xref": {
+					"@type": "@id",
+					"@id": "term:has_annotation",
+					"@context": {
+						"rxnorm": {
+							"@type": "@id",
+							"@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+							"@context": {
+								"@base": "http://identifiers.org/rxcui/"
+							}
+						},
+						"chebi": {
+							"@type": "@id",
+							"@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+							"@context": {
+								"@base": "http://identifiers.org/chebi/"
+							}
+						},
+						"chembl_id": {
+							"@type": "@id",
+							"@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+							"@context": {
+								"@base": "http://identifiers.org/chembl/"
+							}
+						},
+                        "chebi": {
+                            "@type": "@id",
+                            "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                            "@context": {
+                                "@base": "http://identifiers.org/chebi/"
+                            }
+                        },
+                        "drugbank_id": {
+                            "@type": "@id",
+                            "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                            "@context": {
+                                "@base": "http://identifiers.org/drugbank/"
+                            }
+                        },
+                        "iuphar_ligand_id": {
+                            "@type": "@id",
+                            "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                            "@context": {
+                                "@base": "http://identifiers.org/iuphar.ligand/"
+                            }
+                        },
+                        "kegg_drug": {
+                            "@type": "@id",
+                            "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                            "@context": {
+                                "@base": "http://identifiers.org/kegg.drug/"
+                            }
+                        },
+                        "pubchem_cid": {
+                            "@type": "@id",
+                            "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                            "@context": {
+                                "@base": "http://identifiers.org/pubchem.compound/"
+                            }
+                        },
+                        "unii": {
+                            "@type": "@id",
+                            "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                            "@context": {
+                                "@base": "http://identifiers.org/unii/"
+                            }
+                        }
+					}
+				},
+                "structures": {
+                    "@type": "@id",
+                    "@id": "term:has_annotation",
+                    "@context": {
+                        "inchi": {
+                            "@type": "@id",
+                            "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                            "@context": {
+                                "@base": "http://identifiers.org/inchi/"
+                            }
+                        },
+                        "inchikey": {
+                            "@type": "@id",
+                            "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                            "@context": {
+                                "@base": "http://identifiers.org/inchikey/"
+                            }
+                        }
+                    }
+                },
+                "bioactivity": {
+                    "@type": "@id",
+                    "@id": "term:has_annotation",
+                    "@context": {
+                        "uniprot_id": {
+                            "@type": "@id",
+                            "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                            "@context": {
+                                "@base": "http://identifiers.org/uniprot/"
+                            }
+                        }
+                    }
+                }
+			}
+		},
+        "ginas": {
+            "@type": "@id",
+            "@id": "term:has_annotation",
+            "@context": {
+                "xrefs": {
+                    "@type": "@id",
+                    "@id": "term:has_annotation",
+                    "@context": {
+                        "RXCUI": {
+                            "@type": "@id",
+                            "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                            "@context": {
+                                "@base": "http://identifiers.org/rxcui/"
+                            }
+                        }
+                    }
+                },
+                "unii": {
+                    "@type": "@id",
+                    "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "@context": {
+                        "@base": "http://identifiers.org/unii/"
+                    }
+                },
+                "inchikey": {
+                    "@type": "@id",
+                    "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "@context": {
+                        "@base": "http://identifiers.org/inchikey/"
+                    }
+                }
+            }
+        },
+        "pharmgkb": {
+            "@type": "@id",
+            "@id": "term:has_annotation",
+            "@context": {
+                "external_vocabulary": {
+                    "@type": "@id",
+                    "@id": "term:has_annotation",
+                    "@context": {
+                        "rxnorm": {
+                            "@type": "@id",
+                            "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                            "@context": {
+                                "@base": "http://identifiers.org/rxcui/"
+                            }
+                        }
+                    }
+                },
+                "cross_references": {
+                    "@type": "@id",
+                    "@id": "term:has_annotation",
+                    "@context": {
+                        "drugbank": {
+                            "@type": "@id",
+                            "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                            "@context": {
+                                "@base": "http://identifiers.org/drugbank/"
+                            }
+                        },
+                        "iuphar_ligand": {
+                            "@type": "@id",
+                            "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                            "@context": {
+                                "@base": "http://identifiers.org/iuphar.ligand/"
+                            }
+                        },
+                        "kegg_drug": {
+                            "@type": "@id",
+                            "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                            "@context": {
+                                "@base": "http://identifiers.org/kegg.drug/"
+                            }
+                        },
+                        "kegg_compound": {
+                            "@type": "@id",
+                            "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                            "@context": {
+                                "@base": "http://identifiers.org/kegg.compound/"
+                            }
+                        },
+                        "pubchem_compound": {
+                            "@type": "@id",
+                            "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                            "@context": {
+                                "@base": "http://identifiers.org/pubchem.compound/"
+                            }
+                        },
+                        "drugbank": {
+                            "@type": "@id",
+                            "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                            "@context": {
+                                "@base": "http://identifiers.org/drugbank/"
+                            }
+                        },
+                        "uniprotkb": {
+                            "@type": "@id",
+                            "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                            "@context": {
+                                "@base": "http://identifiers.org/uniprot/"
+                            }
+                        }
+                    }
+                },
+                "inchi": {
+                    "@type": "@id",
+                    "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "@context": {
+                        "@base": "http://identifiers.org/inchi/"
+                    }
+                }
+            }
+        },
+		"chebi": {
+			"@type": "@id",
+			"@id": "term:has_annotation",
+			"@context": {
+				"chebi_id": {
+					"@type": "@id",
+					"@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+					"@context": {
+						"@base": "http://identifiers.org/chebi/"
+					}
+				},
+                "drugbank_database_links": {
+                    "@type": "@id",
+                    "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "@context": {
+                        "@base": "http://identifiers.org/drugbank/"
+                    }
+                },
+                "kegg_drug_database_links": {
+                    "@type": "@id",
+                    "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "@context": {
+                        "@base": "http://identifiers.org/kegg.drug/"
+                    }
+                },
+                "kegg_compound_database_links": {
+                    "@type": "@id",
+                    "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "@context": {
+                        "@base": "http://identifiers.org/kegg.compound/"
+                    }
+                },
+                "pubchem_database_links": {
+                    "@type": "@id",
+                    "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "@context": {
+                        "@base": "http://identifiers.org/pubchem.compound/"
+                    }
+                },
+                "inchikey": {
+                    "@type": "@id",
+                    "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "@context": {
+                        "@base": "http://identifiers.org/inchikey/"
+                    }
+                },
+                "inchi": {
+                    "@type": "@id",
+                    "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "@context": {
+                        "@base": "http://identifiers.org/inchi/"
+                    }
+                },
+                "uniprot_database_links": {
+                    "@type": "@id",
+                    "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "@context": {
+                        "@base": "http://identifiers.org/uniprot/"
+                    }
+                }
+		    }
+		},
+        "chembl": {
+            "@type": "@id",
+            "@id": "term:has_annotation",
+            "@context": {
+                "molecule_chembl_id": {
+                    "@type": "@id",
+                    "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "@context": {
+                        "@base": "http://identifiers.org/chembl/"
+                    }
+                },
+                "inchi_key": {
+                    "@type": "@id",
+                    "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "@context": {
+                        "@base": "http://identifiers.org/inchikey/"
+                    }
+                },
+                "inchi": {
+                    "@type": "@id",
+                    "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "@context": {
+                        "@base": "http://identifiers.org/inchi/"
+                    }
+                }
+            }
+        },
+        "drugbank": {
+            "@type": "@id",
+            "@id": "term:has_annotation",
+            "@context": {
+                "accession_number": {
+                    "@type": "@id",
+                    "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "@context": {
+                        "@base": "http://identifiers.org/drugbank/"
+                    }
+                },
+                "chembl": {
+                    "@type": "@id",
+                    "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "@context": {
+                        "@base": "http://identifiers.org/chembl/"
+                    }
+                },
+                "kegg_drug": {
+                    "@type": "@id",
+                    "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "@context": {
+                        "@base": "http://identifiers.org/kegg.drug/"
+                    }
+                },
+                "inchi_key": {
+                    "@type": "@id",
+                    "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "@context": {
+                        "@base": "http://identifiers.org/inchikey/"
+                    }
+                },
+                "inchi": {
+                    "@type": "@id",
+                    "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "@context": {
+                        "@base": "http://identifiers.org/inchi/"
+                    }
+                },
+                "pathways": {
+                    "@type": "@id",
+                    "@id": "term:has_annotation",
+                    "@context": {
+                        "enzymes": {
+                            "@type": "@id",
+                            "@id": "term:has_annotation",
+                            "@context": {
+                                "uniprot_id": {
+                                    "@type": "@id",
+                                    "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                                    "@context": {
+                                        "@base": "http://identifiers.org/uniprot/"
+                                    } 
+                                }
+                            }
+                        }
+                    }
+                },
+                "targets": {
+                    "@type": "@id",
+                    "@id": "term:has_annotation",
+                    "@context": {
+                        "uniprot": {
+                            "@type": "@id",
+                            "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                            "@context": {
+                                "@base": "http://identifiers.org/uniprot/"
+                            }
+                        }
+                    }
+                },
+                "transporters": {
+                    "@type": "@id",
+                    "@id": "term:has_annotation",
+                    "@context": {
+                        "uniprot": {
+                            "@type": "@id",
+                            "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                            "@context": {
+                                "@base": "http://identifiers.org/uniprot/"
+                            }
+                        }
+                    }
+                },
+                "pharmacology": {
+                    "@type": "@id",
+                    "@id": "term:has_annotation",
+                    "@context": {
+                        "snp_adverse_drug_reactions": {
+                            "@type": "@id",
+                            "@id": "term:has_annotation",
+                            "@context": {
+                                "reaction": {
+                                    "@type": "@id",
+                                    "@id": "term:has_annotation",
+                                    "@context": {
+                                        "uniprot_id": {
+                                            "@type": "@id",
+                                            "@id": "term:has_annotation",
+                                            "@context": {
+                                                "@base": "http://identifiers.org/uniprot/"
+                                            }
+                                        }
+                                    } 
+                                }
+                            }
+                        },
+                        "snp_effects": {
+                            "@type": "@id",
+                            "@id": "term:has_annotation",
+                            "@context": {
+                                "effect": {
+                                    "@type": "@id",
+                                    "@id": "term:has_annotation",
+                                    "@context": {
+                                        "uniprot_id": {
+                                            "@type": "@id",
+                                            "@id": "term:has_annotation",
+                                            "@context": {
+                                                "@base": "http://identifiers.org/uniprot/"
+                                            }
+                                        }
+                                    } 
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "pubchem": {
+            "@type": "@id",
+            "@id": "term:has_annotation",
+            "@context": {
+                "cid": {
+                    "@type": "@id",
+                    "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "@context": {
+                        "@base": "http://identifiers.org/pubchem.compound/"
+                    }
+                },
+                "inchi_key": {
+                    "@type": "@id",
+                    "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "@context": {
+                        "@base": "http://identifiers.org/inchikey/"
+                    }
+                }
+            }
+        },
+        "unii": {
+            "@type": "@id",
+            "@id": "term:has_annotation",
+            "@context": {
+                "unii": {
+                    "@type": "@id",
+                    "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "@context": {
+                        "@base": "http://identifiers.org/unii/"
+                    }
+                },
+                "inchikey": {
+                    "@type": "@id",
+                    "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "@context": {
+                        "@base": "http://identifiers.org/inchikey/"
+                    }
+                },
+                "inchi": {
+                    "@type": "@id",
+                    "@id": "http://www.w3.org/2004/02/skos/core#exactMatch",
+                    "@context": {
+                        "@base": "http://identifiers.org/inchi/"
+                    }
+                }
+            }
+        }
+    },
+    "_id": "GIUYCYHIANZCFB-FJFJXFQQSA-N",
+  "_version": 2,
+  "drugcentral": {
+    "approval": {
+      "date": "1991-04-18",
+      "type": "FDA"
+    },
+    "bioactivity": [
+      {
+        "act_source": "WOMBAT-PK",
+        "action_type": "INHIBITOR",
+        "gene_name": "POLA1",
+        "moa": "1",
+        "moa_source": "DRUG LABEL",
+        "swissprot": "DPOLA_HUMAN",
+        "target": "DNA polymerase alpha catalytic subunit",
+        "target_class": "Enzyme",
+        "uniprot_id": "P09884"
+      },
+      {
+        "act_source": "IUPHAR",
+        "act_type": "IC50",
+        "act_value": "6",
+        "action_type": "INHIBITOR",
+        "gene_name": "RRM2",
+        "swissprot": "RIR2_HUMAN",
+        "target": "Ribonucleoside-diphosphate reductase subunit M2",
+        "target_class": "Enzyme",
+        "uniprot_id": "P31350"
+      },
+      {
+        "act_source": "IUPHAR",
+        "act_type": "IC50",
+        "act_value": "6",
+        "action_type": "INHIBITOR",
+        "gene_name": "RRM1",
+        "swissprot": "RIR1_HUMAN",
+        "target": "Ribonucleoside-diphosphate reductase large subunit",
+        "target_class": "Enzyme",
+        "uniprot_id": "P23921"
+      },
+      {
+        "act_comment": "Binding affinity determined by displacement of specific binding of [125I]N-(4-amino-3-iodophenethyl)-adenosine in membranes of CHO cells stably transfected with the rat adenosine A3 receptor",
+        "act_source": "CHEMBL",
+        "act_type": "Ki",
+        "act_value": "4.98",
+        "gene_name": "Adora3",
+        "swissprot": "AA3R_RAT",
+        "target": "Adenosine receptor A3",
+        "target_class": "GPCR",
+        "uniprot_id": "P28647"
+      },
+      {
+        "act_comment": "Binding affinity to adenosine A2A receptor in rat striatal membranes by measuring displacement of specific [3H]-CGS- 21680 as radioligand",
+        "act_source": "CHEMBL",
+        "act_type": "Ki",
+        "act_value": "7.55",
+        "gene_name": "Adora2a",
+        "swissprot": "AA2AR_RAT",
+        "target": "Adenosine receptor A2a",
+        "target_class": "GPCR",
+        "uniprot_id": "P30543"
+      },
+      {
+        "act_comment": "Binding affinity to adenosine A1 receptor in rat brain membranes by measuring displacement of specific [3H]PIA as radioligand.",
+        "act_source": "CHEMBL",
+        "act_type": "Ki",
+        "act_value": "8.23",
+        "gene_name": "Adora1",
+        "swissprot": "AA1R_RAT",
+        "target": "Adenosine receptor A1",
+        "target_class": "GPCR",
+        "uniprot_id": "P25099"
+      }
+    ],
+    "drug_dosage": {
+      "atc_code": "L01BB05",
+      "dose": "50",
+      "route": "P",
+      "unit": "mg"
+    },
+    "drug_use": [
+      {
+        "relation": "contraindication",
+        "snomed_id": "413603009",
+        "snomed_name": "Autoimmune hemolytic anemia"
+      },
+      {
+        "relation": "contraindication",
+        "snomed_id": "371632003",
+        "snomed_name": "Coma"
+      },
+      {
+        "relation": "indication",
+        "snomed_id": "92814006",
+        "snomed_name": "Chronic lymphoid leukemia, disease"
+      },
+      {
+        "relation": "contraindication",
+        "snomed_id": "75331009",
+        "snomed_name": "Evans syndrome"
+      },
+      {
+        "relation": "contraindication",
+        "snomed_id": "267038008",
+        "snomed_name": "Edema"
+      },
+      {
+        "relation": "contraindication",
+        "snomed_id": "4854004",
+        "snomed_name": "Acquired hemolytic anemia"
+      },
+      {
+        "relation": "contraindication",
+        "snomed_id": "307762000",
+        "snomed_name": "Bone marrow depression"
+      },
+      {
+        "relation": "contraindication",
+        "snomed_id": "271737000",
+        "snomed_name": "Anemia"
+      },
+      {
+        "relation": "contraindication",
+        "snomed_id": "24199005",
+        "snomed_name": "Feeling agitated"
+      },
+      {
+        "relation": "contraindication",
+        "snomed_id": "77157004",
+        "snomed_name": "Disorder of optic nerve"
+      },
+      {
+        "relation": "contraindication",
+        "snomed_id": "14230004",
+        "snomed_name": "Acquired factor VIII deficiency disease"
+      },
+      {
+        "relation": "contraindication",
+        "snomed_id": "303011007",
+        "snomed_name": "Neutropenic disorder"
+      },
+      {
+        "relation": "contraindication"
+      },
+      {
+        "relation": "contraindication",
+        "snomed_id": "4740000",
+        "snomed_name": "Herpes zoster"
+      },
+      {
+        "relation": "contraindication",
+        "snomed_id": "58574008",
+        "snomed_name": "Acute nephropathy"
+      },
+      {
+        "relation": "contraindication",
+        "snomed_id": "64667001",
+        "snomed_name": "Interstitial pneumonia"
+      },
+      {
+        "relation": "contraindication",
+        "snomed_id": "274401005",
+        "snomed_name": "Uric acid renal calculus"
+      },
+      {
+        "relation": "contraindication",
+        "snomed_id": "197663003",
+        "snomed_name": "Impaired renal function disorder"
+      },
+      {
+        "relation": "contraindication",
+        "snomed_id": "413712001",
+        "snomed_name": "Breastfeeding (mother)"
+      },
+      {
+        "relation": "contraindication",
+        "snomed_id": "397540003",
+        "snomed_name": "Visual impairment"
+      },
+      {
+        "relation": "contraindication",
+        "snomed_id": "87628006",
+        "snomed_name": "Bacterial infectious disease"
+      },
+      {
+        "relation": "contraindication"
+      },
+      {
+        "relation": "contraindication",
+        "snomed_id": "66760008",
+        "snomed_name": "Optic neuritis"
+      },
+      {
+        "relation": "contraindication",
+        "snomed_id": "37471005",
+        "snomed_name": "Extrinsic allergic alveolitis"
+      },
+      {
+        "relation": "contraindication",
+        "snomed_id": "289908002",
+        "snomed_name": "Pregnancy, function"
+      },
+      {
+        "relation": "contraindication",
+        "snomed_id": "44808001",
+        "snomed_name": "Conduction disorder of the heart"
+      },
+      {
+        "relation": "contraindication",
+        "snomed_id": "128613002",
+        "snomed_name": "Seizure disorder"
+      },
+      {
+        "relation": "contraindication",
+        "snomed_id": "128091003",
+        "snomed_name": "Autoimmune thrombocytopenia"
+      },
+      {
+        "relation": "contraindication",
+        "snomed_id": "166603001",
+        "snomed_name": "Liver function tests abnormal"
+      },
+      {
+        "relation": "contraindication",
+        "snomed_id": "22255007",
+        "snomed_name": "Progressive multifocal leukoencephalopathy"
+      },
+      {
+        "relation": "off-label use",
+        "snomed_id": "91861009",
+        "snomed_name": "Acute myeloid leukemia, disease"
+      },
+      {
+        "relation": "contraindication",
+        "snomed_id": "63171007",
+        "snomed_name": "Acute infectious disease"
+      },
+      {
+        "relation": "contraindication",
+        "snomed_id": "3218000",
+        "snomed_name": "Mycosis"
+      },
+      {
+        "relation": "contraindication",
+        "snomed_id": "32273002",
+        "snomed_name": "Idiopathic thrombocytopenic purpura"
+      },
+      {
+        "relation": "contraindication",
+        "snomed_id": "386806002",
+        "snomed_name": "Impaired cognition"
+      },
+      {
+        "relation": "off-label use",
+        "snomed_id": "308121000",
+        "snomed_name": "Follicular non-Hodgkin's lymphoma"
+      },
+      {
+        "relation": "off-label use",
+        "snomed_id": "190818004",
+        "snomed_name": "Waldenstr\u00f6m macroglobulinemia"
+      },
+      {
+        "relation": "contraindication",
+        "snomed_id": "195111005",
+        "snomed_name": "Decompensated cardiac failure"
+      },
+      {
+        "relation": "contraindication",
+        "snomed_id": "127034005",
+        "snomed_name": "Pancytopenia"
+      }
+    ],
+    "pharmacology_action": [
+      {
+        "class_code": "N0000000233",
+        "name": "Nucleic Acid Synthesis Inhibitors",
+        "source": "FDA",
+        "type": "MoA"
+      },
+      {
+        "class_code": "N0000175595",
+        "name": "Nucleoside Metabolic Inhibitor",
+        "source": "FDA",
+        "type": "EPC"
+      },
+      {
+        "class_code": "CHEBI:35610",
+        "name": "antineoplastic agent",
+        "source": "CHEBI",
+        "type": "has role"
+      },
+      {
+        "class_code": "CHEBI:35705",
+        "name": "immunosuppressive agent",
+        "source": "CHEBI",
+        "type": "has role"
+      },
+      {
+        "class_code": "CHEBI:50266",
+        "name": "prodrug",
+        "source": "CHEBI",
+        "type": "has role"
+      },
+      {
+        "class_code": "D000963",
+        "name": "Antimetabolites",
+        "source": "MeSH",
+        "type": "PA"
+      },
+      {
+        "class_code": "D000964",
+        "name": "Antimetabolites, Antineoplastic",
+        "source": "MeSH",
+        "type": "PA"
+      },
+      {
+        "class_code": "D000970",
+        "name": "Antineoplastic Agents",
+        "source": "MeSH",
+        "type": "PA"
+      },
+      {
+        "class_code": "D007155",
+        "name": "Immunologic Factors",
+        "source": "MeSH",
+        "type": "PA"
+      },
+      {
+        "class_code": "D007166",
+        "name": "Immunosuppressive Agents",
+        "source": "MeSH",
+        "type": "PA"
+      },
+      {
+        "class_code": "D009676",
+        "name": "Noxae",
+        "source": "MeSH",
+        "type": "PA"
+      }
+    ],
+    "struct_id": 1189,
+    "structures": {
+      "cas_rn": "75607-67-9",
+      "inchi": "InChI=1S/C10H13FN5O7P/c11-10-14-7(12)4-8(15-10)16(2-13-4)9-6(18)5(17)3(23-9)1-22-24(19,20)21/h2-3,5-6,9,17-18H,1H2,(H2,12,14,15)(H2,19,20,21)/t3-,5-,6+,9-/m1/s1",
+      "inchikey": "GIUYCYHIANZCFB-FJFJXFQQSA-N",
+      "inn": "fludarabine phosphate",
+      "smiles": "NC1=C2N=CN([C@@H]3O[C@H](COP(O)(O)=O)[C@@H](O)[C@@H]3O)C2=NC(F)=N1"
+    },
+    "synonyms": [
+      "fludarabine 5'-monophosphate",
+      "fludarabine phosphate",
+      "fludura",
+      "fludara",
+      "2-F-ara-AMP"
+    ],
+    "xref": {
+      "chebi": "CHEBI:63599",
+      "chembl_id": [
+        "CHEMBL1568",
+        "CHEMBL1096882"
+      ],
+      "drugbank_id": "DB01073",
+      "inn_id": "5214",
+      "iuphar_ligand_id": "4802",
+      "kegg_drug": "D01907",
+      "mesh_supplemental_record_ui": [
+        "C024352",
+        "C042382"
+      ],
+      "mmsl": [
+        "110964",
+        "4734"
+      ],
+      "nddf": "003618",
+      "ndfrt": [
+        "N0000179136",
+        "N0000148119"
+      ],
+      "nui": "N0000148244",
+      "pubchem_cid": "30751",
+      "rxnorm": "25102",
+      "secondary_cas_rn": "21679-14-1",
+      "snomedct_us": "108765002",
+      "umlscui": "C0059985",
+      "unii": "P2K93U8740",
+      "vandf": "4020177",
+      "vuid": "4020528"
+    }
+  }
+}
