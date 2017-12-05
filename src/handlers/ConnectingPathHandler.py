@@ -226,7 +226,7 @@ class EndpointHandler(BaseHandler):
         inputs = bt_explorer.api_map.predecessors(endpoint_name)
         inputs = [_input for _input in inputs if bt_explorer.api_map.node[_input]['type'] == 'bioentity']
         edges.extend([(_input, endpoint_name, find_edge_label(bt_explorer.api_map, _input, endpoint_name)) for _input in inputs])
-        plotly_results = networkx_to_plotly(edges, [_item['preferred_name'] for _item in list(bt_explorer.registry.bioentity_info.values())], [_item['preferred_name'] for _item in list(bt_explorer.registry.bioentity_info.values())])
+        plotly_results = networkx_to_plotly(edges, duplicates_not_allowed=bt_explorer.registry.endpoint_info.keys())
         self.write(json.dumps({"plotly": plotly_results}))
 
 class MetaDataHandler(BaseHandler):
