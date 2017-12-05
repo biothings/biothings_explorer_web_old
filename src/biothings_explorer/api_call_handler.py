@@ -1,5 +1,6 @@
 import json
 import requests
+import grequests
 
 from .api_registry_parser import RegistryParser
 from .jsonld_processor import json2nquads
@@ -130,11 +131,15 @@ class ApiCallHandler:
                                 results[_para['name']] = _template['template'].replace('{{input}}', json.dumps(uri_value_dict[_template['valueType']]))
                     else:
                         results[_para['name']] = list(uri_value_dict.values())[0]
+        """
+        # switch to grquests to handle multiple API calls together
         if requests.get(endpoint_name, params=results).status_code == 200:
             return requests.get(endpoint_name, params=results)
         else:
             print('This API call returns no results. The URI given is {}, the endpoint given is {}'.format(uri_value_dict, endpoint_name))
             return
+        """
+        return (endpoint_name, results)
 
     def preprocess_json_doc(self, json_doc, endpoint_name):
         """
@@ -227,12 +232,17 @@ class ApiCallHandler:
         # preprocess the input
         processed_input = self.preprocessing_input(input_value, endpoint_name)
         # retrieve json doc
+        api_call_params = []
         for _input_value in processed_input:
             uri_value = {input_type: _input_value}
             if additional_parameters:
                 uri_value.update(additional_parameters)
-            api_call_response = self.call_api(uri_value, endpoint_name)
-            if api_call_response:
+            api_call_params.append(self.call_api(uri_value, endpoint_name))
+        rs = (grequests.get(u, params=v) for (u,v) in api_call_params)
+        responses = grequests.map(rs)
+            #api_call_response = self.call_api(uri_value, endpoint_name)
+        for api_call_response in responses:
+            if api_call_response.status_code == 200:
                 json_doc = self.preprocess_json_doc(api_call_response.json(), endpoint_name)
             else:
                 print('This API call returns no response. Endpoint name: {}, Input value type: {}. Input value: {}'

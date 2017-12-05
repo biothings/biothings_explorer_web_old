@@ -2,6 +2,7 @@ from pyld import jsonld
 import json
 import re
 import requests
+import grequests
 from collections import defaultdict
 
 from .utils import readFile
@@ -10,7 +11,7 @@ from .utils import readFile
 t = jsonld.JsonLdProcessor()
 
 
-def jsonld2nquads(jsonld_doc):
+def jsonld2nquads(jsonld_doc, mode='request'):
     """
     Given a JSON-LD annotated document,
     Fetch it's corresponding NQUADs file from JSON-LD playground
@@ -27,11 +28,17 @@ def jsonld2nquads(jsonld_doc):
         JSON-LD annotated document
     """
     # need to skip html escapes
-    nquads = requests.post('http://jsonld.biothings.io/?action=nquads', data={'doc': json.dumps(jsonld_doc).replace('>', "&gt;").replace(' ', '')})
-    if nquads.status_code != 413:
-        # remove the log line from the nquads
-        nquads = re.sub('Parsed .*second.\n', '', nquads.json()['output'])
-        return t.parse_nquads(nquads)
+    if mode == 'request':
+        nquads = requests.post('http://jsonld.biothings.io/?action=nquads', data={'doc': json.dumps(jsonld_doc).replace('>', "&gt;").replace(' ', '')})
+        if nquads.status_code != 413:
+            # remove the log line from the nquads
+            nquads = re.sub('Parsed .*second.\n', '', nquads.json()['output'])
+            return t.parse_nquads(nquads)
+    elif mode == 'grequest':
+        responses = []
+        for _jsonld_doc in jsonld_doc:
+            responses.append(grequest.post('http://jsonld.biothings.io/?action=nquads', data={'doc': json.dumps(jsonld_doc).replace('>', "&gt;").replace(' ', '')}))
+        return grequests.map(iter(responses))
 
 def fetchvalue(nquads, object_uri, predicate=None):
     """
