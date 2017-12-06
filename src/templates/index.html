@@ -14,6 +14,7 @@
       <script type="text/javascript" src="./static/js/create_api_map.js"></script>
       <script type="text/javascript" src="./static/js/populateSelect.js"></script>
       <script type="text/javascript" src="./static/js/data2Sankey.js"></script>
+      <script type="text/javascript" src="./static/js/customize_path.js"></script>
       <script type="text/javascript" src="./static/js/data2Cytoscape.js"></script>
       <script type = "text/javascript"
          src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>
@@ -131,7 +132,45 @@
                     </div>
                   </div>
                </li>
-         </div>
+                <li>
+                  <div class = "collapsible-header">
+                     <i class = "material-icons orange-text text-darken-2">directions</i>Customize Your Own Path</div>
+                  <div class = "collapsible-body" id="customize-collapsible-body"><p> Please select the <b>bioentities</b> you would like to explore. A sankey plot would appear on the right showing all the <b>paths</b> connecting the <b>input</b> and <b>output</b> you selected.</p>
+                    <div class="select-wrapper"> 
+                        <select id="customize1" class="customizeoptions">
+                           <option value="" disabled selected>Choose your option</option>
+                        </select>
+                        <label>Input 1/Start Point</label>
+                    </div>
+                    <div class="select-wrapper"> 
+                        <select disabled id="customize2" class="customizeoptions">
+                           <option value="" disabled selected>Choose your option</option>
+                        </select>
+                        <label>Endpoint 1</label>
+                    </div>
+                    <div>
+                      <div class="select-wrapper" style="display: inline-block;width: 80%">
+                          <select disabled id="customize3" class="customizeoptions">
+                            <option value="" disabled selected>Choose your option</option>
+                          </select>
+                          <label>Output 1/Input 2</label>
+                      </div>
+                      <i class="append-customize-select material-icons orange-text text-darken-2" id="append1" disabled>add</i>
+                    </div>
+                    <a class="orange lighten-2 btn" id="customizePathButton">Construct Path</a>
+                    <div id="explore-customize-path">
+                      <p> Please select the <b>path</b> using the <b>drop-down</b> menu below. The detailed <b>description</b> for each path could be found under the <b>Sankey Plot</b> on the right. After selecting the path, please <b>specify the input</b>. If you have <b>multiple</b> inputs, separate them by <b>comma</b>.</p>
+                      <div class="input-field">
+                        <input id="customized_input_value" type="text" class="validate">
+                        <label for="input_value">Please put your input value here.</label>
+                      </div>
+                      <a class="orange lighten-2 btn" id="exploreCustomizePathButton">Explore This Path</a>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+         
         <div class="col s12 m8" id="main">
             <!-- Plotly chart will be drawn inside this div -->
             <div id="plotly-div"></div>
