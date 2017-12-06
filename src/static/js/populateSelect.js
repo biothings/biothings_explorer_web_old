@@ -94,13 +94,16 @@ function populateSelectInSideBar() {
     populateBioEntity("#select-output");
     populateBioEntity("#select-input1");
     populateBioEntity("#select-output1");
+    populateInput("#customize1");
     $("#select-max-api").material_select();
+    $("#customize2").material_select();
+    $("#customize3").material_select();
 }
 
 /**
  * Automatically add available bio-entities as input of endpoint
 */
-function poplulateInput(dropdown_id) {
+function populateInput(dropdown_id) {
     getMetaData('bioentity_input').done(function(jsonResponse) {
         var parsedJson = $.parseJSON(jsonResponse);
         addOptionFromMetaData(parsedJson['input'], 'input', dropdown_id);
@@ -120,11 +123,10 @@ function poplulateEndpointFromInput(dropdown_id, _input) {
 /**
  * Automatically add available bio-entities as input of endpoint
 */
-function poplulateOutputFromEndpoint(dropdown_id, _endpoint) {
+function populateOutputFromEndpoint(dropdown_id, _endpoint) {
     getOutputBasedOnEndpoint(_endpoint).done(function(jsonResponse) {
         var parsedJson = $.parseJSON(jsonResponse);
         addOptionFromMetaData(parsedJson['output'], 'output', dropdown_id);
         $(dropdown_id).material_select();
     });
 }
-
