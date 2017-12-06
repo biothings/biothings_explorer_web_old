@@ -1,5 +1,6 @@
 function drawSankeyPlot(jsonResponse){
   var fig = jsonResponse;
+  console.log(fig);
   var data = {
     type: "sankey",
     domain: {
@@ -17,7 +18,7 @@ function drawSankeyPlot(jsonResponse){
         width: 0.5
       },
      label: fig.plotly.labels,
-     //color: fig.plotly.colors
+     color: fig.plotly.colors
         },
     link: {
       source: fig.plotly.source,
@@ -42,5 +43,5 @@ function drawSankeyPlot(jsonResponse){
   $("#cy").hide();
   Plotly.purge('plotly-div');
   $("#plotly-div").show();
-  Plotly.plot('plotly-div', data, layout,  {displayModeBar: false});
+  Plotly.plot('plotly-div', data, layout);
 };
