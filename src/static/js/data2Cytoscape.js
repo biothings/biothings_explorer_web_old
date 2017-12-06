@@ -64,17 +64,25 @@ function findSubPath (path) {
 }
 
 /**
- * Display the connection between input and output based on selected path
- * return {Cytoscape graph}
+ * get the path as a list
 */
-function displayOutputToCytoscape() {
-    //extract value from input_value, and make it a list
+function getPath() {
     var _input_value = $("#input_value").val().split(",").map(function(item) { return item.trim(); });;
     var _path_id = parseInt($("#select-path").find("option:selected").attr("value"));
     var paths = extractPath();
     var selected_path = paths[_path_id];
+    return [selected_path, _input_value]
+}
+/**
+ * Display the connection between input and output based on selected path
+ * return {Cytoscape graph}
+*/
+function displayOutputToCytoscape(selected_path, _input_value) {
+    //extract value from input_value, and make it a list
+    $("#log-list").empty();
+    $("#cy").empty();
+    $("#paths-list").empty();
     var subpath = findSubPath(selected_path);
-    console.log(subpath);
     var _level = 0;
     var sequence = Promise.resolve();
     var cy;
