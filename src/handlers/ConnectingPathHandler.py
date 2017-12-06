@@ -204,6 +204,15 @@ class ConnectingInputHandler(BaseHandler):
         plotly_results = networkx_to_plotly(edges, duplicates_not_allowed=bt_explorer.registry.endpoint_info.keys())
         self.write(json.dumps({"plotly": plotly_results}))
 
+class Input2EndpointHandler(BaseHandler):
+    """
+    Return endpoints which accepts given input
+    """
+    def post(self):
+        _input = self.get_argument('input')
+        endpoints = bt_explorer.api_map.successors(_input)
+        self.write(json.dumps({"endpoints": endpoints, "input": _input}))
+
 class ConnectingOutputHandler(BaseHandler):
     def post(self):
         _output = self.get_argument('output')
