@@ -12,7 +12,7 @@ from  tornado.escape import json_encode
 from tornado.options import define, options
 import requests
 
-from handlers.ConnectingPathHandler import FindOutputHandler, MetaDataHandler, ConnectingPathHandler, EndpointHandler, ConnectingOutputHandler, ConnectingInputHandler, ApiMapHandler, ApiMapHandlerSankey
+from handlers.ConnectingPathHandler import FindOutputHandler, MetaDataHandler, ConnectingPathHandler, EndpointHandler, ConnectingOutputHandler, ConnectingInputHandler, ApiMapHandler, ApiMapHandlerSankey, Input2EndpointHandler
 from handlers.basehandler import BaseHandler
 
 
@@ -38,7 +38,8 @@ class Application(tornado.web.Application):
             (r"/explorer/endpoint", EndpointHandler),
             (r"/explorer/metadata/([^/]+)", MetaDataHandler),
             (r"/explorer/findoutput", FindOutputHandler),
-            (r"/explorer/apimapsankey", ApiMapHandlerSankey)
+            (r"/explorer/apimapsankey", ApiMapHandlerSankey),
+            (r"/explorer/input2endpoint", Input2EndpointHandler)
         ]
 
         tornado.web.Application.__init__(self, handlers, **settings)
