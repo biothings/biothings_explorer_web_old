@@ -10,11 +10,11 @@ from biothings_explorer import BioThingsExplorer
 
 bt_explorer = BioThingsExplorer()
 
-color_dict = {'ClinicalTrial': 'rgba(144, 144, 28, 0.4)', 'Gene': 'rgba(28, 144, 28, 0.4)', 
-              'Drug': 'rgba(144, 28, 144, 0.4)', 'Protein': 'rgba(28, 144, 144, 0.4)', 
-              'Allele/Variant': 'rgba(86, 144, 28, 0.4)', 'ExperimentalStudy': 'rgba(86, 28, 144, 0.3)',
-              'Phenotype': 'rgba(28, 86, 144, 0.3)', 'Pathway': 'rgba(88, 188, 32, 0.4)',
-              'Disease': 'rgba(122, 144, 77, 0.4)', 'Reaction': 'rgba(100, 88, 77, 0.4)'}
+color_dict = {'ClinicalTrial': 'rgba(144, 144, 28, 0.4)', 'Gene': 'rgba(55, 230, 84, 0.93)', 
+              'Drug': 'rgba(230, 55, 218, 0.93)', 'Protein': 'rgba(55, 227, 230, 0.6)', 
+              'Allele/Variant': 'rgba(230, 174, 55, 0.83)', 'ExperimentalStudy': 'rgba(86, 28, 144, 0.3)',
+              'Phenotype': 'rgba(28, 86, 144, 0.3)', 'Pathway': 'rgba(230, 55, 116, 0.63)',
+              'Disease': 'rgba(166, 55, 230, 0.84)', 'Reaction': 'rgba(100, 88, 77, 0.4)'}
 
 def label2color(label):
     uri = bt_explorer.registry.prefix2uri(label)
