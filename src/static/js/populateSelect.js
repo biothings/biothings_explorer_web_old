@@ -100,5 +100,31 @@ function populateSelectInSideBar() {
 /**
  * Automatically add available bio-entities as input of endpoint
 */
-function poplulateInput(dropdown_id)
+function poplulateInput(dropdown_id) {
+    getMetaData('bioentity_input').done(function(jsonResponse) {
+        var parsedJson = $.parseJSON(jsonResponse);
+        addOptionFromMetaData(parsedJson['input'], 'input', dropdown_id);
+        $(dropdown_id).material_select();
+    });
+}
+/**
+ * Automatically add available bio-entities as input of endpoint
+*/
+function poplulateEndpointFromInput(dropdown_id, _input) {
+    getEndpointsBasedOnInput(_input).done(function(jsonResponse) {
+        var parsedJson = $.parseJSON(jsonResponse);
+        addOptionFromMetaData(parsedJson['endpoints'], 'endpoint', dropdown_id);
+        $(dropdown_id).material_select();
+    });
+}
+/**
+ * Automatically add available bio-entities as input of endpoint
+*/
+function poplulateOutputFromEndpoint(dropdown_id, _endpoint) {
+    getOutputBasedOnEndpoint(_endpoint).done(function(jsonResponse) {
+        var parsedJson = $.parseJSON(jsonResponse);
+        addOptionFromMetaData(parsedJson['output'], 'output', dropdown_id);
+        $(dropdown_id).material_select();
+    });
+}
 
