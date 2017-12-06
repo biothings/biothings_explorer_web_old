@@ -28,6 +28,32 @@ function getMetaData(metadata_type){
 }
 
 /**
+ * Get available endpoint info based on input
+*/
+function getEndpointsBasedOnInput(_input) {
+    var promise = $.ajax({
+        type: "POST",
+        url: "http://localhost:8853/explorer/input2endpoint",
+        data: {input: _input},
+        datatype: "json"
+    });
+    return promise;
+}
+
+/**
+ * Get available output info based on endpoint
+*/
+function getOutputBasedOnEndpoint(_endpoint) {
+    var promise = $.ajax({
+        type: "POST",
+        url: "http://localhost:8853/explorer/endpoint2output",
+        data: {endpoint: _endpoint},
+        datatype: "json"
+    });
+    return promise;
+}
+
+/**
  * Automatically add endpoint info to the options of select
  * @param {String} dropdown_id
 */
@@ -71,4 +97,8 @@ function populateSelectInSideBar() {
     $("#select-max-api").material_select();
 }
 
+/**
+ * Automatically add available bio-entities as input of endpoint
+*/
+function poplulateInput(dropdown_id)
 
