@@ -11,7 +11,7 @@ from .utils import readFile
 t = jsonld.JsonLdProcessor()
 
 
-def jsonld2nquads(jsonld_doc, mode='request'):
+def jsonld2nquads(jsonld_doc, mode='batch'):
     """
     Given a JSON-LD annotated document,
     Fetch it's corresponding NQUADs file from JSON-LD playground
@@ -28,17 +28,25 @@ def jsonld2nquads(jsonld_doc, mode='request'):
         JSON-LD annotated document
     """
     # need to skip html escapes
-    if mode == 'request':
+    if mode != 'batch':
         nquads = requests.post('http://jsonld.biothings.io/?action=nquads', data={'doc': json.dumps(jsonld_doc).replace('>', "&gt;").replace(' ', '')})
         if nquads.status_code != 413:
             # remove the log line from the nquads
             nquads = re.sub('Parsed .*second.\n', '', nquads.json()['output'])
             return t.parse_nquads(nquads)
-    elif mode == 'grequest':
+    elif mode == 'batch':
         responses = []
         for _jsonld_doc in jsonld_doc:
-            responses.append(grequest.post('http://jsonld.biothings.io/?action=nquads', data={'doc': json.dumps(jsonld_doc).replace('>', "&gt;").replace(' ', '')}))
-        return grequests.map(iter(responses))
+            responses.append(grequests.post('http://jsonld.biothings.io/?action=nquads', data={'doc': json.dumps(_jsonld_doc).replace('>', "&gt;").replace(' ', '')}))
+        responses = grequests.map(iter(responses))
+        results = []
+        for _response in responses:
+            if _response.status_code != 413:
+                nquads = re.sub('Parsed .*second.\n', '', _response.json()['output'])
+                results.append(t.parse_nquads(nquads))
+            else:
+                results.append(None)
+        return results
 
 def fetchvalue(nquads, object_uri, predicate=None):
     """
@@ -95,7 +103,7 @@ def find_base(d, relation=defaultdict(set)):
             find_base(v, relation=relation)
     return relation
 
-def json2nquads(json_doc, context_file_path, output, predicate=None):
+def json2nquads(json_doc, context_file_path, output_type, predicate=None):
     """
     Given a JSON document, perform the following actions
     1) Find the json-ld context file based on endpoint_name
@@ -114,11 +122,15 @@ def json2nquads(json_doc, context_file_path, output, predicate=None):
         NQUADS predicate, default is None
     """
     context_file = readFile(context_file_path)
-    json_doc.update(context_file)
-    nquads = jsonld2nquads(json_doc)
-    output = fetchvalue(nquads, output, predicate=predicate)
-    if output:
-        outputs = list(set(output))
-        return outputs
-    else:
-        return None
+    for _json_doc in json_doc:
+        _json_doc.update(context_file)
+    nquads = jsonld2nquads(json_doc, mode='batch')
+    results = []
+    for _nquad in nquads:
+        output = fetchvalue(_nquad, output_type, predicate=predicate)
+        if output:
+            outputs = list(set(output))
+            results.append(outputs)
+        else:
+            results.append(None)
+    return results
