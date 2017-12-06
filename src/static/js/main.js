@@ -7,6 +7,7 @@ $(function(){
 	//temparorily hide explore_path section, this section will only be shown
 	//after the user has specified the path
 	$("#explore-path").hide();
+	$("#explore-customize-path").hide()
 	//Display api_road_map when 'roadmapbutton' is clicked
 	$("#roadMapButton").click(function() {
 		draw_api_map();
@@ -19,8 +20,12 @@ $(function(){
 	//when user select the path connecting input/output, and provide the input value
 	//display the cytoscape graph linking input and output
 	$("#explorePathButton").click(function() {
-		displayOutputToCytoscape();
+		var path = getPath();
+		displayOutputToCytoscape(path[0], path[1]);
 	});
+	//detect changes in the customize path options
+	changeCustomizeOption();
+	displayCustomizedOutput();
 });
 
 
