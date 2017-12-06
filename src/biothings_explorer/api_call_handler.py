@@ -189,11 +189,13 @@ class ApiCallHandler:
         if output_type == 'Entity':
             jsonld_context = self.registry.endpoint_info[endpoint_name]['jsonld_context']
             outputs = json2nquads(json_doc, jsonld_context, output_uri, predicate)
-            if outputs:
-                return (outputs, self.registry.bioentity_info[output_uri]['preferred_name'])
-            else:
-                print("No output could be found from the given json_doc and output type!")
-                return
+            results = []
+            for _output in outputs:
+                if _output:
+                    results.append((_output, self.registry.bioentity_info[output_uri]['preferred_name']))
+                else:
+                    results.append(None)
+            return results
         # if output_type is object, use OpenAPI specs to extract the output
         else:
             response = self.endpoint_info[endpoint_name]['get']['responses']['200']['x-responseValueType']
@@ -241,17 +243,9 @@ class ApiCallHandler:
         rs = (grequests.get(u, params=v) for (u,v) in api_call_params)
         responses = grequests.map(rs)
             #api_call_response = self.call_api(uri_value, endpoint_name)
-        for api_call_response in responses:
-            if api_call_response.status_code == 200:
-                json_doc = self.preprocess_json_doc(api_call_response.json(), endpoint_name)
-            else:
-                print('This API call returns no response. Endpoint name: {}, Input value type: {}. Input value: {}'
-                      .format(endpoint_name, input_type, input_value))
-            # extract the output based on output_type & predicate
-            output_info = self.extract_output(json_doc, endpoint_name, output_type, predicate=predicate)
-            if output_info:
-                final_results.append({'input': (_input_value, self.registry.bioentity_info[input_type]['preferred_name']), 'output': (output_info)})
-            else:
-                print('The API call returns response. But no appropriate output could be extracted. Output type given is : {}. Predicate given is: {}'
-                      .format(output_type, predicate))
+        valid_responses = [self.preprocess_json_doc(api_call_response.json(), endpoint_name) if api_call_response.status_code == 200 else {} for api_call_response in responses]
+        outputs = self.extract_output(valid_responses, endpoint_name, output_type, predicate=predicate)
+        for i in range(len(outputs)):
+            if outputs[i]:
+                final_results.append({'input': (processed_input[i], self.registry.bioentity_info[input_type]['preferred_name']), 'output': (outputs[i])})
         return final_results
