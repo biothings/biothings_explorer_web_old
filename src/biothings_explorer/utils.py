@@ -105,3 +105,12 @@ def output2input(_output):
         result.extend([_o[0] for _o in output_list])
     return result
 
+def timing(f):
+    def wrap(*args):
+        time1 = time.time()
+        ret = f(*args)
+        time2 = time.time()
+        print('%s function took %0.3f ms' % (f.__name__, (time2-time1)*1000.0))
+        return ret
+    return wrap
+
