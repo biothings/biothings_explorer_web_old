@@ -8,11 +8,21 @@ lib_path = os.path.abspath(os.path.join('..', 'biothings_explorer'))
 sys.path.append( path.dirname( path.dirname( path.abspath(lib_path))))
 from biothings_explorer import BioThingsExplorer
 
-color_dict = {'ClinicalTrial': 'blue', 'Gene': 'green', 
-              'Drug': 'brown', 'Protein': 'black', 
-              'Allele/Variant': 'purple', 'ExperimentalStudy': 'yellow',
-              'Phenotype': 'orange', 'Pathway': 'Acajou',
-              'Disease': 'Aero', 'Reaction': 'Almond'}
+bt_explorer = BioThingsExplorer()
+
+color_dict = {'ClinicalTrial': 'rgba(144, 144, 28, 0.4)', 'Gene': 'rgba(28, 144, 28, 0.4)', 
+              'Drug': 'rgba(144, 28, 144, 0.4)', 'Protein': 'rgba(28, 144, 144, 0.4)', 
+              'Allele/Variant': 'rgba(86, 144, 28, 0.4)', 'ExperimentalStudy': 'rgba(86, 28, 144, 0.3)',
+              'Phenotype': 'rgba(28, 86, 144, 0.3)', 'Pathway': 'rgba(88, 188, 32, 0.4)',
+              'Disease': 'rgba(122, 144, 77, 0.4)', 'Reaction': 'rgba(100, 88, 77, 0.4)'}
+
+def label2color(label):
+    uri = bt_explorer.registry.prefix2uri(label)
+    if uri:
+        return color_dict[bt_explorer.registry.bioentity_info[uri]['semantic type']]
+    else:
+        return "rgba(250, 0, 0, 1.0)"
+
 def find_edge_label(G, source, target, relation=None):
     """
     Given a MultiDiGraph, together with a source, target pair
@@ -84,10 +94,12 @@ def networkx_to_plotly(edges, duplicates_not_allowed=[]):
                 output_idx[_edge[0]] = idx
                 idx += 1
                 output_json['labels'].append(_edge[0])
+                output_json['colors'].append(label2color(_edge[0]))
         elif _edge[0] not in input_idx:
             input_idx[_edge[0]] = idx
             idx += 1
             output_json['labels'].append(_edge[0])
+            output_json['colors'].append(label2color(_edge[0]))
         output_json['source'].append(input_idx[_edge[0]])
         if _edge[1] in duplicates_not_allowed:
             if _edge[1] not in output_json['labels']:
@@ -95,10 +107,12 @@ def networkx_to_plotly(edges, duplicates_not_allowed=[]):
                 output_idx[_edge[1]] = idx
                 idx += 1
                 output_json['labels'].append(_edge[1])
+                output_json['colors'].append(label2color(_edge[1]))
         elif _edge[1] not in output_idx:
             output_idx[_edge[1]] = idx
             idx += 1
             output_json['labels'].append(_edge[1])
+            output_json['colors'].append(label2color(_edge[1]))
         output_json['target'].append(output_idx[_edge[1]])
         output_json['edge_labels'].append(_edge[2])
         if type(_edge[2]) == list:
@@ -158,7 +172,7 @@ def networkx_to_cytoscape(edges, entity_list=[], api_list=[], endpoint_list=[]):
         elements.append(construct_cytoscape_edge(_edge))
     return elements
 
-bt_explorer = BioThingsExplorer()
+
 
 class ConnectingPathHandler(BaseHandler):
     def post(self):
