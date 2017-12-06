@@ -20,7 +20,8 @@ var concentric_style = [
             "haystack-radius": 0,
             "width": 5,
             "opacity": 0.5,
-            "line-color": "#a2efa2"
+            "line-color": "#a2efa2", 
+            "label": "data(label)"
         }
     }
 ];
@@ -68,7 +69,7 @@ function findSubPath (path) {
 */
 function displayOutputToCytoscape() {
     //extract value from input_value, and make it a list
-    var _input_value = $("#input_value").val().split(",");
+    var _input_value = $("#input_value").val().split(",").map(function(item) { return item.trim(); });;
     var _path_id = parseInt($("#select-path").find("option:selected").attr("value"));
     var paths = extractPath();
     var selected_path = paths[_path_id];
@@ -76,6 +77,7 @@ function displayOutputToCytoscape() {
     console.log(subpath);
     var _level = 0;
     var sequence = Promise.resolve();
+    var cy;
     $("#paths").hide();
     $("#log-list").append("<li class='collection-header'><h4>Your exploration starts now!</h4></li>")
     subpath.forEach(function(path) {
@@ -87,7 +89,7 @@ function displayOutputToCytoscape() {
             $("#log-list").append("<li class='collection-item'>" + "Step " + (_level + 1) + " ENDS!" + "</li>")
             var parsedJson = $.parseJSON(jsonResponse);
             if (_level == 0) {
-                var cy = drawCytoscape("#cy", concentric_style, concentricOptions, parsedJson.cytoscape);
+                cy = drawCytoscape("#cy", concentric_style, concentricOptions, parsedJson.cytoscape);
             } else {
                 cy.add(parsedJson.cytoscape);
                 cy.layout(concentricOptions);
