@@ -31,8 +31,6 @@ function drawSankeyPlot(jsonResponse){
   var data = [data];
 
   var layout = {
-    width: 1118,
-    height: 772,
     font: {
       size: 10
     }
