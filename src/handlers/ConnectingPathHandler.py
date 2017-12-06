@@ -273,6 +273,11 @@ class MetaDataHandler(BaseHandler):
         elif type == 'bioentity':
             bio_entity_list = [_item['preferred_name'] for _item in list(bt_explorer.registry.bioentity_info.values())]
             self.write(json.dumps({'bioentity': bio_entity_list}))
+        elif type == 'bioentity_input':
+            bio_entity_list = [_item['preferred_name'] for _item in list(bt_explorer.registry.bioentity_info.values())]
+            inputs = [_edge[0] for _edge in bt_explorer.api_map.edges()]
+            bioentity_inputs = [_entity for _entity in bio_entity_list if _entity in inputs]
+            self.write(json.dumps({'input': bioentity_inputs}))
 
 ###########################################################################
 # Sample Input: {path=["hgnc.symbol", 
