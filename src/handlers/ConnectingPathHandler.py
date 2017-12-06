@@ -213,6 +213,17 @@ class Input2EndpointHandler(BaseHandler):
         endpoints = bt_explorer.api_map.successors(_input)
         self.write(json.dumps({"endpoints": endpoints, "input": _input}))
 
+class Endpoint2OutputHandler(BaseHandler):
+    """
+    Return
+    ======
+    Outputs which can be returned by the given endpoint
+    """
+    def post(self):
+        _endpoint = self.get_argument('endpoint')
+        outputs = bt_explorer.api_map.successors(endpoint_name)
+        self.write(json.dumps({"endpoint": _endpoint, "output": outputs}))
+
 class ConnectingOutputHandler(BaseHandler):
     def post(self):
         _output = self.get_argument('output')
