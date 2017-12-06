@@ -170,7 +170,8 @@ class ConnectingPathHandler(BaseHandler):
         edges = []
         for _edge in bt_explorer.temp_G.edges():
             edges.append((_edge[0], _edge[1], find_edge_label(bt_explorer.temp_G, _edge[0], _edge[1])))
-        plotly_results = networkx_to_plotly(edges)
+        no_duplicate = [_item['preferred_name'] for _item in list(bt_explorer.registry.bioentity_info.values())] + list(bt_explorer.registry.endpoint_info.keys())
+        plotly_results = networkx_to_plotly(edges, duplicates_not_allowed=no_duplicate)
         self.write(json.dumps({"plotly": plotly_results, "paths": paths}))
 
 
