@@ -38,7 +38,7 @@ function drawSankeyPlot(jsonResponse){
       size: 10
     }
   };
-  $("#log-list").hide();
+  $("#log").hide();
   $("#paths").hide();
   $("#log-list").empty();
   $("#cy").empty();

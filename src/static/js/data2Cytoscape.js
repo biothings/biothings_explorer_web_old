@@ -80,7 +80,7 @@ function getPath() {
 function displayOutputToCytoscape(selected_path, _input_value) {
     //extract value from input_value, and make it a list
     $("#log-list").empty();
-    $("#log-list").show();
+    $("#log").show();
     $("#cy").empty();
     $("#paths-list").empty();
     var subpath = findSubPath(selected_path);
