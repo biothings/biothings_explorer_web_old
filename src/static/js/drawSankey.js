@@ -39,7 +39,7 @@ function drawSankeyPlot(jsonResponse){
     }
   };
   $("#log-list").hide();
-  $("#paths-list").hide();
+  $("#paths").hide();
   $("#log-list").empty();
   $("#cy").empty();
   $("#paths-list").empty();
