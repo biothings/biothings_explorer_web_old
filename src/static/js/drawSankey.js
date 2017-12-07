@@ -1,6 +1,5 @@
 function drawSankeyPlot(jsonResponse){
   var fig = jsonResponse;
-  console.log(fig);
   var data = {
     type: "sankey",
     domain: {
