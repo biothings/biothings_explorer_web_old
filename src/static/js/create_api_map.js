@@ -7,7 +7,7 @@
 */
 
 function findApiMap() {
-    var promise = $.getJSON("http://biothings.io/explorer/apimap");
+    var promise = $.getJSON("/explorer/apimap");
     return promise;
 }
 
