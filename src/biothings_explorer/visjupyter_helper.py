@@ -73,7 +73,7 @@ def find_edge_label(G, source, target, relation=None):
     if (source, target) not in G.edges():
         print('The given pair source-target pair ({}, {}) is not in the graph!'.format(source, target))
         return None
-    edge_labels = [v['label'] for k, v in G.edge[source][target].items()]
+    edge_labels = [v['label'] for k, v in G.get_edge_data(source, target).items()]
     if len(edge_labels) == 1:
         return edge_labels[0]
     elif len(edge_labels) > 1 and not relation:
