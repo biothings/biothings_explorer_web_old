@@ -7,7 +7,7 @@
 */
 
 function findApiMap() {
-    var promise = $.getJSON("http://biothings.io/explorer/apimap");
+    var promise = $.getJSON("http://localhost:8853/explorer/apimap");
     return promise;
 }
 
@@ -18,9 +18,13 @@ var style = [
         style: {
             "background-color": "blue",
             "label": "data(id)",
-            "height": 50,
-            "width": 50,
-            "font-size": "20px"
+            "height": 300,
+            "width": 300,
+            "font-size": "20px",
+            "text-valign": "center",
+            "text-halign": "center",
+            "text-outline-color": "#555",
+            "text-outline-width": "2px"
         }
     },
     {
@@ -28,7 +32,7 @@ var style = [
         style: {
             "background-color": "green",
             "label": "data(id)",
-            "font-size": "80px",
+            "font-size": "1000px !important",
             "height": 50,
             "width": 50
         }
@@ -39,8 +43,8 @@ var style = [
             "background-color": "red",
             "label": "data(id)",
             "font-size": "30px",
-            "height": 50,
-            "width": 50
+            "height": 200,
+            "width": 200
         }
     },
     {
@@ -48,7 +52,7 @@ var style = [
         style: {
             "curve-style": "haystack",
             "haystack-radius": 0,
-            "width": 10,
+            "width": 30,
             "opacity": 0.5,
             "line-color": "#a8eae5"
         }
@@ -61,6 +65,9 @@ var concentricOptions = {
     concentric: function (node) {
         return 10 - node.data("level");
     },
+    levelWidth: function () {
+        return 1;
+    },
     minNodeSpacing: 1,
     padding: -1
 };
@@ -68,7 +75,6 @@ var concentricOptions = {
 
 function draw_api_map() {
     findApiMap().done(function (jsonResponse) {
-        var cy = drawCytoscape("#cy", style, concentricOptions, jsonResponse);
-        //var nav = cy.navigator({});
+        drawCytoscape("#cy", style, concentricOptions, jsonResponse);
     });
 }

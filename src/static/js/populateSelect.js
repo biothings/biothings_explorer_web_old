@@ -21,7 +21,7 @@ function addOptionFromMetaData(metadata, metadata_type, dropdown_id){
 function getMetaData(metadata_type){
   var promise = $.ajax({
     type:"GET",
-    url: "http://localhost:8853/explorer/metadata/" + metadata_type,
+    url: "http://biothings.io/explorer/metadata/" + metadata_type,
     datatype: "json"
   });
   return promise;
@@ -33,7 +33,7 @@ function getMetaData(metadata_type){
 function getEndpointsBasedOnInput(_input) {
     var promise = $.ajax({
         type: "POST",
-        url: "http://localhost:8853/explorer/input2endpoint",
+        url: "http://biothings.io/explorer/input2endpoint",
         data: {input: _input},
         datatype: "json"
     });
@@ -46,7 +46,7 @@ function getEndpointsBasedOnInput(_input) {
 function getOutputBasedOnEndpoint(_endpoint) {
     var promise = $.ajax({
         type: "POST",
-        url: "http://localhost:8853/explorer/endpoint2output",
+        url: "http://biothings.io/explorer/endpoint2output",
         data: {endpoint: _endpoint},
         datatype: "json"
     });
