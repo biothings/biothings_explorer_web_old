@@ -133,7 +133,7 @@ class BioThingsExplorer:
             print('the start and end position is not in the api_map')
             return
         visited = [start]
-        stack = [self.api_map.successors_iter(start)]
+        stack = [self.api_map.successors(start)]
         paths = []
         final_results = []
         while stack:
@@ -149,7 +149,7 @@ class BioThingsExplorer:
                         paths.append(visited + [end])
                 elif child not in visited:
                     visited.append(child)
-                    stack.append(self.api_map.successors_iter(child))
+                    stack.append(self.api_map.successors(child))
             else:
                 if child == end or end in children:
                     new_path = visited + [end]
