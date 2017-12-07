@@ -31,8 +31,8 @@ function drawSankeyPlot(jsonResponse){
   var data = [data];
 
   var layout = {
-    width: "3000px",
-    height: "2500px",
+    width: 1000,
+    height: 772,
     font: {
       size: 10
     }
@@ -43,5 +43,5 @@ function drawSankeyPlot(jsonResponse){
   $("#cy").hide();
   Plotly.purge('plotly-div');
   $("#plotly-div").show();
-  Plotly.plot('plotly-div', data, layout);
+  Plotly.plot('plotly-div', data, layout, {displayModeBar: false});
 };
