@@ -12,5 +12,6 @@ function drawCytoscape(target_div, _style, _layout, data){
 		style: _style,
 		elements: data
 	});
+	//var nav = cy.navigator();
 	return cy;
 }
