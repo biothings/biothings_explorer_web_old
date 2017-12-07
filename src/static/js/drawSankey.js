@@ -38,6 +38,8 @@ function drawSankeyPlot(jsonResponse){
       size: 10
     }
   };
+  $("#log-list").hide();
+  $("#paths-list").hide();
   $("#log-list").empty();
   $("#cy").empty();
   $("#paths-list").empty();
