@@ -79,6 +79,8 @@ function populateBioEntity(dropdown_id){
 
 function populatePath(dropdown_id, data){
     $(dropdown_id).empty();
+    //add select all paths option first
+    $(dropdown_id).append('<option value = "all">Explore All Paths</option>');
     $.each(data, function(index, value) {
         $(dropdown_id).append('<option value =' + index + '>' + 'Path: ' + index + '</option>');
     });
