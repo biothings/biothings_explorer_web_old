@@ -69,6 +69,7 @@ var concentricOptions = {
 function draw_api_map() {
     findApiMap().done(function (jsonResponse) {
         var cy = drawCytoscape("#cy", style, concentricOptions, jsonResponse);
+        download(cy);
         //var nav = cy.navigator({});
     });
 }

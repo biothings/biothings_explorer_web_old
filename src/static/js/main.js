@@ -20,8 +20,13 @@ $(function(){
 	//when user select the path connecting input/output, and provide the input value
 	//display the cytoscape graph linking input and output
 	$("#explorePathButton").click(function() {
-		var path = getPath();
-		displayOutputToCytoscape(path[0], path[1]);
+		console.log($("#select-path").find("option:selected").attr("value"));
+		if ($("#select-path").find("option:selected").attr("value") == 'all') {
+			displayOutputFromAllPaths();
+		} else {
+			var path = getPath();
+			displayOutputToCytoscape(path[0], path[1]);
+		}
 	});
 	//detect changes in the customize path options
 	changeCustomizeOption();
