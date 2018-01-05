@@ -63,11 +63,6 @@
                      <p> Please select the <b>endpoint</b> you would like to explore. A sankey plot would appear on the right showing the <b>input</b> and <b>output</b> of the endpoint.</p>
                      <div class="select-wrapper"> 
                         <select id="select-endpoint">
-                           <option value="" disabled selected>Choose your option</option>
-                        </select>
-                        <select class="js-example-basic-single" name="state">
-                          <option value="AL">Alabama</option>
-                          <option value="WY">Wyoming</option>
                         </select>
                      </div>
                   </div>
@@ -101,18 +96,24 @@
                      <i class = "material-icons orange-text text-darken-2">directions</i>Explore Paths between Input and Output</div>
                   <div class = "collapsible-body"><p> Please select the <b>bioentities</b> you would like to explore. A sankey plot would appear on the right showing all the <b>paths</b> connecting the <b>input</b> and <b>output</b> you selected.</p>
                     <div class="select-wrapper"> 
+                      <label for="select-input1">
+                        Input
                         <select id="select-input1">
                            <option value="" disabled selected>Choose your option</option>
                         </select>
-                        <label>Input</label>
+                      </label>
                     </div>
                     <div class="select-wrapper"> 
+                      <label for="select-output1">
+                        Output
                         <select id="select-output1">
                            <option value="" disabled selected>Choose your option</option>
                         </select>
-                        <label>Output</label>
+                       </label>
                     </div>
                     <div class="select-wrapper">
+                      <label for="select-max-api">
+                        Maximum number of APIs used
                         <select id="select-max-api">
                           <option value="3" disabled selected>3</option>
                           <option value="1">1</option>
@@ -120,12 +121,13 @@
                           <option value="3">3</option>
                           <option value="4">4</option>
                         </select>
-                        <label>Maximum number of API used</label>
+                      </label>
                     </div>
                     <a class="orange lighten-2 btn" id="inputOutputPathButton">Find Path</a>
                     <div id="explore-path">
                       <p> Please select the <b>path</b> using the <b>drop-down</b> menu below. The detailed <b>description</b> for each path could be found under the <b>Sankey Plot</b> on the right. After selecting the path, please <b>specify the input</b>. If you have <b>multiple</b> inputs, separate them by <b>comma</b>.</p>
                       <div class="select-wrapper">
+                        <label for="select-path">
                           <select id="select-path">
                             <option value="3" disabled selected>3</option>
                             <option value="1">1</option>
@@ -133,7 +135,7 @@
                             <option value="3">3</option>
                             <option value="4">4</option>
                           </select>
-                          <label>Select the path you want to explore</label>
+                        </label>
                       </div>
                       <div class="input-field">
                         <input id="input_value" type="text" class="validate">
