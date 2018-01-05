@@ -12,6 +12,8 @@ function addOptionFromMetaData(metadata, metadata_type, dropdown_id){
     };
 };
 
+
+
 /**
  * Get metadata information based on type
  * @param {String} metadata_type
@@ -60,8 +62,10 @@ function getOutputBasedOnEndpoint(_endpoint) {
 function populateEndpoints(dropdown_id){
     getMetaData('endpoint').done(function(jsonResponse){
         var parsedJson = $.parseJSON(jsonResponse);
-        addOptionFromMetaData(parsedJson['endpoint'], 'endpoint', dropdown_id);
-        $(dropdown_id).material_select();
+        var endpoint_select2_data = $.map(parsedJson.endpoint, function(n) {
+            return {"id": n, "text": n};
+        });
+        $('#select-endpoint').select2({data: endpoint_select2_data});
     });
 };
 
@@ -100,6 +104,7 @@ function populateSelectInSideBar() {
     $("#select-max-api").material_select();
     $("#customize2").material_select();
     $("#customize3").material_select();
+    
 }
 
 /**
