@@ -65,7 +65,7 @@ function populateEndpoints(dropdown_id){
         var endpoint_select2_data = $.map(parsedJson.endpoint, function(n) {
             return {"id": n, "text": n};
         });
-        $('#select-endpoint').select2({data: endpoint_select2_data});
+        $(dropdown_id).select2({data: endpoint_select2_data});
     });
 };
 
@@ -76,8 +76,10 @@ function populateEndpoints(dropdown_id){
 function populateBioEntity(dropdown_id){
     getMetaData('bioentity').done(function(jsonResponse){
         var parsedJson = $.parseJSON(jsonResponse);
-        addOptionFromMetaData(parsedJson['bioentity'], 'bioentity', dropdown_id);
-        $(dropdown_id).material_select();
+        var bioentity_select2_data = $.map(parsedJson.bioentity, function(n) {
+            return {"id": n, "text": n};
+        });
+        $(dropdown_id).select2({data: bioentity_select2_data});
     });
 };
 
