@@ -4,10 +4,12 @@ $(function(){
 
 
 	draw_api_map();
+	//var cy = drawCytoscape("#cy", concentric_style, concentricOptions, [{"group": "nodes", "data": {'id': "NCBIGENE", "type": "value", "level": 0}}]);
 	//temparorily hide explore_path section, this section will only be shown
 	//after the user has specified the path
 	$("#explore-path").hide();
-	$("#explore-customize-path").hide()
+	$("#color-schema").hide();
+	$("#explore-customize-path").hide();
 	//Display api_road_map when 'roadmapbutton' is clicked
 	$("#roadMapButton").click(function() {
 		draw_api_map();
@@ -20,7 +22,6 @@ $(function(){
 	//when user select the path connecting input/output, and provide the input value
 	//display the cytoscape graph linking input and output
 	$("#explorePathButton").click(function() {
-		console.log($("#select-path").find("option:selected").attr("value"));
 		if ($("#select-path").find("option:selected").attr("value") == 'all') {
 			displayOutputFromAllPaths();
 		} else {
