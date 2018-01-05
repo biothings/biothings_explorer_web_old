@@ -28,6 +28,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
       <link href="./static/css/style.css" rel="stylesheet" />
       <script src="./static/js/cytoscape-navigator.js"></script>
+      <script src="http://d3js.org/d3.v3.min.js"></script>
 
    </head>
    
@@ -191,7 +192,10 @@
               <a class="grey lighten-1 btn btn-small right_button" id="DownloadCodeButton">Download Code</a>
             </div>
             <!-- Plotly chart will be drawn inside this div -->
-            <div id="plotly-div"></div>
+            <div id="plotly-div">
+            </div>
+            <div id="color-schema">
+            </div>
             <!-- Cytoscape chart will be drawn inside this div -->
             <div id="cy"></div>
 
