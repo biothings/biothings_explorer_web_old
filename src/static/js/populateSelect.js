@@ -103,6 +103,7 @@ function populateSelectInSideBar() {
     populateBioEntity("#select-input1");
     populateBioEntity("#select-output1");
     populateInput("#customize1");
+    $("#select-max-api").select2();
     $("#select-max-api").material_select();
     $("#customize2").material_select();
     $("#customize3").material_select();
