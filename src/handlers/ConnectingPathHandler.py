@@ -318,3 +318,20 @@ class FindOutputHandler(BaseHandler):
         self.write(json.dumps({'output': outputs, 'cytoscape':cytoscape_results}))
 
 
+class FindEdgeLabel(BaseHandler):
+    """
+    This function serves as one BioThings Explorer API endpoint
+    Given an endpoint and its output, return the relationship info from JSON-LD context
+
+    Params
+    ======
+    endpoint: endpoint name
+    output: output of the endpoint
+
+    """
+    def post(self):
+        endpoint_name = self.get_argument('endpoint')
+        output = self.get_argument('output')
+        self.write(json.dumps({'relation': find_edge_label(bt_explorer.api_map, endpoint_name, output)}))
+
+
