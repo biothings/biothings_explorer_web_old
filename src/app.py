@@ -37,6 +37,7 @@ class Application(tornado.web.Application):
             (r"/explorer/?", MainHandler),
             (r"/tutorial/?", TutorialHandler),
             (r"/explorer/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
+            (r"/tutorial/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
             (r"/explorer/path", ConnectingPathHandler),
             (r"/explorer/input", ConnectingInputHandler),
             (r"/explorer/apimap", ApiMapHandler),
