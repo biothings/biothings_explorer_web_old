@@ -6,6 +6,7 @@
          href = "https://fonts.googleapis.com/icon?family=Material+Icons">
       <link rel = "stylesheet"
          href = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
+      <link href="./static/css/tutorial_style.css" rel="stylesheet" />
       <script type = "text/javascript"
          src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>
       <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js">
@@ -90,9 +91,11 @@
                   </div>
                   <p>Once an API endpoint is selected, a Sankey plot would be displayed on the right side of the window to show the input and ouptut information of the API endpoint</p>
                   <div class="center">
-                     <img src="../static/img/tutorial_endpoint_sankey.png" alt="Select Endpoint View" width="100%">
+                     <img src="../static/img/tutorial_endpoint_sankey.png" alt="Select Endpoint View" width="80%">
                   </div>
+                  <p> On the left side of the Sankey plot is all the inputs accepted by the chosen API endpoint; and on the right side of the Sankey plot is all the possible outputs provided by the chosen API endpoint.</p>
                   <br>
+               </div>
             </div>
             <br>
             <div class="row" id="path">
@@ -104,11 +107,10 @@
                <div class="center">
                   <img src="../static/img/tutorial_select_bioentity.png" alt="Select Endpoint View" width="200" height="300">
                </div>
-               <p>Once an API endpoint is selected, a Sankey plot would be displayed on the right side of the window to show which API endpoint(s) could be connected from or to this bio-entity</p>
+               <p>Once an API endpoint is selected, a Sankey plot would be displayed on the right side of the window to show which API endpoint(s) could be connected from or to this bio-entity. The example below shows all API endpoints which could be connected from Uniprot.</p>
                <div class="center">
                   <img src="../static/img/tutorial_bioentity_sankey.png" alt="Select Bio-Entity View" width="100%">
                </div>
-               <br>
             </div>
             <br>
             <div class="row" id="explore">
