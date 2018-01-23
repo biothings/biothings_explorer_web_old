@@ -20,7 +20,7 @@
                     <a href="#!" class="brand-logo">BioThings Explorer</a>
                     <ul class="right hide-on-med-and-down">
                     <li><a href="#" id="map">TUTORIAL</a></li>
-                    <li><a href="#" id="explore">EXPLORE</a></li>
+                    <li><a href="/explorer" id="explore">EXPLORE</a></li>
                     </ul>
                 </div>
             </nav>
@@ -36,10 +36,11 @@
          <br>
          <div class="col s12" id="function">
             <h3> What can BioThings Explorer Offer? </h3>
+            <br>
             <div class="row">
                <div class="col s3">
                   <div class="center">
-                     <a href="/registry">
+                     <a href="#overview">
                        <i class="large material-icons">map</i>
                        <h5 class="promo-caption">Map</h5></a>
                      <p class="light center">Overview of how API, endpoints and bio-entities are connected</p>
@@ -47,7 +48,7 @@
                </div>
                <div class="col s3">
                   <div class="center">
-                     <a href="/registry">
+                     <a href="#metadata">
                        <i class="large material-icons">search</i>
                        <h5 class="promo-caption">MetaData</h5></a>
                      <p class="light center">Get metadata information about API endpoints</p>
@@ -55,7 +56,7 @@
                </div>
                <div class="col s3">
                   <div class="center">
-                     <a href="/registry">
+                     <a href="#path">
                        <i class="large material-icons">timeline</i>
                        <h5 class="promo-caption">Path</h5></a>
                      <p class="light center">Find Connection between Bio-entities</p>
@@ -63,11 +64,45 @@
                </div>
                <div class="col s3">
                   <div class="center">
-                     <a href="/registry">
+                     <a href="#explore">
                        <i class="large material-icons">explore</i>
                        <h5 class="promo-caption">Explore</h5></a>
                      <p class="light center">Knowledge Exploration through chaining API calls </p>
                   </div>
+               </div>
+            </div>
+            <br>
+            <div class="row" id="overview">
+               <div class="col s12 center">
+                  <i class="Large material-icons">map</i> <h3> Map </h3>
+               </div>
+            </div>
+            <br>
+            <div class="row" id="metadata">
+               <div class="col s12 center">
+                  <i class="Large material-icons">search</i> <h3> Metadata </h3>
+               </div>
+               <div class="col s12">
+                  <p> BioThings Explorer feeds on OpenAPI specifications stored at <a href="http://smart-api.info/" target="_blank">SmartAPI.info</a>, which includes metadata information of the input and output of individual API endpoint. </p>
+                  <p> Users may select any API endpoint of their interest at 'Explore individual Endpoint'. </p>
+                  <div class="center">
+                     <img src="../static/img/tutorial_select_endpoint.png" alt="Select Endpoint View" width="200" height="300">
+                  </div>
+                  <p>Once an API endpoint is selected, a Sankey plot would be displayed on the right side of the window to show the input and ouptut information of the API endpoint</p>
+                  <div class="center">
+                     <img src="../static/img/tutorial_endpoint_sankey.png" alt="Select Endpoint View" width="100%">
+                  </div>
+            </div>
+            <br>
+            <div class="row" id="path">
+               <div class="col s12 center">
+                  <i class="Large material-icons">timeline</i> <h3> Path </h3>
+               </div>
+            </div>
+            <br>
+            <div class="row" id="explore">
+               <div class="col s12 center">
+                  <i class="Large material-icons">explore</i> <h3> Explore </h3>
                </div>
             </div>
          </div>
