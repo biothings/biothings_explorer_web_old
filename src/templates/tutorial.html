@@ -33,6 +33,7 @@
             <h3> What is BioThings Explorer? </h3>
             <p> Current biological research relies significantly on the integration and cross-linking of data across multiple domains, including genes, drugs and diseases. Meanwhile, lots of data providers start to use web-based APIs as an alternative data access point. BioThings Explorer integrate different biological data together through a distributed approach, which is to interlink those individually maintained APIs for integrated knowledge exploration.</p>
             <p>BioThings Explorer utilize the <a href="http://smart-api.info/" target="_blank">SmartAPI</a> basd API-specific metadata and <a href="https://json-ld.org/" target="_blank">JSON-LD</a> based semantic context to solve the API data interoperability issue. By utilizing all these technologies, we are able to build a highly connected network of biological APIs, which are discoverable, reusable and actionable.  More importantly, it empowers users to perform knowledge exploration tasks by identifying potential connecting paths and chaining multiple API calls together.</p>
+            <p> You may check <a href="#sources">here</a> for API resources currently integrated in BioThings Explorer</p>
          </div>
          <br>
          <div class="col s12" id="function">
@@ -146,5 +147,81 @@
                <p> The graph above shows that the exploration starts from ncbigene:1018 (red dot), and it goes to hgnc.symbol:CDK3 first, and then it connects to three drugnames, which are RGB-286638, ALVOCIDIB and TG-02. The relationship between these nodes are labeled in the edges of the graph.</p>
             </div>
          </div>
+         <br>
+         <div class="col s12" id="sources">
+            <h3> What API resources has been integrated in BioThings Explorer </h3>
+            <br>
+           <ul class="collection">
+             <li class="collection-item avatar">
+               <img src="../static/img/mygene_info_logo.svg" alt="" class="circle">
+               <span class="title">MyGene.info API</span>
+               <p> <br>MyGene.info aggregates gene annotation information from NCBI, Ensembl, Uniprot, NetAffy, PharmGKB, UCSC, CPDB, etc.
+               </p>
+               <a href="http://mygene.info/" target="_blank" class="secondary-content"><i class="material-icons">link</i></a>
+             </li>
+             <li class="collection-item avatar">
+               <img src="../static/img/myvariant_info_logo_nomask.svg" alt="" class="circle">
+               <span class="title">MyVariant.info API</span>
+               <p> <br>MyVariant.info aggregates variant annotation information from dbSNP, dbNSFP, ClinVar, CADD, COSMIC, UniProt, CIViC, CGI, etc.
+               </p>
+               <a href="http://myvariant.info/" target="_blank" class="secondary-content"><i class="material-icons">link</i></a>
+             </li>
+             <li class="collection-item avatar">
+               <img src="../static/img/mychem_on.png" alt="" class="circle">
+               <span class="title">MyChem.info API</span>
+               <p> <br>MyChem.info aggregates variant annotation information from ChEBI, ChEMBL, DrugBank, Drug Central, PharmGKB, PubChem, UNII, etc.
+               </p>
+               <a href="http://mychem.info/" target="_blank" class="secondary-content"><i class="material-icons">link</i></a>
+             </li>
+             <li class="collection-item avatar">
+               <img src="../static/img/monarch_logo.png" alt="" class="circle">
+               <span class="title">BioLink API</span>
+               <p> <br>BioLink API aggregates biological information from variety of databases, covering gene, disease, pathway, genotype, investigations, etc.
+               </p>
+               <a href="https://api.monarchinitiative.org/api/" target="_blank" class="secondary-content"><i class="material-icons">link</i></a>
+             </li>
+             <li class="collection-item avatar">
+               <img src="../static/img/dgidb_logo.png" alt="" class="circle">
+               <span class="title">DGIdb API</span>
+               <p> <br>DGIdb offer information on drug-gene interactionsfrom over thirty trusted sources, including Ensembl, Entrez, CGI, CIViC, FDA, MyCancerGenome, NCI, etc.
+               </p>
+               <a href="http://www.dgidb.org/" target="_blank" class="secondary-content"><i class="material-icons">link</i></a>
+             </li>
+             <li class="collection-item avatar">
+               <img src="../static/img/do_logo.png" alt="" class="circle">
+               <span class="title">Disease Ontology API</span>
+               <p> <br>The Disease Ontology ntegrates disease and medical vocabularies through mapping of DO terms to MeSH, ICD, NCI’s thesaurus, SNOMED and OMIM.
+               </p>
+               <a href="http://disease-ontology.org/" target="_blank" class="secondary-content"><i class="material-icons">link</i></a>
+             </li>
+             <li class="collection-item avatar">
+               <img src="../static/img/ols-logo.png" alt="" class="circle">
+               <span class="title">Ontology Lookup Service API</span>
+               <p> <br>The Ontology Lookup Service (OLS) is a repository for biomedical ontologies that aims to provide a single point of access to the latest ontology versions.
+               </p>
+               <a href="https://www.ebi.ac.uk/ols/index" target="_blank" class="secondary-content"><i class="material-icons">link</i></a>
+             </li>
+             <li class="collection-item avatar">
+               <img src="../static/img/ensembl_logo.png" alt="" class="circle">
+               <span class="title">Ensembl API</span>
+               <p> <br>The Ensembl API covers a variety of biological concepts, including variants, transcripts, sequences, phenotypes, regulation, taxonomy, ontology, etc.
+               </p>
+               <a href="https://rest.ensembl.org/" target="_blank" class="secondary-content"><i class="material-icons">link</i></a>
+             </li>
+             <li class="collection-item avatar">
+               <img src="../static/img/broad_logo.png" alt="" class="circle">
+               <span class="title">Broad PGM API</span>
+               <p> <br>The Broad-PGM API provides probabilistic graphical models for gene expression data.
+               </p>
+               <a href="https://github.com/mjstealey/broad-pgm-translator" target="_blank" class="secondary-content"><i class="material-icons">link</i></a>
+             </li>
+             <li class="collection-item avatar">
+               <img src="../static/img/human_base_logo.png" alt="" class="circle">
+               <span class="title">HumanBase API</span>
+               <p> <br>The HumanBase API provides data-driven predictions of gene expression, function, regulation and interactions in human
+               </p>
+               <a href="https://github.com/mjstealey/broad-pgm-translator" target="_blank" class="secondary-content"><i class="material-icons">link</i></a>
+             </li>
+           </ul>
    </body>
 </html>
