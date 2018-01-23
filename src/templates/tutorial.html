@@ -18,7 +18,7 @@
          <div class="col s12" id="navbar">
             <nav>
                 <div class="nav-wrapper orange">
-                    <a href="#!" class="brand-logo">BioThings Explorer</a>
+                    <a href="/explorer" class="brand-logo">BioThings Explorer</a>
                     <ul class="right hide-on-med-and-down">
                     <li><a href="#" id="map">TUTORIAL</a></li>
                     <li><a href="/explorer" id="explore">EXPLORE</a></li>
@@ -65,7 +65,7 @@
                </div>
                <div class="col s3">
                   <div class="center">
-                     <a href="#explore">
+                     <a href="#knowledge_explore">
                        <i class="large material-icons">explore</i>
                        <h5 class="promo-caption">Explore</h5></a>
                      <p class="light center">Knowledge Exploration through chaining API calls </p>
@@ -75,13 +75,13 @@
             <br>
             <div class="row" id="overview">
                <div class="col s12 center">
-                  <i class="Large material-icons">map</i> <h3> Map </h3>
+                  <i class="Large material-icons blue-text text-lighten-1">map</i> <h3 class="blue-text text-lighten-1"> Map </h3>
                </div>
             </div>
             <br>
             <div class="row" id="metadata">
                <div class="col s12 center">
-                  <i class="Large material-icons">search</i> <h3> Metadata </h3>
+                  <i class="Large material-icons blue-text text-lighten-1">search</i> <h3 class="blue-text text-lighten-1"> Metadata </h3>
                </div>
                <div class="col s12">
                   <p> BioThings Explorer feeds on OpenAPI specifications stored at <a href="http://smart-api.info/" target="_blank">SmartAPI.info</a>, which includes metadata information of the input and output of individual API endpoint. </p>
@@ -100,7 +100,7 @@
             <br>
             <div class="row" id="path">
                <div class="col s12 center">
-                  <i class="Large material-icons">timeline</i> <h3> Path </h3>
+                  <i class="Large material-icons blue-text text-lighten-1">timeline</i> <h3 class="blue-text text-lighten-1"> Path </h3>
                </div>
                <p> Users may explore which API endpoints could connect from or to a specific biological entity, e.g. ncbigene at 'Explore individual Biological Entity as Input' or 'Explore Individual Biological Entity as Ouptut. </p>
                <p> You may first select any biological entity of your interest</p>
@@ -109,14 +109,41 @@
                </div>
                <p>Once an API endpoint is selected, a Sankey plot would be displayed on the right side of the window to show which API endpoint(s) could be connected from or to this bio-entity. The example below shows all API endpoints which could be connected from Uniprot.</p>
                <div class="center">
-                  <img src="../static/img/tutorial_bioentity_sankey.png" alt="Select Bio-Entity View" width="100%">
+                  <img src="../static/img/tutorial_bioentity_sankey.png" alt="Select Bio-Entity View" width="80%">
                </div>
             </div>
             <br>
-            <div class="row" id="explore">
+            <div class="row" id="knowledge_explore">
                <div class="col s12 center">
-                  <i class="Large material-icons">explore</i> <h3> Explore </h3>
+                  <i class="Large material-icons blue-text text-lighten-1">explore</i> <h3 class="blue-text text-lighten-1"> Explore </h3>
                </div>
+               <p>This part is designed to help users uncover implicit relationship between two biological IDs. Graph theory algorithms are used here to help users identify potential paths (e.g. API endpoints) connecting two biological IDs.</p>
+               <p> Users may first specify the input ID and output ID they would like to explore.</p>
+               <div class="center">
+                  <img src="../static/img/tutorial_path_input_output.png" alt="Select Endpoint View" width="200" height="300">
+               </div>
+               <p> Users may also specify the maximum number of APIs used in the path. By default, it is set to be 3, which means at most 3 APIs will be used to construct one path connecting from input to output</p>
+               <div class="center">
+                  <img src="../static/img/tutorial_max_api.png" alt="Select Endpoint View" width="200" height="300">
+               </div>
+               <p> Once you finish chosing input, output and max_api, you may click 'FIND PATH' button below. And a Sankey plot would be constructed for you on the right side of the window, showing all paths which could be connected from your input to your output. 
+               <div class="center">
+                  <img src="../static/img/tutorial_path_sankey.png" alt="Select Bio-Entity View" width="80%">
+               </div>
+               <p> The example above shows all paths connecting from ncbigene ID to drugname.</p>
+               <p> Below the Sankey plot, there will also be another section which list all these paths</p>
+               <div class="center">
+                  <img src="../static/img/tutorial_path_list.png" alt="Select Bio-Entity View" width="80%">
+               </div>
+               <p> Users may then chose any path they desire on the left side of the window, and specify the input value.</p>
+               <div class="center">
+                  <img src="../static/img/tutorial_path_select.png" alt="Select Endpoint View" width="200" height="300">
+               </div>
+               <p> Here we select path 11, which is the path connecting from ncbigene -> mygene.info -> hgnc.symbol -> dgidb -> drugname. The input value we specified here is 1018, which correspond to ncbigene ID 1018. You may then click 'EXPLORE THIS PATH', and API calls will be chained together and automatically generated for you. A cytoscape network graph would be displayed on the right, showing all intermediate results as well as final results.</p>
+               <div class="center">
+                  <img src="../static/img/tutorial_explore.png" alt="Select Bio-Entity View" width="80%">
+               </div>
+               <p> The graph above shows that the exploration starts from ncbigene:1018 (red dot), and it goes to hgnc.symbol:CDK3 first, and then it connects to three drugnames, which are RGB-286638, ALVOCIDIB and TG-02. The relationship between these nodes are labeled in the edges of the graph.</p>
             </div>
          </div>
    </body>
