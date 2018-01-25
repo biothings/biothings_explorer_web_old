@@ -18,7 +18,7 @@ function download(cy) {
     })
 }
 var COMMENT_LINE = "<br>################################################<br>"
-var IMPORT_LINE = COMMENT_LINE + "<p>#Import biothings_explorer python package</p>" + COMMENT_LINE + "<p style='color:blue;'>from biothings_explorer import BioThingsExplorer</p>"
+var IMPORT_LINE = COMMENT_LINE + "<p>#Import biothings_explorer python package</p><p> You can download the python package using pip install biothings_explorer</p>" + COMMENT_LINE + "<p style='color:blue;'>from biothings_explorer import BioThingsExplorer</p>"
 var INITIATE_LINE = COMMENT_LINE + "#Start biothings_explorer instance" + COMMENT_LINE + "<p style='color:blue;'>t = BioThingsExplorer()</p>"
 var DEFINE_PATH_LINE = COMMENT_LINE + "#Your exploration starts from input_id to output_id" + COMMENT_LINE 
 var FIND_PATH_LINE = "<p style='color:blue;'>paths = t.find_path(start=input_id, end=output_id)</p>"
