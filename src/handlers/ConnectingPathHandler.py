@@ -230,7 +230,7 @@ class Endpoint2OutputHandler(BaseHandler):
         self.write(json.dumps({"endpoint": _endpoint, "output": outputs}))
 
 class ConnectingOutputHandler(BaseHandler):
-    def post(self):
+    def get(self):
         _output = self.get_argument('output')
         edges = []
         endpoints = bt_explorer.api_map.predecessors(_output)
@@ -258,7 +258,7 @@ class ApiMapHandlerSankey(BaseHandler):
         self.write(json.dumps({"plotly": plotly_results}))
 
 class EndpointHandler(BaseHandler):
-    def post(self):
+    def get(self):
         endpoint_name = self.get_argument('endpoint')
         edges = []
         outputs = bt_explorer.api_map.successors(endpoint_name)
@@ -302,7 +302,7 @@ class MetaDataHandler(BaseHandler):
 #                           "source": "hgnc.symbol:CDK7"}}]
 ###########################################################################    
 class FindOutputHandler(BaseHandler):
-    def post(self):
+    def get(self):
         path = json.loads(self.get_argument('path'))
         input_prefix, _, output_prefix = path
         # the input field by default is a list(even if it only contains one item)
