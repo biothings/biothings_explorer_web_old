@@ -1,4 +1,6 @@
 import json
+import operator
+from collections import defaultdict
 from .basehandler import BaseHandler
 import os, sys
 from os import path
@@ -271,8 +273,13 @@ class MetaDataHandler(BaseHandler):
         elif type == 'endpoint':
             self.write(json.dumps({'endpoint': list(bt_explorer.registry.endpoint_info.keys())}))
         elif type == 'bioentity':
-            bio_entity_list = [_item['preferred_name'] for _item in list(bt_explorer.registry.bioentity_info.values())]
-            self.write(json.dumps({'bioentity': bio_entity_list}))
+            # group all bioentity ids together based on their semantic type
+            bioentity_dict = defaultdict(list)
+            for _item in bt_explorer.registry.bioentity_info.values():
+                bioentity_dict[_item['semantic type']].append(_item['preferred_name'])
+            for k,v in bioentity_dict.items():
+                bioentity_dict[k] = sorted(v)
+            self.write(json.dumps({'bioentity': bioentity_dict}))
         elif type == 'bioentity_input':
             bio_entity_list = [_item['preferred_name'] for _item in list(bt_explorer.registry.bioentity_info.values())]
             inputs = [_edge[0] for _edge in bt_explorer.api_map.edges()]
