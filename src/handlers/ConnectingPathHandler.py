@@ -270,9 +270,9 @@ class EndpointHandler(BaseHandler):
 class MetaDataHandler(BaseHandler):
     def get(self, type):
         if type == 'api':
-            self.write(json.dumps({'api': list(bt_explorer.registry.api_info.keys())}))
+            self.write(json.dumps({'api': sorted(list(bt_explorer.registry.api_info.keys()))}))
         elif type == 'endpoint':
-            self.write(json.dumps({'endpoint': list(bt_explorer.registry.endpoint_info.keys())}))
+            self.write(json.dumps({'endpoint': sorted(list(bt_explorer.registry.endpoint_info.keys()))}))
         elif type == 'bioentity':
             # group all bioentity ids together based on their semantic type
             bioentity_dict = defaultdict(list)
