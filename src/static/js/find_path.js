@@ -22,7 +22,7 @@ function findStartEndConnection(_start, _end, _max_api=3){
 */
 function findOutputTypeBasedOnInputType(_input){
 	var promise = $.ajax({
-		type: "POST",
+		type: "GET",
 		url: "/explorer/input",
 		data: {input: _input},
 		datatype: "json"
@@ -37,7 +37,7 @@ function findOutputTypeBasedOnInputType(_input){
 **/
 function findInputTypeBasedOnOutputType(_output){
 	var promise = $.ajax({
-		type: "POST",
+		type: "GET",
 		url: "/explorer/output",
 		data: {output: _output},
 		datatype: "json"
@@ -52,7 +52,7 @@ function findInputTypeBasedOnOutputType(_output){
 **/
 function findInputOutputBasedOnEndpoint(endpoint_name) {
 	var promise = $.ajax({
-		type: "POST",
+		type: "GET",
 		url: "/explorer/endpoint",
 		data: {endpoint: endpoint_name},
 		datatype: "json"
@@ -68,7 +68,7 @@ function findInputOutputBasedOnEndpoint(endpoint_name) {
 **/
 function findOutputBasedOnInputAndPath(input_value, _path, _level) {
 	var promise = $.ajax({
-		type: "POST",
+		type: "GET",
 		url: "/explorer/findoutput",
 		data: {path: JSON.stringify(_path), input: JSON.stringify(input_value), level: _level},
 		datatype: "json"

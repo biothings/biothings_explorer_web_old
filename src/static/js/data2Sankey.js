@@ -6,8 +6,7 @@ function displayInput() {
 	$("#select-input").change(function(){
 		_input = $(this).find("option:selected").attr('value');
 		findOutputTypeBasedOnInputType(_input).done(function(jsonResponse){
-            var parsedJson = $.parseJSON(jsonResponse);
-	    	drawSankeyPlot(parsedJson);
+	    	drawSankeyPlot(jsonResponse);
 		});
 	});
 };
@@ -20,8 +19,7 @@ function displayOutput() {
     $("#select-output").change(function(){
         _output = $(this).find("option:selected").attr('value');
         findInputTypeBasedOnOutputType(_output).done(function(jsonResponse){
-            var parsedJson = $.parseJSON(jsonResponse);
-            drawSankeyPlot(parsedJson);
+            drawSankeyPlot(jsonResponse);
         });
     });
 };
@@ -33,9 +31,9 @@ function displayOutput() {
 function displayEndpoint() {
     $("#select-endpoint").change(function(){
         _endpoint = $(this).find("option:selected").attr('value');
+        console.log(_endpoint);
         findInputOutputBasedOnEndpoint(_endpoint).done(function(jsonResponse){
-            var parsedJson = $.parseJSON(jsonResponse);
-            drawSankeyPlot(parsedJson);
+            drawSankeyPlot(jsonResponse);
         });
     });
 };

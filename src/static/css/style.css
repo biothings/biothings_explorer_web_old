@@ -15,16 +15,17 @@ body {
 #cy {
     width: 100%; /* height is set using window size*/
     height: 100%;
-    display:block;
+    display:none;
 }
 #main {
     margin-top: 0.5%;
 }
 /*sankey plot*/
-#plotly-div {
-    width: 100%;
-    height: 100%;
-    display: block; /* height is set using window size*/
+#path-plotly-div {
+    display: none; /* height is set using window size*/
+}
+#explore-plotly-div {
+  display: none;
 }
 h1 {
   opacity: 0.5;

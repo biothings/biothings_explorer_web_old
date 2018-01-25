@@ -391,7 +391,11 @@
 .select2-container--default .select2-results__group {
     cursor: default;
     display: block;
-    padding: 6px
+    padding: 6px;
+    font-size: 18px;
+    color: grey;
+    font-style: italic;
+    text-transform: uppercase;
 }
 
 .select2-container--classic .select2-selection--single {
