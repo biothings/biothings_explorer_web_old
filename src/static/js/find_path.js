@@ -22,7 +22,7 @@ function findStartEndConnection(_start, _end, _max_api=3){
 */
 function findOutputTypeBasedOnInputType(_input){
 	var promise = $.ajax({
-		type: "POST",
+		type: "GET",
 		url: "/explorer/input",
 		data: {input: _input},
 		datatype: "json"
