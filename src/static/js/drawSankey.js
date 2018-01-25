@@ -9,7 +9,7 @@ function drawSankeyPlot(jsonResponse, type){
 
   } else if (type=='explore'){
       Plotly.purge('explore-plotly');
-      $("#explore-plotly-div").show();
+      $("#path-plotly-div").hide();
       $("#explore-plotly-div").show();
   }
 
