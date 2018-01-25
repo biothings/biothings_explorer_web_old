@@ -6,8 +6,7 @@ function displayInput() {
 	$("#select-input").change(function(){
 		_input = $(this).find("option:selected").attr('value');
 		findOutputTypeBasedOnInputType(_input).done(function(jsonResponse){
-            var parsedJson = $.parseJSON(jsonResponse);
-	    	drawSankeyPlot(parsedJson);
+	    	drawSankeyPlot(jsonResponse);
 		});
 	});
 };
