@@ -75,10 +75,16 @@ function populateEndpoints(dropdown_id){
 */
 function populateBioEntity(dropdown_id){
     getMetaData('bioentity').done(function(jsonResponse){
+        var bioentity_select2_data = []
         var parsedJson = $.parseJSON(jsonResponse);
-        var bioentity_select2_data = $.map(parsedJson.bioentity, function(n) {
-            return {"id": n, "text": n};
-        });
+        for (var semantic_type in parsedJson.bioentity) {
+            var group = {'id': semantic_type, 'text': semantic_type, 'children': []};
+            var bioentity_id_list = parsedJson.bioentity[semantic_type];
+            for (var bioentity_id in bioentity_id_list) {
+                group['children'].push({id: bioentity_id_list[bioentity_id], text: bioentity_id_list[bioentity_id]})
+            };
+            bioentity_select2_data.push(group);
+        };
         $(dropdown_id).select2({data: bioentity_select2_data});
     });
 };
