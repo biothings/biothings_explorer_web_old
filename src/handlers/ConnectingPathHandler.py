@@ -1,4 +1,7 @@
 import json
+import operator
+from collections import defaultdict
+from tornado.escape import json_encode
 from .basehandler import BaseHandler
 import os, sys
 from os import path
@@ -10,11 +13,13 @@ from biothings_explorer import BioThingsExplorer
 
 bt_explorer = BioThingsExplorer()
 
-color_dict = {'ClinicalTrial': 'rgba(144, 144, 28, 0.4)', 'Gene': 'rgba(55, 230, 84, 0.93)', 
-              'Drug': 'rgba(230, 55, 218, 0.93)', 'Protein': 'rgba(55, 227, 230, 0.6)', 
-              'Allele/Variant': 'rgba(230, 174, 55, 0.83)', 'ExperimentalStudy': 'rgba(86, 28, 144, 0.3)',
-              'Phenotype': 'rgba(28, 86, 144, 0.3)', 'Pathway': 'rgba(230, 55, 116, 0.63)',
-              'Disease': 'rgba(166, 55, 230, 0.84)', 'Reaction': 'rgba(100, 88, 77, 0.4)'}
+color_dict = {'clinical trial': 'rgba(144, 144, 28, 0.4)', 'gene': 'rgba(55, 230, 84, 0.93)', 
+              'chemical': 'rgba(230, 55, 218, 0.93)', 'protein': 'rgba(55, 227, 230, 0.6)', 
+              'variant': 'rgba(230, 174, 55, 0.83)', 'publication': 'rgba(86, 28, 144, 0.3)',
+              'phenotype': 'rgba(28, 86, 144, 0.3)', 'pathway': 'rgba(230, 55, 116, 0.63)',
+              'disease': 'rgba(166, 55, 230, 0.84)', 'transcript': 'rgba(100, 88, 77, 0.4)',
+              'clinical significance': 'rgba(70, 33, 77, 0.4)', 'organism': 'rgba(10, 133, 177, 0.4)',
+              'structure': 'rgba(8, 233, 7, 0.4)'}
 
 def label2color(label):
     uri = bt_explorer.registry.prefix2uri(label)
@@ -190,7 +195,7 @@ class ConnectingPathHandler(BaseHandler):
 
 
 class ConnectingInputHandler(BaseHandler):
-    def post(self):
+    def get(self):
         _input = self.get_argument('input')
         print(_input)
         edges = []
@@ -225,7 +230,7 @@ class Endpoint2OutputHandler(BaseHandler):
         self.write(json.dumps({"endpoint": _endpoint, "output": outputs}))
 
 class ConnectingOutputHandler(BaseHandler):
-    def post(self):
+    def get(self):
         _output = self.get_argument('output')
         edges = []
         endpoints = bt_explorer.api_map.predecessors(_output)
@@ -253,7 +258,7 @@ class ApiMapHandlerSankey(BaseHandler):
         self.write(json.dumps({"plotly": plotly_results}))
 
 class EndpointHandler(BaseHandler):
-    def post(self):
+    def get(self):
         endpoint_name = self.get_argument('endpoint')
         edges = []
         outputs = bt_explorer.api_map.successors(endpoint_name)
@@ -267,12 +272,17 @@ class EndpointHandler(BaseHandler):
 class MetaDataHandler(BaseHandler):
     def get(self, type):
         if type == 'api':
-            self.write(json.dumps({'api': list(bt_explorer.registry.api_info.keys())}))
+            self.write(json.dumps({'api': sorted(list(bt_explorer.registry.api_info.keys()))}))
         elif type == 'endpoint':
-            self.write(json.dumps({'endpoint': list(bt_explorer.registry.endpoint_info.keys())}))
+            self.write(json.dumps({'endpoint': sorted(list(bt_explorer.registry.endpoint_info.keys()))}))
         elif type == 'bioentity':
-            bio_entity_list = [_item['preferred_name'] for _item in list(bt_explorer.registry.bioentity_info.values())]
-            self.write(json.dumps({'bioentity': bio_entity_list}))
+            # group all bioentity ids together based on their semantic type
+            bioentity_dict = defaultdict(list)
+            for _item in bt_explorer.registry.bioentity_info.values():
+                bioentity_dict[_item['semantic type']].append(_item['preferred_name'])
+            for k,v in bioentity_dict.items():
+                bioentity_dict[k] = sorted(v)
+            self.write(json_encode({'bioentity': bioentity_dict}))
         elif type == 'bioentity_input':
             bio_entity_list = [_item['preferred_name'] for _item in list(bt_explorer.registry.bioentity_info.values())]
             inputs = [_edge[0] for _edge in bt_explorer.api_map.edges()]
@@ -292,7 +302,7 @@ class MetaDataHandler(BaseHandler):
 #                           "source": "hgnc.symbol:CDK7"}}]
 ###########################################################################    
 class FindOutputHandler(BaseHandler):
-    def post(self):
+    def get(self):
         path = json.loads(self.get_argument('path'))
         input_prefix, _, output_prefix = path
         # the input field by default is a list(even if it only contains one item)
