@@ -60,9 +60,10 @@ class BioThingsExplorer:
             for _output in _info['output']:
                 preferred_name = self.registry.bioentity_info[_output]['preferred_name']
                 self.api_map.add_node(preferred_name, type='bioentity', color='yellow')
-                relations = _info['relation'][_output]
-                for _relation in relations:
-                    self.api_map.add_edge(_endpoint, preferred_name, label=_relation)
+                if _output in _info['relation']:
+                    relations = _info['relation'][_output]
+                    for _relation in relations:
+                        self.api_map.add_edge(_endpoint, preferred_name, label=_relation)
         return self.api_map
 
     def draw_api_road_map(self):
