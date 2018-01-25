@@ -7,8 +7,8 @@ body {
 }
 /*cytoscape*/
 #semantic_type_view, #bioentity_id_view, #api_view {
-    width: 100%; /* height is set using window size*/
-    height: 100%;
+    width: 800px /* height is set using window size*/
+    height: 800px;
     display:block;
 }
 /*cytoscape*/
