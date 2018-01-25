@@ -6,7 +6,7 @@ function displayInput() {
 	$("#select-input").change(function(){
 		_input = $(this).find("option:selected").attr('value');
 		findOutputTypeBasedOnInputType(_input).done(function(jsonResponse){
-	    	drawSankeyPlot(jsonResponse);
+	    	drawSankeyPlot(jsonResponse, type='path');
 		});
 	});
 };
@@ -19,7 +19,7 @@ function displayOutput() {
     $("#select-output").change(function(){
         _output = $(this).find("option:selected").attr('value');
         findInputTypeBasedOnOutputType(_output).done(function(jsonResponse){
-            drawSankeyPlot(jsonResponse);
+            drawSankeyPlot(jsonResponse, type='path');
         });
     });
 };
@@ -31,9 +31,8 @@ function displayOutput() {
 function displayEndpoint() {
     $("#select-endpoint").change(function(){
         _endpoint = $(this).find("option:selected").attr('value');
-        console.log(_endpoint);
         findInputOutputBasedOnEndpoint(_endpoint).done(function(jsonResponse){
-            drawSankeyPlot(jsonResponse);
+            drawSankeyPlot(jsonResponse, type='path');
         });
     });
 };
@@ -49,16 +48,11 @@ function displayPathsBetweenInputOutput() {
         var _output = $("#select-output1").find("option:selected").attr('value');
         var max_api = $("#select-max-api").find("option:selected").attr('value');
         findStartEndConnection(_input, _output, max_api).done(function(jsonResponse){
-            var parsedJson = $.parseJSON(jsonResponse);
-            drawSankeyPlot(parsedJson);
-            var paths = parsedJson['paths'];
-            populatePath("#select-path", paths);
-            $("#explore-path").show();
-            $("#paths").show();
-            $("#paths-list").append('<li class="collection-header"><h4>' + 'Path(s) Connecting from ' + _input + ' to ' + _output + '</h4></li>')
-            $.each(paths, function(index, value) {
-                $("#paths-list").append('<li class="collection-item">' + 'Path' + index + ': ' + value.join(' -> ') + '</li>')
-            });
+            drawSankeyPlot(jsonResponse, type="explore");
+            CURRENT_PATHS = jsonResponse['paths'];
+            $("#export-python").append(dynamic_text(_input, _output));
+            draw_hierarchical_path(CURRENT_PATHS);
+            populatePath("#select-path", CURRENT_PATHS);
         });
     });
 };
