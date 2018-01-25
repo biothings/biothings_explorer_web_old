@@ -1,6 +1,7 @@
 import json
 import operator
 from collections import defaultdict
+from tornado.escape import json_encode
 from .basehandler import BaseHandler
 import os, sys
 from os import path
@@ -279,7 +280,7 @@ class MetaDataHandler(BaseHandler):
                 bioentity_dict[_item['semantic type']].append(_item['preferred_name'])
             for k,v in bioentity_dict.items():
                 bioentity_dict[k] = sorted(v)
-            self.write(json.dumps({'bioentity': bioentity_dict}))
+            self.write(json_encode({'bioentity': bioentity_dict}))
         elif type == 'bioentity_input':
             bio_entity_list = [_item['preferred_name'] for _item in list(bt_explorer.registry.bioentity_info.values())]
             inputs = [_edge[0] for _edge in bt_explorer.api_map.edges()]
