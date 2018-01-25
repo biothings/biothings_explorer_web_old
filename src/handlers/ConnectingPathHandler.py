@@ -180,7 +180,7 @@ def networkx_to_cytoscape(edges, entity_list=[], api_list=[], endpoint_list=[]):
 
 
 class ConnectingPathHandler(BaseHandler):
-    def post(self):
+    def get(self):
         start = self.get_argument('start')
         end = self.get_argument('end')
         max_api = self.get_argument('max_api')
