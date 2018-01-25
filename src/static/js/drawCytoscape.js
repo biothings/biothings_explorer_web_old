@@ -1,9 +1,9 @@
 function drawCytoscape(target_div, _style, _layout, data){
-	$("#cy").empty();
+	$(target_div).empty();
 	Plotly.purge('plotly-div');
 	$("#paths").hide();
 	//$("#log").hide();
-    $("#cy").show();
+    $(target_div).show();
     $("#plotly-div").hide();
     $("#color-schema").hide();
 	var cy = cytoscape({

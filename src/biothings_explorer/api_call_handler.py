@@ -117,7 +117,14 @@ class ApiCallHandler:
         for _para in self.registry.endpoint_info[endpoint_name][method]['parameters']:
             # handle cases where input value is part of the url
             if _para['in'] == 'path':
-                endpoint_name = endpoint_name.replace('{' + _para['name'] + '}', str(uri_value_dict[_para['x-valueType'][0]]))
+                for _input_type in _para['x-valueType']:
+                    if _input_type in uri_value_dict:
+                        for _template in _para['x-requestTemplate']:
+                            if _template['valueType'] == _input_type:
+                                if _template['template'] in endpoint_name:
+                                    endpoint_name = endpoint_name.replace('{' + _para['name'] + '}', str(uri_value_dict[_input_type]))
+                                else:
+                                    endpoint_name = self.registry.endpoint_info[endpoint_name]['api'] + _template['template'].replace('{' + _para['name'] + '}', str(uri_value_dict[_input_type]))
             # handle cases for query
             else:
                 # check whether the parameter is required
