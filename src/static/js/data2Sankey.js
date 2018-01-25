@@ -31,6 +31,7 @@ function displayOutput() {
 function displayEndpoint() {
     $("#select-endpoint").change(function(){
         _endpoint = $(this).find("option:selected").attr('value');
+        console.log(_endpoint);
         findInputOutputBasedOnEndpoint(_endpoint).done(function(jsonResponse){
             drawSankeyPlot(jsonResponse);
         });
