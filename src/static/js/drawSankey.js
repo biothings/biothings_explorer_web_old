@@ -1,9 +1,18 @@
 
-function drawSankeyPlot(jsonResponse){
+function drawSankeyPlot(jsonResponse, type){
   // hide all non sankey plots in the main div
-  Plotly.purge('path-plotly');
   $(".overview_map").hide();
-  $("#path-plotly-div").show();
+  if (type=='path'){
+      Plotly.purge('path-plotly');
+      $("#explore-plotly-div").hide();
+      $("#path-plotly-div").show();
+
+  } else if (type=='explore'){
+      Plotly.purge('explore-plotly');
+      $("#explore-plotly-div").show();
+      $("#explore-plotly-div").show();
+  }
+
   var fig = jsonResponse;
   var data = {
     type: "sankey",
@@ -42,7 +51,9 @@ function drawSankeyPlot(jsonResponse){
       size: 10
     }
   };
-
-  Plotly.plot('path-plotly', data, layout, {displayModeBar: false});
-
+  if (type=='path'){
+    Plotly.plot('path-plotly', data, layout, {displayModeBar: false});
+  } else if (type=="explore"){
+    Plotly.plot('explore-plotly', data, layout, {displayModeBar: false});
+  };
 };
