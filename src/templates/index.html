@@ -23,6 +23,7 @@
       <script type="text/javascript" src="./static/js/draw_id_map.js"></script>
       <script type="text/javascript" src="./static/js/draw_api_map.js"></script>
       <script type="text/javascript" src="./static/js/color_schema.js"></script>
+      <script type="text/javascript" src="./static/js/draw_hierarchical_path.js"></script>
       <script type = "text/javascript"
          src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>
       <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> 
@@ -78,7 +79,8 @@
                   <div class = "collapsible-header">
                      <i class = "material-icons orange-text text-darken-2">call_made</i>Explore Individual Bio-Entity as Input</div>
                   <div class = "collapsible-body">
-                     <p> Please select the <b>bioentity</b> you would like to explore. A sankey plot would appear on the right showing all the <b>bioentity</b>(output) which can be connected from the <b>bioentity</b> you selected.</p>
+                     <p> Please select the <b>bioentity</b> you would like to explore. A sankey plot would appear on the right showing all the <b>bioentity</b>(output) which can be connected from the <b>bioentity</b> you selected.<br>
+                     <b>Example Input</b>: ncbigene </p>
                      <div class="select-wrapper"> 
                         <select id="select-input">
                            <option value="" disabled selected>Choose your option</option>
@@ -89,7 +91,8 @@
                <li>
                   <div class = "collapsible-header">
                      <i class = "material-icons orange-text text-darken-2">call_received</i>Explore Individual Bio-Entity as Output</div>
-                  <div class = "collapsible-body"><p> Please select the <b>bioentity</b> you would like to explore. A sankey plot would appear on the right showing all the <b>bioentity</b>(input) which can be connected to the <b>bioentity</b> you selected.</p>
+                  <div class = "collapsible-body"><p> Please select the <b>bioentity</b> you would like to explore. A sankey plot would appear on the right showing all the <b>bioentity</b>(input) which can be connected to the <b>bioentity</b> you selected.<br>
+                  <b>Example Output</b>: uniprot </p>
                      <div class="select-wrapper"> 
                         <select id="select-output">
                            <option value="" disabled selected>Choose your option</option>
@@ -217,15 +220,16 @@
               <div id="color-schema" class="col s12"></div>
             </div>
             <div id="explore-plotly-div">
-              <div id="paths">
-                <ul class="collection with-header" id="paths-list">
-                  <li class="collection-header"><h4>First Names</h4></li>
+              <div class="col s12">
+                <ul class="tabs">
+                  <li class="tab col s4"><a class="active" href="#explore-plotly">Sankey Plot View</a></li>
+                  <li class="tab col s4"><a class="active" href="#explore-visjs">Hierarchical View</a></li>
+                  <li class="tab col s4"><a href="#export-python">Export Python Code</a></li>
                 </ul>
               </div>
-              <div id="log">
-                <ul class="collection with-header" id="log-list">
-                </ul>
-              </div>
+              <div id="explore-plotly" class="col s12"></div>
+              <div id="explore-visjs" class="col s12"></div>
+              <div id="export-python" class="col s12"></div>
             </div>
         </div>
       </div>
