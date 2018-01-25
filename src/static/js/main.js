@@ -1,9 +1,9 @@
 $(function(){
 	//by default, when user opens the biothings explorer, 
 	//the overview of api road map will be displayed
-
-
-	draw_api_map();
+	drawSemanticMap();
+	drawIdLevelMap();
+	drawApiLevelMap()
 	//var cy = drawCytoscape("#cy", concentric_style, concentricOptions, [{"group": "nodes", "data": {'id': "NCBIGENE", "type": "value", "level": 0}}]);
 	//temparorily hide explore_path section, this section will only be shown
 	//after the user has specified the path
