@@ -19,8 +19,7 @@ function displayOutput() {
     $("#select-output").change(function(){
         _output = $(this).find("option:selected").attr('value');
         findInputTypeBasedOnOutputType(_output).done(function(jsonResponse){
-            var parsedJson = $.parseJSON(jsonResponse);
-            drawSankeyPlot(parsedJson);
+            drawSankeyPlot(jsonResponse);
         });
     });
 };
@@ -33,8 +32,7 @@ function displayEndpoint() {
     $("#select-endpoint").change(function(){
         _endpoint = $(this).find("option:selected").attr('value');
         findInputOutputBasedOnEndpoint(_endpoint).done(function(jsonResponse){
-            var parsedJson = $.parseJSON(jsonResponse);
-            drawSankeyPlot(parsedJson);
+            drawSankeyPlot(jsonResponse);
         });
     });
 };
