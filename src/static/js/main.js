@@ -3,7 +3,8 @@ $(function(){
 	//the overview of api road map will be displayed
 	drawSemanticMap();
 	drawIdLevelMap();
-	drawApiLevelMap()
+	drawApiLevelMap();
+	drawColorSchema()
 	//var cy = drawCytoscape("#cy", concentric_style, concentricOptions, [{"group": "nodes", "data": {'id': "NCBIGENE", "type": "value", "level": 0}}]);
 	//temparorily hide explore_path section, this section will only be shown
 	//after the user has specified the path
