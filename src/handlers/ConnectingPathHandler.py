@@ -304,11 +304,14 @@ class MetaDataHandler(BaseHandler):
 class FindOutputHandler(BaseHandler):
     def get(self):
         path = json.loads(self.get_argument('path'))
+        print('path',path)
         input_prefix, _, output_prefix = path
         # the input field by default is a list(even if it only contains one item)
         _input = json.loads(self.get_argument('input'))
+        print('input',_input)
         # consider adding a level parameter here
         level = int(self.get_argument('level'))
+        print(level)
         transformed_path = bt_explorer.path_conversion(path)
         #start_point = [path[0] + ':' + _item for _item in _input]
         G_output = bt_explorer.find_output(transformed_path, _input, display_graph=False)

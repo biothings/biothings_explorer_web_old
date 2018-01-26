@@ -240,13 +240,16 @@ class ApiCallHandler:
 
         # preprocess the input
         processed_input = self.preprocessing_input(input_value, endpoint_name)
+        print('processed_input', processed_input)
         # retrieve json doc
         api_call_params = []
         for _input_value in processed_input:
             uri_value = {input_type: _input_value}
             if additional_parameters:
                 uri_value.update(additional_parameters)
+            print(uri_value)
             api_call_params.append(self.call_api(uri_value, endpoint_name))
+        print('api_call_params', api_call_params)
         rs = (grequests.get(u, params=v) for (u,v) in api_call_params)
         responses = grequests.map(rs)
             #api_call_response = self.call_api(uri_value, endpoint_name)
