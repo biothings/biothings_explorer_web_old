@@ -88,14 +88,21 @@ function populateBioEntity(dropdown_id){
 };
 
 function populatePath(dropdown_id, data){
+    $("#explore-path").show();
     $(dropdown_id).empty();
     //add select all paths option first
-    $(dropdown_id).append('<option value = "all">Explore All Paths</option>');
+    /*
     $.each(data, function(index, value) {
         $(dropdown_id).append('<option value =' + index + '>' + 'Path: ' + index + '</option>');
     });
     $(dropdown_id).material_select();
-}
+    */
+    var path_data = []
+    for (var i=0; i < data.length; i+=1) {
+        path_data.push({id: i+1, text: 'Path: ' + (i+1), value: data[i]})
+    };
+    $(dropdown_id).select2({data:path_data})
+};
 
 /**
  * Automatically populate all selects in the side bar
