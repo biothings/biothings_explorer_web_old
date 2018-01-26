@@ -9,13 +9,13 @@ $(function(){
 	//temparorily hide explore_path section, this section will only be shown
 	//after the user has specified the path
 	$("#explore-path").hide();
-	$("#color-schema").hide();
 	$("#explore-customize-path").hide();
 	//Display api_road_map when 'roadmapbutton' is clicked
 	$("#roadMapButton").click(function() {
 		$("#path-plotly-div").hide();
 		$("#path-plotly-div").hide();
 		$("#explore-plotly-div").hide();
+		$("#cy").hide();
 		$(".overview_map").show();
 	});
 	//populate the sidebar, fill in endpoint and bioentity names to 'select'
