@@ -2,6 +2,7 @@
 function drawSankeyPlot(jsonResponse, type){
   // hide all non sankey plots in the main div
   $(".overview_map").hide();
+  $("#cy").hide();
   if (type=='path'){
       Plotly.purge('path-plotly');
       $("#explore-plotly-div").hide();
