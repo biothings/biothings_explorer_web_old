@@ -68,9 +68,8 @@ function findSubPath (path) {
 */
 function getPath() {
     var _input_value = $("#input_value").val().split(",").map(function(item) { return item.trim(); });;
-    var _path_id = parseInt($("#select-path").find("option:selected").attr("value"));
-    var paths = extractPath();
-    var selected_path = paths[_path_id];
+    var _path_id = parseInt($("#select-path").find(":selected").val());
+    var selected_path = CURRENT_PATHS[_path_id - 1];
     return [selected_path, _input_value]
 }
 /**
@@ -79,15 +78,11 @@ function getPath() {
 */
 function displayOutputToCytoscape(selected_path, _input_value) {
     //extract value from input_value, and make it a list
-    $("#log-list").empty();
-    $("#log").show();
     $("#cy").empty();
-    $("#paths-list").empty();
     var subpath = findSubPath(selected_path);
     var _level = 0;
     var sequence = Promise.resolve();
     var cy;
-    $("#paths").hide();
     $("#log-list").append("<li class='collection-header'><h4>Your exploration starts now!</h4></li>")
     subpath.forEach(function(path) {
         sequence = sequence.then(function() {
@@ -95,16 +90,16 @@ function displayOutputToCytoscape(selected_path, _input_value) {
         var Response = findOutputBasedOnInputAndPath(_input_value, path, _level);
         return Response;
         }).then(function(jsonResponse) {
+            console.log(jsonResponse);
             $("#log-list").append("<li class='collection-item'>" + "Step " + (_level + 1) + " ENDS!" + "</li>")
-            var parsedJson = $.parseJSON(jsonResponse);
             if (_level == 0) {
-                cy = drawCytoscape("#cy", concentric_style, concentricOptions, parsedJson.cytoscape);
+                cy = drawCytoscape("#cy", concentric_style, concentricOptions, jsonResponse.cytoscape);
             } else {
-                cy.add(parsedJson.cytoscape);
+                cy.add(jsonResponse.cytoscape);
                 cy.layout(concentricOptions);
             };
             _level = _level + 1;
-            _input_value = parsedJson.output;
+            _input_value = jsonResponse.output;
         });
     });
 }
