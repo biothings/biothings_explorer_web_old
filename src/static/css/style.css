@@ -1,9 +1,41 @@
-
+*{
+  margin:0;
+  padding:0;
+}
 body {
     margin:0;
     padding:0;
-    font-family: Sans-Serif;
+    font-family: Arial, Sans-Serif;
     line-height: 1.5em;
+}
+/*landingpage*/
+#index-banner {
+  height:60vh;
+  background-color: black;
+}
+
+#index-banner h1 {
+  font-size: 50px;
+  color: white;
+}
+
+#index-banner h5{
+  font-size: 20px;
+  color: white;
+  margin-bottom: 5%
+}
+
+.banner-image img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+    height: 80%;
+}
+
+#index-features h5{
+  font-size:18px;
 }
 /*cytoscape*/
 #semantic_type_view, #bioentity_id_view, #api_view {
@@ -11,6 +43,7 @@ body {
     height: 800px;
     display:block;
 }
+
 /*cytoscape*/
 #cy {
     width: 100%; /* height is set using window size*/
