@@ -38,18 +38,67 @@
    </head>
    
    <body> 
-      <div class="row">
-        <div class="col s12" id="navbar">
-            <nav>
-                <div class="nav-wrapper orange">
-                    <a href="#!" class="brand-logo">BioThings Explorer</a>
-                    <ul class="right hide-on-med-and-down">
-                    <li><a href="tutorial" id="map">TUTORIAL</a></li>
-                    <li><a href="#" id="explore">EXPLORE</a></li>
-                    </ul>
-                </div>
-            </nav>
+      <nav role="navigation">
+          <div class="nav-wrapper orange">
+              <a href="#!" class="brand-logo">BioThings Explorer</a>
+              <ul class="right hide-on-med-and-down">
+              <li><a href="tutorial" id="map">TUTORIAL</a></li>
+              <li><a href="#" id="explore">EXPLORE</a></li>
+              </ul>
+          </div>
+      </nav>
+      <div class="section no-pad-bot" id="index-banner">
+        <div class="row">
+          <div class="col m12 l6">
+            <br><br>
+            <h1 class="header center white-text">BioThings Explorer</h1>
+            <div class="row center">
+              <h5 class="header col s12 light white-text">Biological Knowledge Exploration through Linked API Services</h5>
+            </div>
+            <div class="row center">
+              <a href="#main" id="download-button" class="btn-large waves-effect waves-light orange">Get Started</a>
+            </div>
+            <br><br>
+          </div>
+          <div class="col m12 l6 banner-image">
+            <img src="./static/img/banner_image.png" alt="Unsplashed background img 1">
+          </div>
         </div>
+      </div>
+      <div class="container" id="index-features">
+        <div class="section">
+          <!--   Icon Section   -->
+          <div class="row">
+            <div class="col s12 m4">
+              <div class="icon-block">
+                <h2 class="center light-blue-text"><i class="medium material-icons">search</i></h2>
+                <h5 class="center">API Metadata Exploration</h5>
+
+                <p class="light">We use Smart-API specifications, which provides rich semantic information about each API source.</p>
+              </div>
+            </div>
+
+            <div class="col s12 m4">
+              <div class="icon-block">
+                <h2 class="center light-blue-text"><i class="medium material-icons">timeline</i></h2>
+                <h5 class="center">Knowledge Path Identification</h5>
+
+                <p class="light">We utilize graph theory algorithms to automatically help user identify potential paths connecting from different biological concepts.</p>
+              </div>
+            </div>
+
+            <div class="col s12 m4">
+              <div class="icon-block">
+                <h2 class="center light-blue-text"><i class="medium material-icons">explore</i></h2>
+                <h5 class="center">API Call Chaining</h5>
+
+                <p class="light">We help users automatically generate API calls based on needs, and chain API calls together based on API inputs and outputs.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <br><br>
       </div>
       <div class="row">
          <div class="col s12 m4" id="sidebar">
