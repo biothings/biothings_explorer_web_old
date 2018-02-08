@@ -122,10 +122,16 @@ class RegistryParser:
         parsed_result['api'] = {api_name: {'info': data['info'], 'servers': data['servers'], 'endpoints': []}}
         # parse endpoint info
         for _name, _info in data['paths'].items():
+            if 'x-responseValueType' in _info['get']['responses']['200']:
+                _output = [_item['valueType'] for _item in _info['get']['responses']['200']['x-responseValueType'] if _item['valueType'] in self.bioentity_info]
+            else:
+                continue
+            if 'x-valueType' in _info['get']['parameters'][0]:
+                _input = [_item for _item in _info['get']['parameters'][0]['x-valueType'] if _item in self.bioentity_info]
+            else:
+                continue
             endpoint_name = data['servers'][0]['url'] + _name
             parsed_result['endpoints'].update({endpoint_name: _info})
-            _output = [_item['valueType'] for _item in _info['get']['responses']['200']['x-responseValueType'] if _item['valueType'] in self.bioentity_info]
-            _input = [_item for _item in _info['get']['parameters'][0]['x-valueType'] if _item in self.bioentity_info]
             # extract relationship info from the json-ld context file
             relation = {}
             if 'x-JSONLDContext' in _info['get']['responses']['200']:
@@ -136,7 +142,10 @@ class RegistryParser:
                 if 'monarch' in endpoint_name:
                     relation = {}
                     for _op in _output:
-                        relation[_op] = [readFile(jsonld_path)['@context']['objects']['@id']]
+                        try:
+                            relation[_op] = [readFile(jsonld_path)['@context']["associations"]["@context"]["object"]["@context"]["id"]['@id']]
+                        except:
+                            relation[_op] = [readFile(jsonld_path)['@context']["associations"]["@context"]["subject"]["@context"]["id"]['@id']]
                 elif 'disease-ontology' in endpoint_name:
                     relation = {}
                     for _op in _output:
