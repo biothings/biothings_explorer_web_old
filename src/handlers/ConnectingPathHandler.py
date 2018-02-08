@@ -342,7 +342,7 @@ class FindEdgeLabel(BaseHandler):
     output: output of the endpoint
 
     """
-    def post(self):
+    def get(self):
         endpoint_name = self.get_argument('endpoint')
         output = self.get_argument('output')
         self.write(json.dumps({'relation': find_edge_label(bt_explorer.api_map, endpoint_name, output)}))
@@ -359,4 +359,39 @@ class KnowledgeMapEndpoint(BaseHandler):
             for _output in outputs:
                 _output_uri = bt_explorer.registry.prefix2uri(_output)
                 triples.append({'subject': {'semantic_type': bt_explorer.registry.bioentity_info[_input_uri]['semantic type'], 'prefix': _input}, 'predicate': find_edge_label(bt_explorer.api_map, endpoint_name, _output), 'object': {'semantic_type': bt_explorer.registry.bioentity_info[_output_uri]['semantic type'], 'prefix': _output}})
+        self.write(json.dumps({"associations": triples}))
+
+class KnowledgeMapInput(BaseHandler):
+    def get(self):
+        _input = self.get_argument('input')
+        _input_uri = bt_explorer.registry.prefix2uri(_input)
+        results = {'endpoint': [], 'subject': _input, 'object': [], 'associations': []}
+        results['endpoint'] = list(bt_explorer.api_map.successors(_input))
+        if results['endpoint']:
+            for _endpoint in results['endpoint']:
+                outputs = list(bt_explorer.api_map.successors(_endpoint))
+                if outputs:
+                    results['object'].extend(outputs)
+                    for _output in outputs:
+                        _output_uri = bt_explorer.registry.prefix2uri(_output)
+                        results['associations'].append({'subject': {'semantic_type': bt_explorer.registry.bioentity_info[_input_uri]['semantic type'], 'prefix': _input}, 'predicate': find_edge_label(bt_explorer.api_map, _endpoint, _output), 'object': {'semantic_type': bt_explorer.registry.bioentity_info[_output_uri]['semantic type'], 'prefix': _output}})
+        results['object'] = list(set(results['object']))
+        self.write(json.dumps({"information": results}))
+
+class KnowledgeMap(BaseHandler):
+    def get(self):
+        bioentity_info = bt_explorer.registry.bioentity_info
+        i = 0
+        triples = []
+        for _endpoint, _endpoint_info in bt_explorer.registry.endpoint_info.items():
+            relation = _endpoint_info['relation']
+            inputs = _endpoint_info['input']
+            for _input in inputs:
+                _input_curie = bioentity_info[_input]['preferred_name']
+                _input_type = bt_explorer.registry.bioentity_info[_input]['semantic type']
+                for _output, _relation in relation.items():
+                    _output_curie = bioentity_info[_output]['preferred_name']
+                    _output_type = bt_explorer.registry.bioentity_info[_output]['semantic type']
+                    for _relate in _relation:
+                        triples.append({'subject': {'prefix': _input_curie, 'semantic_type': _input_type}, 'object': {'prefix': _output_curie, 'semantic_type': _output_type}, 'predicate': _relate, 'endpoint': _endpoint})
         self.write(json.dumps({"information": triples}))
