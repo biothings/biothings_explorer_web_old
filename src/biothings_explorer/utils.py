@@ -19,9 +19,14 @@ def int2str(d):
         if isinstance(v, dict):
             int2str(v)
         elif isinstance(v, list):
+            new_list = []
             for _v in v:
                 if isinstance(_v, dict):
                     int2str(_v)
+                elif isinstance(_v, int):
+                    new_list.append(str(_v))
+            if new_list:
+                d.update({k: new_list})
         else:
             if type(v) == int:
                 d.update({k: str(v)})
