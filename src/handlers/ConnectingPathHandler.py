@@ -395,3 +395,11 @@ class KnowledgeMap(BaseHandler):
                     for _relate in _relation:
                         triples.append({'subject': {'prefix': _input_curie, 'semantic_type': _input_type}, 'object': {'prefix': _output_curie, 'semantic_type': _output_type}, 'predicate': _relate, 'endpoint': _endpoint})
         self.write(json.dumps({"information": triples}))
+
+class KnowledgeMapPath(BaseHandler):
+    def get(self):
+        start = self.get_argument('start')
+        end = self.get_argument('end')
+        max_api = self.get_argument('max_api')
+        paths = bt_explorer.find_path(start, end, max_no_api_used=int(max_api), dictformat=False, display_graph=False)
+        self.write(json.dumps({"paths": paths}))
