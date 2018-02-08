@@ -19,7 +19,7 @@ color_dict = {'clinical trial': 'rgba(144, 144, 28, 0.4)', 'gene': 'rgba(55, 230
               'phenotype': 'rgba(28, 86, 144, 0.3)', 'pathway': 'rgba(230, 55, 116, 0.63)',
               'disease': 'rgba(166, 55, 230, 0.84)', 'transcript': 'rgba(100, 88, 77, 0.4)',
               'clinical significance': 'rgba(70, 33, 77, 0.4)', 'organism': 'rgba(10, 133, 177, 0.4)',
-              'structure': 'rgba(8, 233, 7, 0.4)'}
+              'structure': 'rgba(8, 233, 7, 0.4)', 'ontology': 'rgba(99,123,4,0.4'}
 
 def label2color(label):
     uri = bt_explorer.registry.prefix2uri(label)
@@ -347,4 +347,16 @@ class FindEdgeLabel(BaseHandler):
         output = self.get_argument('output')
         self.write(json.dumps({'relation': find_edge_label(bt_explorer.api_map, endpoint_name, output)}))
 
-
+class KnowledgeMapEndpoint(BaseHandler):
+    def get(self):
+        endpoint_name = self.get_argument('endpoint')
+        triples = []
+        inputs = bt_explorer.api_map.predecessors(endpoint_name)
+        inputs = [_input for _input in inputs if bt_explorer.api_map.node[_input]['type'] == 'bioentity']
+        outputs = list(bt_explorer.api_map.successors(endpoint_name))
+        for _input in inputs:
+            _input_uri = bt_explorer.registry.prefix2uri(_input)
+            for _output in outputs:
+                _output_uri = bt_explorer.registry.prefix2uri(_output)
+                triples.append({'subject': {'semantic_type': bt_explorer.registry.bioentity_info[_input_uri]['semantic type'], 'prefix': _input}, 'predicate': find_edge_label(bt_explorer.api_map, endpoint_name, _output), 'object': {'semantic_type': bt_explorer.registry.bioentity_info[_output_uri]['semantic type'], 'prefix': _output}})
+        self.write(json.dumps({"information": triples}))
