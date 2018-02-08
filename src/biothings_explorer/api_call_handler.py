@@ -129,13 +129,13 @@ class ApiCallHandler:
             else:
                 # check whether the parameter is required
                 if _para['required']:
-                    # if the para has a request template, then put value into the placeholder {{input}}
+                    # if the para has a request template, then put value into the placeholder 'input_value'
                     if 'x-requestTemplate' in _para:
                         for _template in _para['x-requestTemplate']:
                             if _template['valueType'] == 'default':
-                                results[_para['name']] = _template['template'].replace('{{input}}', json.dumps(list(uri_value_dict.values())[0]))
+                                results[_para['name']] = _template['template'].replace('input_value', json.dumps(list(uri_value_dict.values())[0]))
                             elif _template['valueType'] in uri_value_dict.keys():
-                                results[_para['name']] = _template['template'].replace('{{input}}', json.dumps(uri_value_dict[_template['valueType']]))
+                                results[_para['name']] = _template['template'].replace('input_value', uri_value_dict[_template['valueType']])
                     else:
                         results[_para['name']] = list(uri_value_dict.values())[0]
         """
@@ -152,19 +152,9 @@ class ApiCallHandler:
         """
         Preprocessing json doc, including following steps:
         1) Convert all integers in the json_doc into string
-        2) If the endpoint is MyVariant, convert all ":" into "-"
-            because jsonld could not handle ':'
 
-        TODO: should work with jsonld folks to support ":" as part of the value
         """
         int2str(json_doc)
-        if endpoint_name.startswith('http://myvariant.info/'):
-            if "_id" in json_doc:
-                json_doc["_id"] = json_doc["_id"].replace(':', '-')
-            elif "hits" in json_doc:
-                for _doc in json_doc["hits"]:
-                    if "_id" in _doc:
-                        _doc['_id'] = _doc['_id'].replace(":", "-")
         return json_doc
 
     def extract_output(self, json_doc, endpoint_name, output_uri, predicate):
@@ -240,18 +230,18 @@ class ApiCallHandler:
 
         # preprocess the input
         processed_input = self.preprocessing_input(input_value, endpoint_name)
-        print('processed_input', processed_input)
         # retrieve json doc
         api_call_params = []
         for _input_value in processed_input:
             uri_value = {input_type: _input_value}
             if additional_parameters:
                 uri_value.update(additional_parameters)
-            print(uri_value)
             api_call_params.append(self.call_api(uri_value, endpoint_name))
-        print('api_call_params', api_call_params)
         rs = (grequests.get(u, params=v) for (u,v) in api_call_params)
         responses = grequests.map(rs)
+        if responses and responses[0].status_code == 200 and 'xml' in responses[0].headers['Content-type']:
+            rs = (grequests.get(u, params=v, headers={'Accept': 'application/json'}) for (u,v) in api_call_params)
+            responses = grequests.map(rs)
             #api_call_response = self.call_api(uri_value, endpoint_name)
         valid_responses = [self.preprocess_json_doc(api_call_response.json(), endpoint_name) if api_call_response.status_code == 200 else {} for api_call_response in responses]
         outputs = self.extract_output(valid_responses, endpoint_name, output_type, predicate=predicate)
