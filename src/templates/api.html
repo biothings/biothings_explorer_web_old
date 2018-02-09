@@ -1,0 +1,45 @@
+<html>
+   <head>
+      <title>BioThings Explorer</title>
+      <meta name = "viewport" content = "width = device-width, initial-scale = 1">      
+      <link rel = "stylesheet"
+         href = "https://fonts.googleapis.com/icon?family=Material+Icons">
+      <link rel = "stylesheet"
+         href = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
+      <script type = "text/javascript"
+         src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>
+      <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js">
+      </script>
+      <style>
+        #swagger-ui {
+          height: 100vh;
+          width: 100vw; 
+        }
+        iframe {
+          height: 100%;
+          width: 100%
+        }
+    </style>
+   </head>
+   <body> 
+      <!-- This section is for the header-->
+      <div class="row">
+         <div class="col s12" id="navbar">
+            <nav>
+                <div class="nav-wrapper orange">
+                    <a href="/explorer" class="brand-logo">BioThings Explorer</a>
+                    <ul class="right hide-on-med-and-down">
+                    <li><a href="/tutorial" id="map">TUTORIAL</a></li>
+                    <li><a href="/explorer" id="explore">EXPLORE</a></li>
+                    <li><a href="/#" id="api">API</a></li>
+                    </ul>
+                </div>
+            </nav>
+         </div>
+      </div>
+      <div class="row" id="api_frame">
+        <iframe src="http://smart-api.info/ui/?url=/api/metadata/3959dcb6aa2ed7b4ceae10e9569ffc56#/"><p>Your browser does not support iframes.</p></iframe>
+      </div>
+  </body>
+</html>
+

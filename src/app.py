@@ -21,11 +21,10 @@ class MainHandler(tornado.web.RequestHandler):
     def get(self):
         self.render("index.html", messages=None)
 
-class TestHandler(tornado.web.RequestHandler):
+class APIHandler(tornado.web.RequestHandler):
+    @tornado.web.addslash
     def get(self):
-        arg1 = self.get_argument('key', None)
-        arg2 = self.get_argument('code', None)
-        self.write(json.dumps({"plotly": arg1, "sankey": arg2}))
+        self.render("api.html", messages=None)
 
 class TutorialHandler(tornado.web.RequestHandler):
     @tornado.web.addslash
@@ -40,9 +39,9 @@ class Application(tornado.web.Application):
             'static_path': os.path.join(os.path.dirname(__file__), "static")
         }
         handlers = [
-            (r"/explorer/test", TestHandler),
             (r"/explorer/?", MainHandler),
             (r"/explorer/tutorial/?", TutorialHandler),
+            (r"/explorer/api/?", APIHandler),
             (r"/explorer/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
             (r"/explorer/tutorial/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
             (r"/explorer/path", ConnectingPathHandler),
