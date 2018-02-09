@@ -358,7 +358,7 @@ class KnowledgeMapEndpoint(BaseHandler):
             _input_uri = bt_explorer.registry.prefix2uri(_input)
             for _output in outputs:
                 _output_uri = bt_explorer.registry.prefix2uri(_output)
-                triples.append({'subject': {'semantic_type': bt_explorer.registry.bioentity_info[_input_uri]['semantic type'], 'prefix': _input}, 'predicate': find_edge_label(bt_explorer.api_map, endpoint_name, _output), 'object': {'semantic_type': bt_explorer.registry.bioentity_info[_output_uri]['semantic type'], 'prefix': _output}})
+                triples.append({'endpoint': endpoint_name, 'subject': {'semantic_type': bt_explorer.registry.bioentity_info[_input_uri]['semantic type'], 'prefix': _input}, 'predicate': find_edge_label(bt_explorer.api_map, endpoint_name, _output), 'object': {'semantic_type': bt_explorer.registry.bioentity_info[_output_uri]['semantic type'], 'prefix': _output}})
         self.write(json.dumps({"associations": triples}))
 
 class KnowledgeMapInput(BaseHandler):
@@ -374,7 +374,7 @@ class KnowledgeMapInput(BaseHandler):
                     results['object'].extend(outputs)
                     for _output in outputs:
                         _output_uri = bt_explorer.registry.prefix2uri(_output)
-                        results['associations'].append({'subject': {'semantic_type': bt_explorer.registry.bioentity_info[_input_uri]['semantic type'], 'prefix': _input}, 'predicate': find_edge_label(bt_explorer.api_map, _endpoint, _output), 'object': {'semantic_type': bt_explorer.registry.bioentity_info[_output_uri]['semantic type'], 'prefix': _output}})
+                        results['associations'].append({'endpoint': _endpoint, 'subject': {'semantic_type': bt_explorer.registry.bioentity_info[_input_uri]['semantic type'], 'prefix': _input}, 'predicate': find_edge_label(bt_explorer.api_map, _endpoint, _output), 'object': {'semantic_type': bt_explorer.registry.bioentity_info[_output_uri]['semantic type'], 'prefix': _output}})
         results['object'] = list(set(results['object']))
         self.write(json.dumps({"information": results}))
 
