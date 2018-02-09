@@ -9,6 +9,7 @@ body {
     line-height: 1.5em;
 }
 /*landingpage*/
+
 #index-banner {
   height:60vh;
   background-color: black;
@@ -22,7 +23,6 @@ body {
 #index-banner h5{
   font-size: 20px;
   color: white;
-  margin-bottom: 5%
 }
 
 .banner-image img {
@@ -37,7 +37,7 @@ body {
 #index-features h5{
   font-size:18px;
 }
-/*cytoscape*/
+/*visjs graphs for overview map*/
 #semantic_type_view, #bioentity_id_view, #api_view {
     width: 800px /* height is set using window size*/
     height: 800px;
@@ -60,9 +60,9 @@ body {
 #explore-plotly-div {
   display: none;
 }
-h1 {
+#index-banner h1 {
   opacity: 0.5;
-  font-size: 1em;
+  font-size: 3em;
 }
 
 /*
@@ -90,4 +90,34 @@ sidebar
 }
 .input-field {
   margin: 5%;
+}
+
+/*
+main
+*/
+.api-centric h1{
+  display:block;
+  font-size: 3em;
+  margin-left: 1%;
+}
+
+/*
+explore-entity-css
+*/
+.bio-entity-centric h1{
+  display:block;
+  font-size: 3em;
+  margin-left: 1%;
+}
+/*bioentity explore window*/
+#data_explore_view, #explore_history_view {
+    width: 100%;/* height is set using window size*/
+    height: 100%;
+    display:block;
+}
+/*bioentity explore window*/
+.semantic_type_category_view {
+    width: 60%;/* height is set using window size*/
+    height: 100%;
+    display:block;
 }
