@@ -93,7 +93,8 @@ input_output_dict = {
             "http://identifiers.org/ensembl.transcript/": "ENST00000357618",
             "http://identifiers.org/ccds/": "CCDS4578.1",
             "http://identifiers.org/uniprot/": "Q6B0J5",
-            "http://identifiers.org/clinvar/": "RCV000308358",
+            "http://identifiers.org/clinvar.record/": "RCV000308358",
+            "http://identifiers.org/clinvar/": "9",
             "http://identifiers.org/omim.disease/": "612635",
             "http://identifiers.org/omim.variant/": "613609.0001",
             "http://identifiers.org/ncbigene/": "3077",
@@ -389,6 +390,24 @@ input_output_dict = {
         },
         "output": {
             "http://identifiers.org/hp/": "0000110"
+        }
+    }],
+    "https://api.monarchinitiative.org/api/bioentity/gene/{geneid}/pathways": [
+    {
+        "input": {
+            "http://identifiers.org/ncbigene/": "1017"
+        },
+        "output": {
+            "http://identifiers.org/reactome/": "R-HSA-69304"
+        }
+    }],
+    "https://api.monarchinitiative.org/api/bioentity/variant/{variantid}/genes": [
+    {
+        "input": {
+            "http://identifiers.org/clinvar/": "9"
+        },
+        "output": {
+            "http://identifiers.org/reactome/": "4886"
         }
     }]
 }
