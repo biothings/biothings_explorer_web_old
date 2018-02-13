@@ -271,11 +271,11 @@ class EndpointHandler(BaseHandler):
 
 class MetaDataHandler(BaseHandler):
     def get(self, type):
-        if type == 'api':
+        if type == 'apis':
             self.write(json.dumps({'api': sorted(list(bt_explorer.registry.api_info.keys()))}))
-        elif type == 'endpoint':
+        elif type == 'endpoints':
             self.write(json.dumps({'endpoint': sorted(list(bt_explorer.registry.endpoint_info.keys()))}))
-        elif type == 'bioentity':
+        elif type == 'bioentities':
             # group all bioentity ids together based on their semantic type
             bioentity_dict = defaultdict(list)
             for _item in bt_explorer.registry.bioentity_info.values():
@@ -347,39 +347,36 @@ class FindEdgeLabel(BaseHandler):
         output = self.get_argument('output')
         self.write(json.dumps({'relation': find_edge_label(bt_explorer.api_map, endpoint_name, output)}))
 
-class KnowledgeMapEndpoint(BaseHandler):
-    def get(self):
-        endpoint_name = self.get_argument('endpoint')
-        triples = []
-        inputs = bt_explorer.api_map.predecessors(endpoint_name)
-        inputs = [_input for _input in inputs if bt_explorer.api_map.node[_input]['type'] == 'bioentity']
-        outputs = list(bt_explorer.api_map.successors(endpoint_name))
-        for _input in inputs:
-            _input_uri = bt_explorer.registry.prefix2uri(_input)
-            for _output in outputs:
-                _output_uri = bt_explorer.registry.prefix2uri(_output)
-                triples.append({'endpoint': endpoint_name, 'subject': {'semantic_type': bt_explorer.registry.bioentity_info[_input_uri]['semantic type'], 'prefix': _input}, 'predicate': find_edge_label(bt_explorer.api_map, endpoint_name, _output), 'object': {'semantic_type': bt_explorer.registry.bioentity_info[_output_uri]['semantic type'], 'prefix': _output}})
-        self.write(json.dumps({"associations": triples}))
-
-class KnowledgeMapInput(BaseHandler):
-    def get(self):
-        _input = self.get_argument('input')
-        _input_uri = bt_explorer.registry.prefix2uri(_input)
-        results = {'endpoint': [], 'subject': _input, 'object': [], 'associations': []}
-        results['endpoint'] = list(bt_explorer.api_map.successors(_input))
-        if results['endpoint']:
-            for _endpoint in results['endpoint']:
-                outputs = list(bt_explorer.api_map.successors(_endpoint))
-                if outputs:
-                    results['object'].extend(outputs)
-                    for _output in outputs:
-                        _output_uri = bt_explorer.registry.prefix2uri(_output)
-                        results['associations'].append({'endpoint': _endpoint, 'subject': {'semantic_type': bt_explorer.registry.bioentity_info[_input_uri]['semantic type'], 'prefix': _input}, 'predicate': find_edge_label(bt_explorer.api_map, _endpoint, _output), 'object': {'semantic_type': bt_explorer.registry.bioentity_info[_output_uri]['semantic type'], 'prefix': _output}})
-        results['object'] = list(set(results['object']))
-        self.write(json.dumps({"information": results}))
 
 class KnowledgeMap(BaseHandler):
+    """
+    Return subject, object, predicate information
+    Users could also query based on subject, object and predicate
+
+    Parmas
+    ======
+    endpoint: specify a specific endpoint name, and return all subject, object
+              predicate information specific to this endpoint
+    predicate: specify a specific predicate, and return all subject, object
+              predicate information which contains the specified predicate
+    subject.prefix: specify a specific subject prefix, and return all subject, object
+              predicate information which contains the specified subject prefix
+    subject.semantic_type: specify a specific subject semantic type, and return all subject, object
+              predicate information which contains the specified subject semantic type
+    object.prefix: specify a specific object prefix, and return all subject, object
+              predicate information which contains the specified object prefix
+    object.semantic_type: specify a specific object semantic type, and return all subject, object
+              predicate information which contains the specified object semantic type
+    """
     def get(self):
+        # get parameters
+        input_endpoint = self.get_query_argument('endpoint', None)
+        input_predicate = self.get_query_argument('predicate', None)
+        input_subject_prefix = self.get_query_argument('subject.prefix', None)
+        input_object_prefix = self.get_query_argument('object.prefix', None)
+        input_subject_type = self.get_query_argument('subject.semantic_type', None)
+        input_object_type = self.get_query_argument('object.semantic_type', None)
+        # load all association information into triples
         bioentity_info = bt_explorer.registry.bioentity_info
         i = 0
         triples = []
@@ -393,8 +390,73 @@ class KnowledgeMap(BaseHandler):
                     _output_curie = bioentity_info[_output]['preferred_name']
                     _output_type = bt_explorer.registry.bioentity_info[_output]['semantic type']
                     for _relate in _relation:
-                        triples.append({'subject': {'prefix': _input_curie, 'semantic_type': _input_type}, 'object': {'prefix': _output_curie, 'semantic_type': _output_type}, 'predicate': _relate, 'endpoint': _endpoint})
-        self.write(json.dumps({"information": triples}))
+                        triples.append({'subject': {'prefix': _input_curie, 'semantic_type': _input_type}, 
+                                       'object': {'prefix': _output_curie, 'semantic_type': _output_type}, 
+                                       'predicate': _relate.split(':')[-1], 'endpoint': _endpoint})
+        temp_output = triples
+        END_OUTPUT = False
+        # check if user want to filter for a specific field or combination of fields
+        if input_endpoint:
+            if input_endpoint in bt_explorer.registry.endpoint_info:
+                temp_output = [_association for _association in temp_output if _association['endpoint']==input_endpoint]
+            else:
+                temp_output = []
+                self.set_status(400)
+                self.write(json.dumps({"status": 400, "message": "The endpoint '" + input_endpoint + "' you input is not in BioThings Explorer. \
+                                      Please refer to 'http://biothings.io/explorer/api/v1/metadata/endpoints' for all endpoints currently integrated!"}))
+                self.finish()
+                END_OUTPUT = True
+        if input_predicate and not END_OUTPUT:
+            if input_predicate in [_association['predicate'] for _association in triples]:
+                temp_output = [_association for _association in temp_output if _association['predicate']==input_predicate]
+            else:
+                temp_output = []
+                self.set_status(400)
+                self.write(json.dumps({"status": 400, "message": "The predicate '" + input_predicate + "' you input is not in BioThings Explorer."}))
+                self.finish()
+                END_OUTPUT = True
+        if input_subject_prefix and not END_OUTPUT:
+            if input_subject_prefix in [_association['subject']['prefix'] for _association in triples]:
+                temp_output = [_association for _association in temp_output if _association['subject']['prefix']==input_subject_prefix]
+            else:
+                temp_output = []
+                self.set_status(400)
+                self.write(json.dumps({"status": 400, "message": "The subject prefix '" + input_subject_prefix + "' you input is not in BioThings Explorer."}))
+                self.finish()
+                END_OUTPUT = True
+        if input_subject_type and not END_OUTPUT:
+            if input_subject_type in [_association['subject']['semantic_type'] for _association in triples]:
+                temp_output = [_association for _association in temp_output if _association['subject']['semantic_type']==input_subject_type]
+            else:
+                temp_output = []
+                self.set_status(400)
+                self.write(json.dumps({"status": 400, "message": "The subject semantic type '" + input_subject_type + "' you input is not in BioThings Explorer."}))
+                self.finish()
+                END_OUTPUT = True
+        if input_object_prefix and not END_OUTPUT:
+            if input_object_prefix in [_association['object']['prefix'] for _association in triples]:
+                temp_output = [_association for _association in temp_output if _association['object']['prefix']==input_object_prefix]
+            else:
+                temp_output = []
+                self.set_status(400)
+                self.write(json.dumps({"status": 400, "message": "The object prefix '" + input_object_prefix + "' you input is not in BioThings Explorer."}))
+                self.finish()
+                END_OUTPUT = True
+        if input_object_type and not END_OUTPUT:
+            if input_object_type in [_association['object']['semantic_type'] for _association in triples]:
+                temp_output = [_association for _association in temp_output if _association['object']['semantic_type']==input_object_type]
+            else:
+                temp_output = []
+                self.set_status(400)
+                self.write(json.dumps({"status": 400, "message": "The object semantic type '" + input_object_type + "' you input is not in BioThings Explorer."}))
+                self.finish()
+                END_OUTPUT = True
+        # output
+        if not END_OUTPUT:
+            if temp_output:
+                self.write(json.dumps({"associations": temp_output}))
+            else:
+                self.write(json.dumps({"status": 400, "message": "No associations could be found for the input you give!!"}))
 
 class KnowledgeMapPath(BaseHandler):
     def get(self):
