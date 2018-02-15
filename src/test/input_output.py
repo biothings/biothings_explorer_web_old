@@ -409,5 +409,23 @@ input_output_dict = {
         "output": {
             "http://identifiers.org/reactome/": "4886"
         }
+    }],
+    "https://api.monarchinitiative.org/api/bioentity/variant/{variantid}/genes": [
+    {
+        "input": {
+            "http://identifiers.org/clinvar/": "9"
+        },
+        "output": {
+            "http://identifiers.org/reactome/": "4886"
+        }
+    }],
+    "http://c.biothings.io/v1/taxonomy/{taxonomyid}": [
+    {
+        "input": {
+            "http://identifiers.org/taxonomy/": "9606"
+        },
+        "output": {
+            "http://identifiers.org/taxonomy/": "9605"
+        }
     }]
 }
