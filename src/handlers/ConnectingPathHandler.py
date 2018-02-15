@@ -471,10 +471,13 @@ class KnowledgeMapPath(BaseHandler):
             # function to add semantic type, predicate information into the path
             detailed_paths = []
             for _path in paths:
+                print(_path)
                 new_path = []
-                for i in range(0, len(_path)-3, 2):
+                for i in range(0, len(_path)-2, 2):
                     subject_uri = bt_explorer.registry.prefix2uri(_path[i])
                     object_uri = bt_explorer.registry.prefix2uri(_path[i+2])
+                    print(subject_uri)
+                    print(object_uri)
                     subject_type = bt_explorer.registry.bioentity_info[subject_uri]['semantic type']
                     object_type = bt_explorer.registry.bioentity_info[object_uri]['semantic type']
                     new_path.append({'subject': {'prefix': _path[i], 'semantic_type': subject_type}, 
@@ -484,4 +487,4 @@ class KnowledgeMapPath(BaseHandler):
             self.write(json.dumps({"paths": detailed_paths}))
         else:
             self.set_status(400)
-            self.write(json.dumps({"status": 400, "message": "No path coul be found between " + start + " and " + end + '!'}))
+            self.write(json.dumps({"status": 400, "message": "No path could be found between " + start + " and " + end + '!'}))
