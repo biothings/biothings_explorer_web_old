@@ -10,6 +10,19 @@ from .utils import readFile
 
 t = jsonld.JsonLdProcessor()
 
+def json2jsonld(json_doc, jsonld_context_path):
+    """
+    Given a JSON document and the endpoint where the doc comes from
+    Fetch the JSON-LD context file for the endpoint
+    Apply the JSON-LD context to JSON file to construct the JSON-LD document
+
+    Return
+    ======
+    JSON-LD document
+    """
+    jsonld_context = readFile(jsonld_context_path)
+    json_doc.update(jsonld_context)
+    return json_doc
 
 def jsonld2nquads(jsonld_doc, mode='batch'):
     """
