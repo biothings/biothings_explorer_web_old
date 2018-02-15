@@ -86,6 +86,26 @@ class RegistryParser:
         if verbose:
             print('No URI could be found for the prefix provided: {}'.format(prefix))
 
+    def prefix2semantictype(self, prefix, verbose=False):
+        """
+        Given a bio-entity in prefix format, return its semantic type
+
+        Params
+        ======
+        prefix: (str)
+            bio-entity in prefix format
+
+        Return
+        ======
+        bio-entity in its semantic type, e.g. GENE, VARIANT
+        """
+        for k, v in self.bioentity_info.items():
+            if v['preferred_name'] == prefix:
+                return self.bioentity_info[k]['semantic type']
+        # print error message if no URI was found
+        if verbose:
+            print('No URI could be found for the prefix provided: {}'.format(prefix))
+
     def read_api_list_file(self):
         """
         read in the API_LIST.yml file
