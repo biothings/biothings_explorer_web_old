@@ -289,6 +289,7 @@ class MetaDataHandler(BaseHandler):
             bioentity_inputs = [_entity for _entity in bio_entity_list if _entity in inputs]
             self.write(json.dumps({'input': bioentity_inputs}))
 
+
 ###########################################################################
 # Sample Input: {path=["hgnc.symbol", 
 #                      "http://mygene.info/v1/query", 
@@ -397,6 +398,7 @@ class KnowledgeMap(BaseHandler):
         END_OUTPUT = False
         # check if user want to filter for a specific field or combination of fields
         if input_endpoint:
+            # check whether user input is valid
             if input_endpoint in bt_explorer.registry.endpoint_info:
                 temp_output = [_association for _association in temp_output if _association['endpoint']==input_endpoint]
             else:
@@ -456,12 +458,30 @@ class KnowledgeMap(BaseHandler):
             if temp_output:
                 self.write(json.dumps({"associations": temp_output}))
             else:
+                self.set_status(400)
                 self.write(json.dumps({"status": 400, "message": "No associations could be found for the input you give!!"}))
 
 class KnowledgeMapPath(BaseHandler):
     def get(self):
-        start = self.get_argument('start')
-        end = self.get_argument('end')
-        max_api = self.get_argument('max_api')
+        start = self.get_query_argument('start')
+        end = self.get_query_argument('end')
+        max_api = self.get_query_argument('max_api', 3)
         paths = bt_explorer.find_path(start, end, max_no_api_used=int(max_api), dictformat=False, display_graph=False)
-        self.write(json.dumps({"paths": paths}))
+        if paths:
+            # function to add semantic type, predicate information into the path
+            detailed_paths = []
+            for _path in paths:
+                new_path = []
+                for i in range(0, len(_path)-3, 2):
+                    subject_uri = bt_explorer.registry.prefix2uri(_path[i])
+                    object_uri = bt_explorer.registry.prefix2uri(_path[i+2])
+                    subject_type = bt_explorer.registry.bioentity_info[subject_uri]['semantic type']
+                    object_type = bt_explorer.registry.bioentity_info[object_uri]['semantic type']
+                    new_path.append({'subject': {'prefix': _path[i], 'semantic_type': subject_type}, 
+                                       'object': {'prefix': _path[i+2], 'semantic_type': object_type}, 
+                                       'predicate': find_edge_label(bt_explorer.api_map, _path[i], _path[i+1]), 'endpoint': _path[i+1]})
+                detailed_paths.append(new_path)
+            self.write(json.dumps({"paths": detailed_paths}))
+        else:
+            self.set_status(400)
+            self.write(json.dumps({"status": 400, "message": "No path coul be found between " + start + " and " + end + '!'}))

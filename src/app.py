@@ -56,7 +56,7 @@ class Application(tornado.web.Application):
             (r"/explorer/endpoint2output", Endpoint2OutputHandler),
             (r"/explorer/findedgelabel", FindEdgeLabel),
             (r"/explorer/api/v1/knowledgemap", KnowledgeMap),
-            (r"/explorer/api/v1/knowledgemap/path", KnowledgeMapPath)
+            (r"/explorer/api/v1/path", KnowledgeMapPath)
         ]
 
         tornado.web.Application.__init__(self, handlers, **settings)
