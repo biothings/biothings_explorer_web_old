@@ -23,7 +23,7 @@ function addOptionFromMetaData(metadata, metadata_type, dropdown_id){
 function getMetaData(metadata_type){
   var promise = $.ajax({
     type:"GET",
-    url: "/explorer/metadata/" + metadata_type,
+    url: "/explorer/v1/api/metadata/" + metadata_type,
     datatype: "json"
   });
   return promise;
@@ -60,7 +60,7 @@ function getOutputBasedOnEndpoint(_endpoint) {
  * @param {String} dropdown_id
 */
 function populateEndpoints(dropdown_id){
-    getMetaData('endpoint').done(function(jsonResponse){
+    getMetaData('endpoints').done(function(jsonResponse){
         var endpoint_select2_data = $.map(jsonResponse.endpoint, function(n) {
             return {"id": n, "text": n};
         });
@@ -73,7 +73,7 @@ function populateEndpoints(dropdown_id){
  * @param {String} dropdown_id
 */
 function populateBioEntity(dropdown_id){
-    getMetaData('bioentity').done(function(jsonResponse){
+    getMetaData('bioentities').done(function(jsonResponse){
         var bioentity_select2_data = []
         for (var semantic_type in jsonResponse.bioentity) {
             var group = {'id': semantic_type, 'text': semantic_type, 'children': []};
