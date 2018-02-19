@@ -110,7 +110,7 @@ def exploreinput(input_type, input_value):
         if _output:
             for _pair in _output:
                 semantic_type = bt_explorer.registry.prefix2semantictype(_pair['curie'].split(':')[0])
-                _pair.update({'endpoint': endpoint, 'api': bt_explorer.registry.endpoint_info[endpoint]['api']})
+                _pair.update({'endpoint': endpoint, 'api': bt_explorer.registry.endpoint_info[endpoint]['api'], 'prefix': _pair['curie'].split(':')[0]})
                 outputs[semantic_type].append(_pair)
     summary = {}
     for semantic_type, pair in outputs.items():
