@@ -20,7 +20,7 @@ function fetch_crawler_results(prefix, input_value){
  * @return {String} html for new checkbox
 */
 function create_single_checkbox(name) {
-    var template = '<p><label><input type="checkbox" class="filled-in" checked="checked" /><span>{input}</span></label></p>';
+    var template = '<p class="filter-item"><label><input type="checkbox" class="filled-in"/><span>{input}</span></label></p>';
     return template.replace('{input}', name);
 };
 
@@ -83,14 +83,22 @@ function populate_filter(jsonResponse) {
 /**
  * Update the data content
 */
-function populate_data_display(jsonResponse) {
+function populate_data_display(data) {
     $(".data-display-list").empty();
     var i = 0;
-    for (i = 0; i < 20; i++) {
-        $(".data-display-list").append(create_single_collection(CURRENT_CRAWLING_RESULTS[i]['api'], CURRENT_CRAWLING_RESULTS[i]['endpoint'], CURRENT_CRAWLING_RESULTS[i]['curie'], CURRENT_CRAWLING_RESULTS[i]['predicate']));
-    };
+    if (data.length >= 20) {
+        for (i = 0; i < 20; i++) {
+            $(".data-display-list").append(create_single_collection(data[i]['api'], data[i]['endpoint'], data[i]['curie'], data[i]['predicate']));
+        };
+    } else {
+        for (i = 0; i < data.length; i++) {
+            $(".data-display-list").append(create_single_collection(data[i]['api'], data[i]['endpoint'], data[i]['curie'], data[i]['predicate']));
+        }
+    }
 };
 
+/**
+ * Add more data to th
 /**
  * Shuffles array in place.
  * @param {Array} a items An array containing the items.
@@ -116,13 +124,98 @@ function shuffle_results(jsonResponse) {
     };
     shuffle(CURRENT_CRAWLING_RESULTS);
 };
+/**
+ * Group a list of dicts by its key
+*/
+function groupBy(xs, key) {
+  return xs.reduce(function(rv, x) {
+    (rv[x[key]] = rv[x[key]] || []).push(x);
+    return rv;
+  }, {});
+};
+/**
+ * change data display based on filter checkbox change
+*/
+NON_PREFIX_DATA_TYPE = ['api', 'endpoint', 'predicate'];
+CURRENT_DISPLAY_CONTENT = [];
+function update_data_display_by_filter_results(){
+    CURRENT_FILTER_STATUS = {'prefix': [], 'api': [], 'endpoint': [], 'predicate': []};
+    $("input[type=checkbox]").change(function(){
+        CURRENT_DISPLAY_CONTENT = []
+        var filter_criteria = $(this).siblings('span').text();
+        var data_type = $(this).parents('.filter-item').siblings('h5').text();
+        if (this.checked) {     
+            if (NON_PREFIX_DATA_TYPE.includes(data_type)) {
+                CURRENT_FILTER_STATUS[data_type].push(filter_criteria);
+            } else {
+                CURRENT_FILTER_STATUS['prefix'].push(filter_criteria);
+            }
+        }
+        else {
+            if (NON_PREFIX_DATA_TYPE.includes(data_type)) {
+                var index = CURRENT_FILTER_STATUS[data_type].indexOf(filter_criteria);
+                if (index > -1) {
+                    CURRENT_FILTER_STATUS[data_type].splice(index, 1);
+                }
+            } else {
+                var index = CURRENT_FILTER_STATUS['prefix'].indexOf(filter_criteria);
+                if (index > -1) {
+                    CURRENT_FILTER_STATUS['prefix'].splice(index, 1);
+                } 
+            }
+        };
+        if (CURRENT_FILTER_STATUS['prefix'].length > 0) {
+            var results_groupby_prefix = groupBy(CURRENT_CRAWLING_RESULTS, 'prefix');
+            CURRENT_FILTER_STATUS['prefix'].forEach(function(_prefix) {
+                CURRENT_DISPLAY_CONTENT = CURRENT_DISPLAY_CONTENT.concat(results_groupby_prefix[_prefix]);
+            });
+        } else {
+            CURRENT_DISPLAY_CONTENT = CURRENT_CRAWLING_RESULTS;
+        };
+        NON_PREFIX_DATA_TYPE.forEach(function(key) {
+            if (CURRENT_FILTER_STATUS[key].length > 0) {
+                var results_groupby_criteria = groupBy(CURRENT_DISPLAY_CONTENT, key);
+                CURRENT_DISPLAY_CONTENT = []
+                CURRENT_FILTER_STATUS[key].forEach(function(_criteria) {
+                    CURRENT_DISPLAY_CONTENT = CURRENT_DISPLAY_CONTENT.concat(results_groupby_criteria[_criteria]);
+                })
+            }
+        });
+        populate_data_display(CURRENT_DISPLAY_CONTENT);
+        update_data_display_by_user_search();
+    })
+};
 
-$(document).ready(function(){
-    var prefix = 'ncbigene';
-    var input_value = '1017';
+/**
+ * change data display when user click on one of the item in the display collection
+*/
+function update_data_display_by_user_search(){
+    $(".collection-search").click(function(){
+        var prefix = $(this).attr('id').split(":")[0];
+        var input_value = $(this).attr('id').split(":")[1];
+        update_data_display(prefix, input_value);
+    });
+};
+
+/**
+ * Given prefix and input_value, display the results
+*/
+function update_data_display(prefix, input_value) {
     fetch_crawler_results(prefix, input_value).done(function(jsonResponse) {
         shuffle_results(jsonResponse);
-    	populate_filter(jsonResponse);
-        populate_data_display(jsonResponse);
+        populate_filter(jsonResponse);
+        populate_data_display(CURRENT_CRAWLING_RESULTS);
+        $(".main").show();
+        update_data_display_by_filter_results();
+        update_data_display_by_user_search();
+    });
+};
+
+$(document).ready(function(){
+    populateBioEntity('#select-input');
+    $('#start-crawl-button').click(function() {
+        var prefix = $("#select-input").find("option:selected").attr('value');
+        var input_value = $("#crawler-input-value").val();
+        update_data_display(prefix, input_value);
     });
 });
