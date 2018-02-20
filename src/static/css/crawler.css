@@ -2,3 +2,8 @@
 	margin-left: 1% !important;
 	overflow: scroll;
 }
+
+.crawler_input {
+    height:55px;
+    text-align: bottom;
+}
