@@ -4,11 +4,32 @@ import re
 import requests
 import grequests
 from collections import defaultdict
+from subprocess import Popen, PIPE, STDOUT
+from joblib import Parallel, delayed
+import multiprocessing
 
 from .utils import readFile
 
 
 t = jsonld.JsonLdProcessor()
+
+def process_jsonld(doc):
+    # cmd = 'ruby jsonld_test_cli.rb -a compact'
+    doc = json.dumps(doc)
+    RUBY_JSONLD_CMD = 'jsonld'
+    cmd = RUBY_JSONLD_CMD + ' '
+    cmd += '--validate --format nquads'
+    p = Popen(cmd.split(), stdout=PIPE, stdin=PIPE, stderr=STDOUT)
+    p.stdin.write(doc.encode('utf-8'))
+    # stdout_data = p.communicate(input=doc.encode('utf-8'))[0]
+    stdout_data = p.communicate()[0]
+    p.stdin.close()
+    _response = stdout_data.decode()
+    if 'Parsed' in _response:
+        _nquad = re.sub('Parsed .*second.\n', '', _response)
+        return t.parse_nquads(_nquad)
+    else:
+        return None
 
 def json2jsonld(json_doc, jsonld_context_path):
     """
@@ -24,6 +45,7 @@ def json2jsonld(json_doc, jsonld_context_path):
     json_doc.update(jsonld_context)
     return json_doc
 
+'''
 def jsonld2nquads(jsonld_doc, mode='batch'):
     """
     Given a JSON-LD annotated document,
@@ -60,6 +82,37 @@ def jsonld2nquads(jsonld_doc, mode='batch'):
             else:
                 results.append(None)
         return results
+'''
+def jsonld2nquads(jsonld_docs):
+    """
+    Given a JSON-LD annotated document,
+    Fetch it's corresponding NQUADs file from JSON-LD playground
+    'http://jsonld.biothings.io/?action=nquads'
+
+    TODO: Currently, PyLD hasn't been updated to match JSON-LD v 1.1
+    So we are using the JSON-LD playground API, which is built upon
+    JSON-LD ruby client for 1.1 version. When PyLD has been updated to
+    match 1.1, we should switch back to PyLD.
+
+    Params
+    ======
+    jsonld_doc: (dict)
+        JSON-LD annotated document
+    """
+    results = []
+    """
+    for _doc in jsonld_docs:
+        _response = process_jsonld(_doc)
+        if 'Parsed' in _response:
+            _nquad = re.sub('Parsed .*second.\n', '', _response)
+            results.append(t.parse_nquads(_nquad))
+        else:
+            results.append(None)
+    """
+    num_cores = multiprocessing.cpu_count()
+    results = Parallel(n_jobs=num_cores)(delayed(process_jsonld)(_doc) for _doc in jsonld_docs)
+    return results
+
 
 def fetchvalue(nquads, object_uri, predicate=None):
     """
