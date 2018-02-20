@@ -1,12 +1,17 @@
+import requests
 import grequests
 from collections import defaultdict
 import json
 from timeit import default_timer as timer
+import requests_cache
+from joblib import Parallel, delayed
+import multiprocessing
 
 from biothings_explorer import BioThingsExplorer
 from biothings_explorer.jsonld_processor import json2jsonld, jsonld2nquads
 from .basehandler import BaseHandler
 
+requests_cache.install_cache('biothings_cache', backend='sqlite', expire_after=36000)
 bt_explorer = BioThingsExplorer()
 
 def find_endpoint(input_type):
@@ -18,6 +23,14 @@ def find_endpoint(input_type):
     List of endpoints
     """
     return list(bt_explorer.api_map.successors(input_type))
+
+def get_json_helper(_endpoint, input_type, input_value):
+    params = bt_explorer.apiCallHandler.call_api({input_type: input_value}, _endpoint)
+    response = requests.get(params[0], params=params[1], headers={'Accept': 'application/json'})
+    if response.status_code == 200:
+        return bt_explorer.apiCallHandler.preprocess_json_doc(response.json(), _endpoint)
+    else:
+        return {}
 
 def get_json(endpoints, input_type, input_value):
     """
@@ -31,6 +44,7 @@ def get_json(endpoints, input_type, input_value):
     """
     # this code transform prefix to URI
     input_type = bt_explorer.registry.prefix2uri(input_type)
+    """
     # construct API calls for each endpoint, organize them into a list
     api_call_params = []
     for endpoint_name in endpoints:
@@ -39,7 +53,10 @@ def get_json(endpoints, input_type, input_value):
     rs = (grequests.get(u, params=v, headers={'Accept': 'application/json'}) for (u,v) in api_call_params)
     # get JSON output
     responses = [bt_explorer.apiCallHandler.preprocess_json_doc(api_call_response.json(), endpoint_name) if api_call_response.status_code == 200 else {} for api_call_response in grequests.map(rs)]
-    return list(zip(endpoints, responses))
+    """
+    num_cores = multiprocessing.cpu_count()
+    results = Parallel(n_jobs=num_cores)(delayed(get_json_helper)(_endpoint, input_type, input_value) for _endpoint in endpoints)
+    return list(zip(endpoints, results))
 
 def uri2curie(URI):
     """
