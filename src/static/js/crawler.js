@@ -83,19 +83,52 @@ function populate_filter(jsonResponse) {
 /**
  * Update the data content
 */
-function populate_data_display(data) {
+CURRENT_DATA_INDEX = 0;
+function initialize_data_display(data) {
     $(".data-display-list").empty();
+    CURRENT_DATA_INDEX = 0;
     var i = 0;
-    if (data.length >= 20) {
+    if (data.length > 20) {
         for (i = 0; i < 20; i++) {
             $(".data-display-list").append(create_single_collection(data[i]['api'], data[i]['endpoint'], data[i]['curie'], data[i]['predicate']));
+            $("#show-more").show();
         };
+        CURRENT_DATA_INDEX = 20;
     } else {
         for (i = 0; i < data.length; i++) {
             $(".data-display-list").append(create_single_collection(data[i]['api'], data[i]['endpoint'], data[i]['curie'], data[i]['predicate']));
+            $("#show-more").hide();
+        }
+    };
+    show_more_results();
+};
+
+/**
+ * function to yield 20 more results
+*/
+function extend_data_display(data) {
+    if (data.length > (20 + CURRENT_DATA_INDEX)) {
+        for (var i=CURRENT_DATA_INDEX; i < CURRENT_DATA_INDEX + 20; i++) {
+            $(".data-display-list").append(create_single_collection(data[i]['api'], data[i]['endpoint'], data[i]['curie'], data[i]['predicate']));
+            $("#show-more").show();
+        };
+        CURRENT_DATA_INDEX += 20;
+    } else {
+        for (var i=CURRENT_DATA_INDEX; i < data.length; i++) {
+            $(".data-display-list").append(create_single_collection(data[i]['api'], data[i]['endpoint'], data[i]['curie'], data[i]['predicate']));
+            $("#show-more").hide();
         }
     }
-};
+}
+
+/**
+ * function to yield more results when user clicks on 'show more results'
+*/
+function show_more_results() {
+    $("#show-more").click(function() {
+        extend_data_display(CURRENT_DISPLAY_CONTENT);
+    })
+}
 
 /**
  * Add more data to th
@@ -141,6 +174,7 @@ CURRENT_DISPLAY_CONTENT = [];
 function update_data_display_by_filter_results(){
     CURRENT_FILTER_STATUS = {'prefix': [], 'api': [], 'endpoint': [], 'predicate': []};
     $("input[type=checkbox]").change(function(){
+        $(".overlay-group").show();
         CURRENT_DISPLAY_CONTENT = []
         var filter_criteria = $(this).siblings('span').text();
         var data_type = $(this).parents('.filter-item').siblings('h5').text();
@@ -181,8 +215,10 @@ function update_data_display_by_filter_results(){
                 })
             }
         });
-        populate_data_display(CURRENT_DISPLAY_CONTENT);
+        initialize_data_display(CURRENT_DISPLAY_CONTENT);
+        $(".overlay-group").hide();
         update_data_display_by_user_search();
+        show_more_results();
     })
 };
 
@@ -191,8 +227,22 @@ function update_data_display_by_filter_results(){
 */
 function update_data_display_by_user_search(){
     $(".collection-search").click(function(){
+        $(".overlay-group").show();
         var prefix = $(this).attr('id').split(":")[0];
         var input_value = $(this).attr('id').split(":")[1];
+        update_data_display(prefix, input_value);
+    });
+};
+
+/**
+ * change data display when user click on one of the item in the search history
+*/
+function update_data_display_by_search_history(){
+    $(".chip").click(function(){
+        $(".overlay-group").show();
+        console.log($(this).text());
+        var prefix = $(this).text().split(":")[0];
+        var input_value = $(this).text().split(":")[1];
         update_data_display(prefix, input_value);
     });
 };
@@ -202,18 +252,34 @@ function update_data_display_by_user_search(){
 */
 function update_data_display(prefix, input_value) {
     fetch_crawler_results(prefix, input_value).done(function(jsonResponse) {
+        add_chip(prefix + ':' + input_value);
+        $(".overlay-group").hide();
         shuffle_results(jsonResponse);
         populate_filter(jsonResponse);
-        populate_data_display(CURRENT_CRAWLING_RESULTS);
+        initialize_data_display(CURRENT_CRAWLING_RESULTS);
+        CURRENT_DISPLAY_CONTENT = CURRENT_CRAWLING_RESULTS;
         $(".main").show();
         update_data_display_by_filter_results();
         update_data_display_by_user_search();
+        update_data_display_by_search_history();
     });
+};
+
+/**
+ * Add a chip recording search history
+*/
+function add_chip(search_item) {
+    $(".search-history").append('<div class="chip">' + search_item + '</div>');
 };
 
 $(document).ready(function(){
     populateBioEntity('#select-input');
     $('#start-crawl-button').click(function() {
+        $("#navbar").css({'position': 'relative'});
+        $(".crawler-header").hide();
+        $(".overlay-group").show();
+        $(".search-bar-center").removeClass("search-bar-center");
+        $(".search-history").show();
         var prefix = $("#select-input").find("option:selected").attr('value');
         var input_value = $("#crawler-input-value").val();
         update_data_display(prefix, input_value);
