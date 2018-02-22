@@ -190,7 +190,7 @@ def json2nquads(json_doc, context_file_path, output_type, predicate=None):
     context_file = readFile(context_file_path)
     for _json_doc in json_doc:
         _json_doc.update(context_file)
-    nquads = jsonld2nquads(json_doc, mode='batch')
+    nquads = jsonld2nquads(json_doc)
     results = []
     for _nquad in nquads:
         output = fetchvalue(_nquad, output_type, predicate=predicate)
