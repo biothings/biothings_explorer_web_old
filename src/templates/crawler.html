@@ -9,6 +9,7 @@
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.3/js/materialize.min.js"></script>
       <script type="text/javascript" src="./static/js/populateSelect.js"></script>
+      <script type="text/javascript" src="./static/js/jsonld.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
       <link href="./static/css/select2-materialize.css" rel="stylesheet" type="text/css" />
    </head>
@@ -29,9 +30,14 @@
          </div>
       </div>
       <!-- This section is for the search bar-->
-      <div class="row">    
+      <div class="row valign-wrapper search-bar-center">    
           <div class="col s12">
               <div class="row">
+                  <div class="col s12 crawler-header">
+                    <h1 class="orange-text" style="font-family: Ubuntu; text-align: center;"> BioThings Crawler </h1>
+                    <br>
+                    <br>
+                  </div>
                   <div class="col s2 offset-s2 crawler_input">
                       <select id="select-input">
                           <option value="" disabled selected>Choose prefix</option>
@@ -47,8 +53,15 @@
                       <p class="orange-text"> Example query: Choose prefix to be <strong>ncbigene</strong>, and type <strong>1017</strong> in the input bar. Then click on the search button</p>
                   </div>
               </div>
-
           </div>
+      </div>
+      <div class="row search-history" style="margin-left: 3%; overflow: auto; display:none; max-height: 120px">
+        <p class="blue-text">Search History</p>
+      </div>
+
+      <div class="overlay-group">
+          <div class="overlay"></div>
+          <div id="loading-img"></div>
       </div>
       <!-- This section is for the data display-->
       <div class="row main" style="display: none">
@@ -57,7 +70,7 @@
         <div class="col m8 s12 data-display">
           <ul class="collection data-display-list">
           </ul>
-          <h5 style="text-align: center; background-color: #f4f5f7; font-family: Ubuntu; cursor: pointer"> SHOW MORE RESULTS </h5>
+          <h5 style="text-align: center; background-color: #f4f5f7; font-family: Ubuntu; cursor: pointer" id="show-more"> SHOW MORE RESULTS </h5>
         </div>
       </div>
       <script type="text/javascript" src="./static/js/crawler.js"></script>
