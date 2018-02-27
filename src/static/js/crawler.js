@@ -240,7 +240,6 @@ function update_data_display_by_user_search(){
 function update_data_display_by_search_history(){
     $(".chip").click(function(){
         $(".overlay-group").show();
-        console.log($(this).text());
         var prefix = $(this).text().split(":")[0];
         var input_value = $(this).text().split(":")[1];
         update_data_display(prefix, input_value);
@@ -269,7 +268,7 @@ function update_data_display(prefix, input_value) {
  * Add a chip recording search history
 */
 function add_chip(search_item) {
-    $(".search-history").append('<div class="chip">' + search_item + '</div>');
+    $(".search-history").append('<div class="chip" style="cursor:pointer;">' + search_item + '</div>');
 };
 
 $(document).ready(function(){
