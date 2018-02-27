@@ -11,10 +11,13 @@ from  tornado.escape import json_decode
 from  tornado.escape import json_encode
 from tornado.options import define, options
 import requests
+from raven import Client
 
 from handlers.ConnectingPathHandler import FindEdgeLabel, FindOutputHandler, MetaDataHandler, ConnectingPathHandler, EndpointHandler, ConnectingOutputHandler, ConnectingInputHandler, ApiMapHandler, ApiMapHandlerSankey, Input2EndpointHandler, KnowledgeMap, KnowledgeMapPath, Endpoint2OutputHandler
 from handlers.entitycrawler import Crawler
 from handlers.basehandler import BaseHandler
+
+client = Client('https://9dd387ee33954e9887ef4a6b55c7aa29:d98404d6199a4db1aa9b5a1e9fc3c975@sentry.io/294205')
 
 
 class MainHandler(tornado.web.RequestHandler):
