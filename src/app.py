@@ -11,10 +11,13 @@ from  tornado.escape import json_decode
 from  tornado.escape import json_encode
 from tornado.options import define, options
 import requests
+from raven import Client
 
 from handlers.ConnectingPathHandler import FindEdgeLabel, FindOutputHandler, MetaDataHandler, ConnectingPathHandler, EndpointHandler, ConnectingOutputHandler, ConnectingInputHandler, ApiMapHandler, ApiMapHandlerSankey, Input2EndpointHandler, KnowledgeMap, KnowledgeMapPath, Endpoint2OutputHandler
 from handlers.entitycrawler import Crawler
 from handlers.basehandler import BaseHandler
+
+client = Client('https://9dd387ee33954e9887ef4a6b55c7aa29:d98404d6199a4db1aa9b5a1e9fc3c975@sentry.io/294205')
 
 
 class MainHandler(tornado.web.RequestHandler):
@@ -32,6 +35,11 @@ class TutorialHandler(tornado.web.RequestHandler):
     def get(self):
         self.render("tutorial.html", messages=None)
 
+class CrawlerHandler(tornado.web.RequestHandler):
+    @tornado.web.addslash
+    def get(self):
+        self.render("crawler.html", messages=None)
+
 class Application(tornado.web.Application):
     def __init__(self):
         settings = {
@@ -45,6 +53,8 @@ class Application(tornado.web.Application):
             (r"/explorer/api/?", APIHandler),
             (r"/explorer/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
             (r"/explorer/tutorial/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
+            (r"/explorer/crawler/?", CrawlerHandler),
+            (r"/explorer/crawler/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
             (r"/explorer/path", ConnectingPathHandler),
             (r"/explorer/input", ConnectingInputHandler),
             (r"/explorer/apimap", ApiMapHandler),

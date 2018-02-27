@@ -1,0 +1,49 @@
+.filter {
+	margin-left: 3% !important;
+    overflow: auto;
+}
+
+#navbar {
+    position: absolute;
+}
+.row {
+    margin-bottom: 5px !important
+}
+
+.crawler_input {
+    height:55px;
+    text-align: bottom;
+}
+
+#loading-img {
+    background: url("http://www.chimply.com/images/samples/classic-spinner/animatedEllipse.gif") center center no-repeat;
+    display: block;
+    height: 100px;
+    width: 100px;
+    position: absolute;
+    top: 33%;
+    left: 1%;
+    right: 1%;
+    margin: auto;
+}
+.overlay {
+    height: 100%;
+    background: #f9f9f9;
+    opacity: 0.5;
+}
+.overlay-group {
+    display: none;
+    position: relative;
+    width: 100%;
+}
+
+
+.search-bar-center {
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+}
+
+.chip {
+    display: inline-block;
+}

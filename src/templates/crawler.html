@@ -1,0 +1,78 @@
+<html>
+   <head>
+      <title>BioThings Explorer</title>
+      <meta name = "viewport" content = "width = device-width, initial-scale = 1">      
+      <link rel = "stylesheet"
+         href = "https://fonts.googleapis.com/icon?family=Material+Icons">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.3/css/materialize.min.css">
+      <link href="./static/css/crawler.css" rel="stylesheet" />
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.3/js/materialize.min.js"></script>
+      <script type="text/javascript" src="./static/js/populateSelect.js"></script>
+      <script type="text/javascript" src="./static/js/jsonld.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+      <link href="./static/css/select2-materialize.css" rel="stylesheet" type="text/css" />
+   </head>
+   <body> 
+      <!-- This section is for the header-->
+      <div class="row">
+         <div class="col s12" id="navbar">
+            <nav>
+                <div class="nav-wrapper orange">
+                    <a href="/explorer" class="brand-logo">BioThings Explorer</a>
+                    <ul class="right hide-on-med-and-down">
+                    <li><a href="/tutorial" id="map">TUTORIAL</a></li>
+                    <li><a href="/explorer" id="explore">EXPLORE</a></li>
+                    <li><a href="/#" id="api">API</a></li>
+                    </ul>
+                </div>
+            </nav>
+         </div>
+      </div>
+      <!-- This section is for the search bar-->
+      <div class="row valign-wrapper search-bar-center">    
+          <div class="col s12">
+              <div class="row">
+                  <div class="col s12 crawler-header">
+                    <h1 class="orange-text" style="font-family: Ubuntu; text-align: center;"> BioThings Crawler </h1>
+                    <br>
+                    <br>
+                  </div>
+                  <div class="col s2 offset-s2 crawler_input">
+                      <select id="select-input">
+                          <option value="" disabled selected>Choose prefix</option>
+                      </select>
+                  </div>
+                  <div class="col s5 crawler_input">
+                      <input id="crawler-input-value" type="text" class="validate" placeholder="Type your input value for crawling here..."/>
+                  </div>
+                  <div class="col s1 crawler_input">
+                      <a href="#data_explore_view"><button id="start-crawl-button" class="btn btn-default" type="button"><i class="medium material-icons">search</i></button></a>
+                  </div>
+                  <div class="col s8 offset-s2">
+                      <p class="orange-text"> Example query: Choose prefix to be <strong>ncbigene</strong>, and type <strong>1017</strong> in the input bar. Then click on the search button</p>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="row search-history" style="margin-left: 3%; overflow: auto; display:none; max-height: 120px">
+        <p class="blue-text">Search History</p>
+      </div>
+
+      <div class="overlay-group">
+          <div class="overlay"></div>
+          <div id="loading-img"></div>
+      </div>
+      <!-- This section is for the data display-->
+      <div class="row main" style="display: none">
+        <div class="filter col m3 s12">
+        </div>
+        <div class="col m8 s12 data-display">
+          <ul class="collection data-display-list">
+          </ul>
+          <h5 style="text-align: center; background-color: #f4f5f7; font-family: Ubuntu; cursor: pointer" id="show-more"> SHOW MORE RESULTS </h5>
+        </div>
+      </div>
+      <script type="text/javascript" src="./static/js/crawler.js"></script>
+  </body>
+</html>
