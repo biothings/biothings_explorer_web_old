@@ -7,6 +7,8 @@ from collections import defaultdict
 from subprocess import Popen, PIPE, STDOUT
 from joblib import Parallel, delayed
 import multiprocessing
+import logging
+logger = logging.getLogger(__name__)
 
 from .utils import readFile
 
@@ -16,6 +18,7 @@ t = jsonld.JsonLdProcessor()
 def process_jsonld(doc):
     # cmd = 'ruby jsonld_test_cli.rb -a compact'
     doc = json.dumps(doc)
+    logger.debug('The JSONLD file after json.dumps is %s', doc)
     RUBY_JSONLD_CMD = 'jsonld'
     cmd = RUBY_JSONLD_CMD + ' '
     cmd += '--validate --format nquads'
