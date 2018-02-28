@@ -8,26 +8,75 @@ from subprocess import Popen, PIPE, STDOUT
 from joblib import Parallel, delayed
 import multiprocessing
 import logging
+
 logger = logging.getLogger(__name__)
 
 from .utils import readFile
+
+class JSONLDHelper:
+    def __init__(self):
+        self.processor = jsonld.JsonLdProcessor()
+
+    def jsonld2nquads(jsonld_doc):
+        """
+        Given a JSONLD document, return its nquads format
+
+        Params
+        ======
+        jsonld_doc: jsonld document containing both JSON and the context file
+
+        TODO
+        ======
+        Currently it relies on the JSONLD ruby client to convert to nquads
+        When the JSONLD Python client is ready to adapt to 1.1, 
+        should switch to the Python client
+        """
+        doc = json.dumps(doc).replace(' ', '')
+        # the following 6 lines use JSON-LD Ruby client to convert
+        # JSON-LD document into NQuads format
+        cmd = 'jsonld --validate --format nquads'
+        p = Popen(cmd.split(), stdout=PIPE, stdin=PIPE, stderr=STDOUT)
+        p.stdin.write(doc.encode('utf-8'))
+        stdout_data = p.communicate()[0]
+        p.stdin.close()
+        _response = stdout_data.decode()
+        # deal with cases when JSON-LD Ruby client returns an error
+        if _response.startswith(('Error', 'ERROR')):
+            logger.error("An error occured when JSON-LD Ruby client tries to parse the JSON-LD. \
+                         The first 100 chars of the JSON document is %s", jsonld_doc[:100])
+            return None
+        # deal with cases when JSON-LD Ruby client returns empty resutls
+        elif _response.startswith('\nParsed 0 statements'):
+            logger.warning("0 statements is found when JSON-LD Ruby client tries to parse the JSON-LD input.\
+                           The first 100 chars of the JSON document is %s", jsonld_doc[:100])
+        else:
+            try:
+                _nquad = re.sub('Pased .*second.\n', '', _response)
+                return t.parse_nquads(_nquad)
+            except Exception as e:
+                logger.error("Something Unexpected happend when JSON-LD Ruby client tries to parse the JSON-LD. \
+                             The first 100 chars of the JSON document is %s", jsonld_doc[:100])
+                logging.error(e, exc_info=True)
+                return None
 
 
 t = jsonld.JsonLdProcessor()
 
 def process_jsonld(doc):
-    # cmd = 'ruby jsonld_test_cli.rb -a compact'
-    doc = json.dumps(doc)
-    logger.debug('The JSONLD file after json.dumps is %s', doc)
-    RUBY_JSONLD_CMD = 'jsonld'
-    cmd = RUBY_JSONLD_CMD + ' '
-    cmd += '--validate --format nquads'
+    """
+
+    """
+    doc = json.dumps(doc).replace(' ', '')
+    cmd = 'jsonld --validate --format nquads'
     p = Popen(cmd.split(), stdout=PIPE, stdin=PIPE, stderr=STDOUT)
     p.stdin.write(doc.encode('utf-8'))
-    # stdout_data = p.communicate(input=doc.encode('utf-8'))[0]
     stdout_data = p.communicate()[0]
     p.stdin.close()
     _response = stdout_data.decode()
+    # check if startswith 'ERROR'
+    # check if return nquads
+    # check if the nquads is empty
+    # if parsing error
     if 'Parsed' in _response:
         _nquad = re.sub('Parsed .*second.\n', '', _response)
         return t.parse_nquads(_nquad)
