@@ -1,9 +1,12 @@
 import json
 import requests
 import grequests
+import time
 
 from .api_registry_parser import RegistryParser
-from .jsonld_processor import json2nquads
+from .jsonld_processor import JSONLDHelper
+from .output_organizer import OutputOrganizor
+from .networkx_helper import NetworkxHelper
 from .utils import int2str
 
 class ApiCallHandler:
@@ -16,6 +19,9 @@ class ApiCallHandler:
         4) Extract Output from API call results
         """
         self.registry = RegistryParser(readmethod='filepath', initialize=True)
+        self.jh = JSONLDHelper()
+        self.oo = OutputOrganizor()
+        self.nh = NetworkxHelper()
 
     def check_if_exists_multiple_params(self, endpoint_name):
         """
@@ -154,6 +160,8 @@ class ApiCallHandler:
         1) Convert all integers in the json_doc into string
 
         """
+        if type(json_doc) == list:
+            json_doc = {'data': json_doc}
         int2str(json_doc)
         return json_doc
 
@@ -178,43 +186,25 @@ class ApiCallHandler:
         """
         # get the output_type of the output, could be 'entity' or 'object'
         if output_uri in self.registry.bioentity_info:
-            output_type = self.registry.bioentity_info[output_uri]['type']
+            output_type = self.registry.bioentity_info[output_uri]['semantic type']
         else:
             print("The output_uri specified {} could not be found in the registry!".format(output_uri))
             return
         # if output_type is entity, use JSON-LD to extract the output
-        if output_type == 'Entity':
-            jsonld_context = self.registry.endpoint_info[endpoint_name]['jsonld_context']
-            outputs = json2nquads(json_doc, jsonld_context, output_uri, predicate)
-            results = []
-            for _output in outputs:
-                if _output:
-                    results.append((_output, self.registry.bioentity_info[output_uri]['preferred_name']))
-                else:
-                    results.append(None)
-            return results
-        # if output_type is object, use OpenAPI specs to extract the output
-        else:
-            response = self.endpoint_info[endpoint_name]['get']['responses']['200']['x-responseValueType']
-            # get the dot path for extracting output
-            for _response in response:
-                if _response['valueType'] == output_uri:
-                    output_path = _response['path']
-                else:
-                    print("Could not find the path to extract output in OpenAPI specs in endpoint: {}".format(endpoint_name))
-                    return
-            # extract output
-            outputs_command = 'json_doc'
-            for _item in output_path.split('.'):
-                outputs_command += ('["' + _item + '"]')
-            try:
-                outputs = eval(outputs_command)
-            except:
-                print("Could not extract the output from the path given {}".format(outputs_command))
-                return
-            return (outputs, self.registry.bioentity_info[output_uri]['preferred_name'])
+        jsonld_context = self.registry.endpoint_info[endpoint_name]['jsonld_context']
+        nquads = self.jh.json2nquads(json_doc, jsonld_context)
+        properties = self.jh.fetch_properties_by_association_and_prefix_in_nquads(nquads, predicate, output_uri)
+        properties = [self.oo.nquads2dict(_property) for _property in properties]
+        results = []
+        for _property in properties:
+            if _property:
+                results.append((_property, self.registry.bioentity_info[output_uri]['preferred_name']))
+            else:
+                results.append(None)
+        return results
 
-    def input2output(self, input_type, input_value, endpoint_name, output_type, predicate=None, additional_parameters={}, type='prefix'):
+
+    def input2output(self, input_type, input_value, endpoint_name, output_type, predicate=None, additional_parameters={}, _type='prefix'):
         """
         This is the main function of the class
         Given input, endpoint, output, etc, perform the following steps:
@@ -223,11 +213,16 @@ class ApiCallHandler:
         3) Preprocess the JSON doc from step 2
         4) Extract the output based on output_type and predicate
         """
-        if type == 'prefix':
+        if _type == 'prefix':
             input_type = self.registry.prefix2uri(input_type)
             output_type = self.registry.prefix2uri(output_type)
+        if not predicate:
+            predicate = self.nh.find_edge_label(endpoint_name, self.registry.bioentity_info[output_type]['preferred_name'])
+            if type(predicate) != list:
+                predicate = predicate.replace('assoc:', 'http://biothings.io/explorer/vocab/objects/')
+            else:
+                predicate = [_predicate.replace('assoc:', 'http://biothings.io/explorer/vocab/objects/') for _predicate in predicate]
         final_results = []
-
         # preprocess the input
         processed_input = self.preprocessing_input(input_value, endpoint_name)
         # retrieve json doc
@@ -237,15 +232,26 @@ class ApiCallHandler:
             if additional_parameters:
                 uri_value.update(additional_parameters)
             api_call_params.append(self.call_api(uri_value, endpoint_name))
+        start = time.time()
         rs = (grequests.get(u, params=v) for (u,v) in api_call_params)
         responses = grequests.map(rs)
-        if responses and responses[0].status_code == 200 and 'xml' in responses[0].headers['Content-type']:
+        if responses and responses[0].status_code == 200:
             rs = (grequests.get(u, params=v, headers={'Accept': 'application/json'}) for (u,v) in api_call_params)
             responses = grequests.map(rs)
             #api_call_response = self.call_api(uri_value, endpoint_name)
         valid_responses = [self.preprocess_json_doc(api_call_response.json(), endpoint_name) if api_call_response.status_code == 200 else {} for api_call_response in responses]
-        outputs = self.extract_output(valid_responses, endpoint_name, output_type, predicate=predicate)
-        for i in range(len(outputs)):
-            if outputs[i]:
-                final_results.append({'input': (processed_input[i], self.registry.bioentity_info[input_type]['preferred_name']), 'output': (outputs[i])})
+        print('Time used in making API calls: {:.2f} seconds'.format(time.time() - start))
+        start = time.time()
+        if type(predicate) != list:
+            outputs = self.extract_output(valid_responses, endpoint_name, output_type, predicate=predicate)
+            for i in range(len(outputs)):
+                if outputs[i]:
+                    final_results.append({'input': (processed_input[0], self.registry.bioentity_info[input_type]['preferred_name']), 'output': (outputs[i]), 'endpoint': endpoint_name, 'target': outputs[i][0]['target']['id']})
+        else:
+            for _predicate in predicate:
+                outputs = self.extract_output(valid_responses, endpoint_name, output_type, predicate=_predicate)
+            for i in range(len(outputs)):
+                if outputs[i]:
+                    final_results.append({'input': (processed_input[i], self.registry.bioentity_info[input_type]['preferred_name']), 'output': (outputs[i]), 'endpoint': endpoint_name, 'target': outputs[i][0]['target']['id']})
+        print('Time used in organizing outputs: {:.2f} seconds'.format(time.time() - start))
         return final_results

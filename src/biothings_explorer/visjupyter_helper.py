@@ -25,13 +25,14 @@ def draw_graph(G, graph_id=1):
     nodes_dict = [{"id": n, "color": G.node[n]['color'], "degree": nx.degree(G, n), "x": pos[n][0]*1000, "y": pos[n][0]*1000} for n in G.nodes()]
     edges = []
     for _edge in set(G.edges()):
-        labels = G.edge[_edge[0]][_edge[1]].values()
+        labels = G.get_edge_data(_edge[0],_edge[1]).values()
         for _label in labels:
             edges.append((_edge[0], _edge[1], _label['label']))
     node_map = dict(zip(G.nodes(), range(len(G.nodes()))))  # map to indices for source/target in edges
     edges = G.edges(keys=True)
-    edges_dict = [{"source": node_map[edges[i][0]], "target": node_map[edges[i][1]],
-                  "color": "pink", "id": G.edge[edges[i][0]][edges[i][1]][edges[i][2]]['label']} for i in range(len(edges))]
+    edges_dict = []
+    #[{"source": node_map[edges[i][0]], "target": node_map[edges[i][1]],
+     #             "color": "pink", "id": G.edge[edges[i][0]][edges[i][1]][edges[i][2]]['label']} for i in range(len(edges))]
     return visJS2jupyter.visJS_module.visjs_network(nodes_dict, edges_dict,
                                                     node_size_multiplier=3,
                                                     node_size_transform='',

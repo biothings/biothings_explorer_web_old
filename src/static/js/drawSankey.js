@@ -38,7 +38,8 @@ function drawSankeyPlot(jsonResponse, type){
       source: fig.plotly.source,
       target: fig.plotly.target,
       value: fig.plotly.value,
-      label: fig.plotly.edge_labels
+      label: fig.plotly.edge_labels,
+      color: "#ffffff"
     }
   };
 
@@ -50,11 +51,12 @@ function drawSankeyPlot(jsonResponse, type){
     height: 772,
     font: {
       size: 10
-    }
+    },
+    paper_bgcolor: 'rgba(0,0,0,0)'
   };
   if (type=='path'){
-    Plotly.plot('path-plotly', data, layout, {displayModeBar: false});
+    Plotly.plot('path-plotly', data, layout);
   } else if (type=="explore"){
-    Plotly.plot('explore-plotly', data, layout, {displayModeBar: false});
+    Plotly.plot('explore-plotly', data, layout);
   };
 };

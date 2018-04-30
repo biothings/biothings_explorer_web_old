@@ -8,7 +8,7 @@ function fetch_crawler_results(prefix, input_value){
     var promise = $.ajax({
         type:"GET",
         url: "/explorer/api/v1/crawler",
-        data: {input_type: prefix, input_value: input_value},
+        data: {input_type: prefix, input_value: input_value, 'summary': true},
         datatype: "json"
     });
     return promise;
@@ -31,15 +31,24 @@ function create_single_checkbox(name) {
  * @return {String} html for new filter group
 */
 function create_single_filter_group(semantic_type, summary) {
-	var header_template = '<h5 class="green-text">{input}</h5>';
+	var header_template = '<p class="black-text">{input}</p>';
 	var filter_group_html = '<div class="row filter-box">' + header_template.replace('{input}', semantic_type);
-	summary['id'].forEach(function(prefix) {
-		var new_checkbox = create_single_checkbox(prefix);
+	for (var prefix in summary) {
+		var new_checkbox = create_single_checkbox(summary[prefix]);
 		filter_group_html += new_checkbox;
-	});
+	};
 	filter_group_html += '</div>'
 	return filter_group_html;
 };
+
+function create_collapsible_for_semantic_type(semantic_type, summary) {
+    var collapsible_header_template = '<li><div class="collapsible-header">{semantic_type}</div>';
+    var collapsible_body = '<div class="collapsible-body">';
+    for (var property in summary) {
+        collapsible_body += create_single_filter_group(property, summary[property]);
+    }
+    return collapsible_header_template.replace('{semantic_type}', semantic_type) + collapsible_body + '</div></li>'
+}
 
 /**
  * Create new collection based on API, Endpoint, CURIE, Predicate
@@ -49,9 +58,15 @@ function create_single_filter_group(semantic_type, summary) {
  * @param {String} predicate
  * @return {String} html for new collection
 */
-function create_single_collection(api, endpoint, curie, predicate) {
-    var template = '<li class="collection-item avatar"><span class="title">ID:   {curie}</span><p>Predicate:   {predicate}</p><p>API:   {API}</p><p>Endpoint:   {Endpoint}</p><a href="#!" class="secondary-content"><i class="material-icons collection-search" id="{curie}">search</i></a></li>'
-    template = template.replace('{API}', api).replace('{Endpoint}', endpoint).replace('{curie}', curie).replace('{predicate}', predicate).replace('{curie}', curie);
+function create_single_collection(data) {
+    var template = '<li class="collection-item avatar">'
+    template += '<span class="title">object.id: ' + data['object.id'] + '</span>';
+    for (var property in data) {
+        if (property != 'object.id') {
+            template += ('<p>' + property + ': ' + data[property]); 
+        }
+    };
+    template += '</li>'
     return template
 };
 
@@ -59,25 +74,11 @@ function create_single_collection(api, endpoint, curie, predicate) {
  * Update the refine side bar
 */
 function populate_filter(jsonResponse) {
-    $(".filter").empty();
-    var predicate_summary = {'id': []};
-    var api_summary = {'id': []};
-    var endpoint_summary = {'id': []};
+    $(".filter-collapsible").empty();
     for (var semantic_type in jsonResponse['summary']) {
-        $.each(jsonResponse['summary'][semantic_type]['predicate'], function(i, predicate) {
-            if($.inArray(predicate, predicate_summary['id']) === -1) predicate_summary['id'].push(predicate);
-        });
-        $.each(jsonResponse['summary'][semantic_type]['api'], function(i, api) {
-            if($.inArray(api, api_summary['id']) === -1) api_summary['id'].push(api);
-        });
-        $.each(jsonResponse['summary'][semantic_type]['endpoint'], function(i, endpoint) {
-            if($.inArray(endpoint, endpoint_summary['id']) === -1) endpoint_summary['id'].push(endpoint);
-        });
-        $(".filter").append(create_single_filter_group(semantic_type, jsonResponse['summary'][semantic_type]));
+        $(".filter-collapsible").append(create_collapsible_for_semantic_type(semantic_type, jsonResponse['summary'][semantic_type]));
     };
-    $(".filter").append(create_single_filter_group('predicate', predicate_summary));
-    $(".filter").append(create_single_filter_group('api', api_summary));
-    $(".filter").append(create_single_filter_group('endpoint', endpoint_summary));
+    $(".collapsible").collapsible();
 };
 
 /**
@@ -90,13 +91,13 @@ function initialize_data_display(data) {
     var i = 0;
     if (data.length > 20) {
         for (i = 0; i < 20; i++) {
-            $(".data-display-list").append(create_single_collection(data[i]['api'], data[i]['endpoint'], data[i]['curie'], data[i]['predicate']));
+            $(".data-display-list").append(create_single_collection(data[i]));
             $("#show-more").show();
         };
         CURRENT_DATA_INDEX = 20;
     } else {
         for (i = 0; i < data.length; i++) {
-            $(".data-display-list").append(create_single_collection(data[i]['api'], data[i]['endpoint'], data[i]['curie'], data[i]['predicate']));
+            $(".data-display-list").append(create_single_collection(data[i]));
             $("#show-more").hide();
         }
     };
@@ -255,6 +256,7 @@ function update_data_display(prefix, input_value) {
         $(".overlay-group").hide();
         shuffle_results(jsonResponse);
         populate_filter(jsonResponse);
+        $(".main").show();
         initialize_data_display(CURRENT_CRAWLING_RESULTS);
         CURRENT_DISPLAY_CONTENT = CURRENT_CRAWLING_RESULTS;
         $(".main").show();

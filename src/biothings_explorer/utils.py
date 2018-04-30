@@ -119,3 +119,14 @@ def timing(f):
         return ret
     return wrap
 
+property_uri_2_prefix_dict = {'http://biothings.io/explorer/vocab/attributes/id': 'object.id',
+                              'http://biothings.io/explorer/vocab/attributes/id-secondary': 'object.id-secondary',
+                              'http://biothings.io/explorer/vocab/attributes/label': 'object.label',
+                              'http://biothings.io/explorer/vocab/attributes/taxonomy': 'object.taxonomy',
+                              'http://biothings.io/explorer/vocab/attributes/label': 'object.label',
+                              'http://biothings.io/explorer/vocab/relationships/id': 'relation.id',
+                              'http://biothings.io/explorer/vocab/relationships/label': 'relation.label',
+                              'http://biothings.io/explorer/vocab/relationships/publication': 'publication',
+                              'http://biothings.io/explorer/vocab/relationships/evidence': 'evidence',
+                              'http://biothings.io/explorer/vocab/relationships/provided_by': 'provided_by'
+                              }

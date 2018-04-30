@@ -5,7 +5,7 @@ import os, sys
 import logging
 
 from .api_call_handler import ApiCallHandler
-from .visjupyter_helper import find_edge_label, path2Graph, draw_graph, explore2Graph
+from .visjupyter_helper import find_edge_label, path2Graph, explore2Graph
 from .utils import output2input
 
 # add path for the config folder
@@ -74,20 +74,6 @@ class BioThingsExplorer:
                     for _relation in relations:
                         self.api_map.add_edge(_endpoint, preferred_name, label=_relation)
         return self.api_map
-
-    def draw_api_road_map(self):
-        """
-        This function displays the api road map in the jupyter notebook cell block
-
-        Return
-        ======
-        VisJupyter Graph
-        """
-        if not self.api_map.nodes():
-            print('Please call construct_api_road_map function first!')
-            return
-        self.graph_id += 1
-        return draw_graph(self.api_map, graph_id=self.graph_id)
 
     def path_conversion(self, pathList, relation_filter=None):
         """
@@ -189,7 +175,7 @@ class BioThingsExplorer:
             return final_results
         elif display_graph:
             self.graph_id += 1
-            return draw_graph(self.temp_G, graph_id=self.graph_id)
+            #return draw_graph(self.temp_G, graph_id=self.graph_id)
         else:
             return self.paths
 
@@ -228,14 +214,14 @@ class BioThingsExplorer:
                 self.temp_G = explore2Graph(self.temp_results)
                 self.graph_id += 1
                 if display_graph:
-                    return draw_graph(self.temp_G, graph_id=self.graph_id)
+                    return
                 else:
                     return self.temp_G
             print('Done!!!')
         self.temp_G = explore2Graph(self.temp_results)
         self.graph_id += 1
         if display_graph:
-            return draw_graph(self.temp_G, graph_id=self.graph_id)
+            return
         else:
             return self.temp_G
 
