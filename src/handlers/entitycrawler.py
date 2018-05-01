@@ -177,7 +177,7 @@ def exploreinput(input_type, input_value):
                     reorganized_data = {'endpoint': endpoint, 'api': bt_explorer.registry.endpoint_info[endpoint]['api'],
                                         'predicate': _assoc.replace('http://biothings.io/explorer/vocab/objects/', '')}
                     reorganized_data.update(oo.nquads2dict(_object))
-                    object_id_prefix = reorganized_data['target']['id'].split(':')[0]
+                    object_id_prefix = reorganized_data['object']['id'].split(':')[0]
                     reorganized_data.update({'prefix': object_id_prefix})
                     object_semantic_type = bt_explorer.registry.prefix2semantictype(object_id_prefix)
                     outputs[object_semantic_type].append(reorganized_data)
