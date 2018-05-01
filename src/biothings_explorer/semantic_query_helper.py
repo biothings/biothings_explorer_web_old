@@ -37,20 +37,21 @@ class SemanticQueryHelper:
         except:
             return None
         json_response = await response.json()
+        json_response = self.ah.preprocess_json_doc(json_response, 1)
         final_results = []
         if type(predicate) != list:
             outputs = self.ah.extract_output(json_response, endpoint_name, output_type, predicate=predicate)
             for i in range(len(outputs)):
                 if outputs[i]:
                     final_results.append({'input': (input_value, self.registry.bioentity_info[input_type]['preferred_name']), 'output': (outputs[i]),
-                                          'endpoint': endpoint_name, 'target': outputs[i][0]['target']['id']})
+                                          'endpoint': endpoint_name, 'target': outputs[i][0]['object']['id']})
         else:
             for _predicate in predicate:
                 outputs = self.ah.extract_output(valid_responses, endpoint_name, output_type, predicate=_predicate)
             for i in range(len(outputs)):
                 if outputs[i]:
                     final_results.append({'input': (input_value, self.registry.bioentity_info[input_type]['preferred_name']), 'output': (outputs[i]),
-                                          'endpoint': endpoint_name, 'target': outputs[i][0]['target']['id']})
+                                          'endpoint': endpoint_name, 'target': outputs[i][0]['object']['id']})
         return final_results
 
     async def asynchronous(self, paths):
