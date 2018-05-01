@@ -246,12 +246,12 @@ class ApiCallHandler:
             outputs = self.extract_output(valid_responses, endpoint_name, output_type, predicate=predicate)
             for i in range(len(outputs)):
                 if outputs[i]:
-                    final_results.append({'input': (processed_input[0], self.registry.bioentity_info[input_type]['preferred_name']), 'output': (outputs[i]), 'endpoint': endpoint_name, 'target': outputs[i][0]['target']['id']})
+                    final_results.append({'input': (processed_input[0], self.registry.bioentity_info[input_type]['preferred_name']), 'output': (outputs[i]), 'endpoint': endpoint_name, 'target': outputs[i][0]['object']['id']})
         else:
             for _predicate in predicate:
                 outputs = self.extract_output(valid_responses, endpoint_name, output_type, predicate=_predicate)
             for i in range(len(outputs)):
                 if outputs[i]:
-                    final_results.append({'input': (processed_input[i], self.registry.bioentity_info[input_type]['preferred_name']), 'output': (outputs[i]), 'endpoint': endpoint_name, 'target': outputs[i][0]['target']['id']})
+                    final_results.append({'input': (processed_input[i], self.registry.bioentity_info[input_type]['preferred_name']), 'output': (outputs[i]), 'endpoint': endpoint_name, 'target': outputs[i][0]['object']['id']})
         print('Time used in organizing outputs: {:.2f} seconds'.format(time.time() - start))
         return final_results
