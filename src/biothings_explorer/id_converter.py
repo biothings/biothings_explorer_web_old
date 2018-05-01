@@ -1,4 +1,5 @@
 import requests
+from collections import defaultdict
 from pyld import jsonld
 
 from .config import MYGENE_URI2SCOPE, MYCHEM_URI2SCOPE, MYGENE_QUERY_JSONLD, MYCHEM_QUERY_JSONLD
@@ -53,6 +54,15 @@ class IDConverter:
                 yield _synonym[target_type]
             else:
                 yield None
+
+    def convert_gene_ids_in_batch(self, input_value, input_type, target_type):
+        synonyms = self.find_gene_synonym(input_value, input_type)
+        results = defaultdict(list)
+        for _synonym in synonyms:
+            if target_type in _synonym:
+                _input = str(_synonym[input_type]).upper()
+                results[_input].append(_synonym[target_type])
+        return results
 
     def find_chemical_synonym(self, input_value, input_type):
         """
