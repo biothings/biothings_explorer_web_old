@@ -479,7 +479,7 @@ class KnowledgeMapPath(BaseHandler):
                     object_type = bt_explorer.registry.bioentity_info[object_uri]['semantic type']
                     new_path.append({'subject': {'prefix': _path[i], 'semantic_type': subject_type}, 
                                        'object': {'prefix': _path[i+2], 'semantic_type': object_type}, 
-                                       'predicate': find_edge_label(bt_explorer.api_map, _path[i+1], _path[i+2]).split(':')[0], 'endpoint': _path[i+1]})
+                                       'predicate': find_edge_label(bt_explorer.api_map, _path[i+1], _path[i+2]).split(':')[-1], 'endpoint': _path[i+1]})
                 detailed_paths.append(new_path)
             self.write(json.dumps({"paths": detailed_paths}))
         else:
