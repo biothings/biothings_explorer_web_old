@@ -102,19 +102,19 @@ class OutputOrganizor:
         3) edge
 
         """
-        reorganized_data = {'target': {}, 'edge': {}}
+        reorganized_data = {'object': {}, 'edge': {}}
         for attribute_uri, _value in properties.items():
             attribute_label = self.attribute_dict[attribute_uri]['name']
             attribute_category = self.attribute_dict[attribute_uri]['category']
             # first handle cases where the property key is object.id
             if attribute_label == 'id' and attribute_category == 'object':
-                reorganized_data['target']['id'] = self.uri2curie(_value)
+                reorganized_data['object']['id'] = self.uri2curie(_value)
             # then handle cases where the property key is object.secondary-ids
             elif attribute_label == 'secondary-id' and attribute_category == 'object':
-                reorganized_data['target']['secondary-id'] = self.uri2curie(_value)
+                reorganized_data['object']['secondary-id'] = self.uri2curie(_value)
             # next handle cases where the property key belongs to 'object' category
             elif attribute_category == 'object':
-                reorganized_data['target'][attribute_label] = self.uri2value(_value)
+                reorganized_data['object'][attribute_label] = self.uri2value(_value)
             elif attribute_category == 'edge':
                 reorganized_data['edge'][attribute_label] = self.uri2value(_value)
             else:
@@ -122,5 +122,5 @@ class OutputOrganizor:
         return {k: v for k, v in reorganized_data.items() if v}
 
     def organize_synonym_output(self, outputs):
-        outputs = [_output['output'][0]['target']['id'] for _output in outputs]
+        outputs = [_output['output'][0]['object']['id'] for _output in outputs]
         return set(outputs)
