@@ -72,6 +72,7 @@ class Application(tornado.web.Application):
             (r"/explorer/findedgelabel", FindEdgeLabel),
             (r"/explorer/api/v2/knowledgemap", KnowledgeMap),
             (r"/explorer/api/v1/path", KnowledgeMapPath),
+            (r"/explorer/api/v2/findpath", KnowledgeMapPath),
             (r"/explorer/api/v2/crawler", Crawler),
             (r"/explorer/api/v2/directoutput", DirectPathHandler),
             (r"/explorer/api/v2/findsynonym", SynonymHandler),
