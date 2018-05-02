@@ -15,7 +15,7 @@ bt_explorer = BioThingsExplorer()
 
 color_dict = {'clinical trial': 'rgba(144, 144, 28, 0.4)', 'gene': 'rgba(55, 230, 84, 0.93)', 
               'chemical': 'rgba(230, 55, 218, 0.93)', 'protein': 'rgba(55, 227, 230, 0.6)', 
-              'variant': 'rgba(230, 174, 55, 0.83)', 'publication': 'rgba(86, 28, 144, 0.3)',
+              'variant': 'rgba(230, 174, 55, 0.83)', 'anatomy': 'rgba(86, 28, 144, 0.3)',
               'phenotype': 'rgba(28, 86, 144, 0.3)', 'pathway': 'rgba(230, 55, 116, 0.63)',
               'disease': 'rgba(166, 55, 230, 0.84)', 'transcript': 'rgba(100, 88, 77, 0.4)',
               'clinical significance': 'rgba(70, 33, 77, 0.4)', 'organism': 'rgba(10, 133, 177, 0.4)',
