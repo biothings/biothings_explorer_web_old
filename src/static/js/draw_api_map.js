@@ -436,6 +436,7 @@ function drawApiLevelMap(){
   	layout:{randomSeed:3}
   };
   var network_api = new vis.Network(container, data, options);
+  network_api.fit();
 }
 
 
