@@ -39,7 +39,7 @@ function drawSankeyPlot(jsonResponse, type){
       target: fig.plotly.target,
       value: fig.plotly.value,
       label: fig.plotly.edge_labels,
-      color: "#ffffff"
+      color: "#e3e5e8"
     }
   };
 
