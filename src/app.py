@@ -44,6 +44,11 @@ class CrawlerHandler(tornado.web.RequestHandler):
     def get(self):
         self.render("crawler.html", messages=None)
 
+class ExplorerHandler(tornado.web.RequestHandler):
+    @tornado.web.addslash
+    def get(self):
+        self.render("explorer.html", messages=None)
+
 class Application(tornado.web.Application):
     def __init__(self):
         settings = {
@@ -55,6 +60,8 @@ class Application(tornado.web.Application):
             (r"/explorer/?", MainHandler),
             (r"/explorer/tutorial/?", TutorialHandler),
             (r"/explorer/api/?", APIHandler),
+            (r"/explorer/explorer/?", ExplorerHandler),
+            (r"/explorer/explorer/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
             (r"/explorer/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
             (r"/explorer/tutorial/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
             (r"/explorer/crawler/?", CrawlerHandler),
