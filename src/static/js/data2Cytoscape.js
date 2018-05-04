@@ -86,7 +86,8 @@ function displayOutputToCytoscape(selected_path, _input_value) {
     $("#log-list").append("<li class='collection-header'><h4>Your exploration starts now!</h4></li>")
     subpath.forEach(function(path) {
         sequence = sequence.then(function() {
-        $("#log-list").append("<li class='collection-item'>" + "Step " + (_level + 1) + " STARTS: Connect from " + path[0] + " to " + path[2] + " using " + path[1] + ". The input value is " + _input_value + "</li>")
+        $("#log-list").append("<li class='collection-item'>" + "Step " + (_level + 1) + " STARTS: Connect from " + path[0] + " to " + path[2] + " using " + path[1] + ". The input value is " + _input_value + "</li>");
+        console.log(_input_value, path, _level);
         var Response = findOutputBasedOnInputAndPath(_input_value, path, _level);
         return Response;
         }).then(function(jsonResponse) {
