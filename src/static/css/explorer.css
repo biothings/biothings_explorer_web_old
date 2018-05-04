@@ -9,5 +9,22 @@
 .select-wrapper {
     margin-left: 3% !important;
     margin-right: 3% !important;
-    margin-bottom: 1%
-}
+    margin-bottom: 1%;
+};
+
+#DirectInput2OutputButton {
+	margin-top: 2% !important;
+};
+
+.direct_output_display {
+	max-height: 300px;
+};
+
+#cy {
+    border-width: 1px;
+    border-color: grey;
+};
+
+h1 {
+    font-size: 1rem;
+};
