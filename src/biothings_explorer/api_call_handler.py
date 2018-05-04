@@ -194,6 +194,8 @@ class ApiCallHandler:
         jsonld_context = self.registry.endpoint_info[endpoint_name]['jsonld_context']
         nquads = self.jh.json2nquads(json_doc, jsonld_context)
         results = []
+        if type(nquads) != list:
+            nquads = [nquads]
         for _nquad in nquads:
             _result = []
             properties = self.jh.fetch_properties_by_association_and_prefix_in_nquads(_nquad, predicate, output_uri)
@@ -223,6 +225,8 @@ class ApiCallHandler:
                 predicate = predicate.replace('assoc:', 'http://biothings.io/explorer/vocab/objects/')
             else:
                 predicate = [_predicate.replace('assoc:', 'http://biothings.io/explorer/vocab/objects/') for _predicate in predicate]
+        else:
+            predicate = predicate.replace('assoc:', 'http://biothings.io/explorer/vocab/objects/')
         final_results = []
         # preprocess the input
         processed_input = self.preprocessing_input(input_value, endpoint_name)

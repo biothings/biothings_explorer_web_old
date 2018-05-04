@@ -104,11 +104,7 @@ def output2input(_output):
     ======
     list of ids
     """
-    result = []
-    for _iopair in _output:
-        output_list = _iopair['output'][0]
-        result.extend([_o[0] for _o in output_list])
-    return result
+    return [_o['target'].split(':')[1] for _o in _output]
 
 def timing(f):
     def wrap(*args):

@@ -207,8 +207,10 @@ class BioThingsExplorer:
             print('Currently working on path {}. The path connects from {} to {} using {}!!'.format(i, _path['input'], _path['output'], _path['endpoint']))
             path_output = self.apiCallHandler.input2output(_path['input'], path_input, _path['endpoint'], _path['output'], _path['relation'])
             if path_output:
+                print('yes')
                 self.temp_results.update({i: path_output})
                 path_input = output2input(path_output)
+                print(path_input)
             else:
                 print('No results could be found for the given path!! The exploration ended!')
                 self.temp_G = explore2Graph(self.temp_results)
