@@ -10,7 +10,7 @@ from .utils import output2input
 
 # add path for the config folder
 sys.path.append('/Users/kevinxin/Documents/myvariant.info/json-ld/bt_explorer_web_development/config_folder/bt_explorer_2')
-from config import LOG_FOLDER
+from .config import LOG_FOLDER
 
 formatter = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 logging.basicConfig(level=logging.DEBUG, filename=os.path.join(LOG_FOLDER, 'debug.log'), format=formatter)
