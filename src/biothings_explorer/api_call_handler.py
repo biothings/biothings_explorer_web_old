@@ -193,14 +193,15 @@ class ApiCallHandler:
         # if output_type is entity, use JSON-LD to extract the output
         jsonld_context = self.registry.endpoint_info[endpoint_name]['jsonld_context']
         nquads = self.jh.json2nquads(json_doc, jsonld_context)
-        properties = self.jh.fetch_properties_by_association_and_prefix_in_nquads(nquads, predicate, output_uri)
-        properties = [self.oo.nquads2dict(_property) for _property in properties]
         results = []
-        for _property in properties:
-            if _property:
-                results.append((_property, self.registry.bioentity_info[output_uri]['preferred_name']))
-            else:
-                results.append(None)
+        for _nquad in nquads:
+            _result = []
+            properties = self.jh.fetch_properties_by_association_and_prefix_in_nquads(_nquad, predicate, output_uri)
+            properties = [self.oo.nquads2dict(_property) for _property in properties]
+            for _property in properties:
+                if _property:
+                    _result.append(_property)
+            results.append(_result)
         return results
 
 
@@ -246,12 +247,13 @@ class ApiCallHandler:
             outputs = self.extract_output(valid_responses, endpoint_name, output_type, predicate=predicate)
             for i in range(len(outputs)):
                 if outputs[i]:
-                    final_results.append({'input': (processed_input[0], self.registry.bioentity_info[input_type]['preferred_name']), 'output': (outputs[i]), 'endpoint': endpoint_name, 'target': outputs[i][0]['object']['id']})
+                    for _output in outputs[i]:
+                        final_results.append({'input': (processed_input[i], self.registry.bioentity_info[input_type]['preferred_name']), 'output': _output, 'endpoint': endpoint_name, 'target': _output['object']['id'], 'predicate': predicate.split('/')[-1]})
         else:
             for _predicate in predicate:
                 outputs = self.extract_output(valid_responses, endpoint_name, output_type, predicate=_predicate)
             for i in range(len(outputs)):
                 if outputs[i]:
-                    final_results.append({'input': (processed_input[i], self.registry.bioentity_info[input_type]['preferred_name']), 'output': (outputs[i]), 'endpoint': endpoint_name, 'target': outputs[i][0]['object']['id']})
+                    final_results.append({'input': (processed_input[i], self.registry.bioentity_info[input_type]['preferred_name']), 'output': (outputs[i]), 'endpoint': endpoint_name, 'target': outputs[i][0]['object']['id'], 'predicate': predicate})
         print('Time used in organizing outputs: {:.2f} seconds'.format(time.time() - start))
         return final_results
