@@ -1,4 +1,4 @@
-import visJS2jupyter.visJS_module
+#import visJS2jupyter.visJS_module
 import networkx as nx
 
 def draw_graph(G, graph_id=1):
@@ -33,6 +33,7 @@ def draw_graph(G, graph_id=1):
     edges_dict = []
     #[{"source": node_map[edges[i][0]], "target": node_map[edges[i][1]],
      #             "color": "pink", "id": G.edge[edges[i][0]][edges[i][1]][edges[i][2]]['label']} for i in range(len(edges))]
+    """
     return visJS2jupyter.visJS_module.visjs_network(nodes_dict, edges_dict,
                                                     node_size_multiplier=3,
                                                     node_size_transform='',
@@ -49,6 +50,7 @@ def draw_graph(G, graph_id=1):
                                                     max_velocity=15,
                                                     min_velocity=1,
                                                     edge_smooth_enabled=True)
+    """
 
 def find_edge_label(G, source, target, relation=None):
     """
@@ -133,6 +135,7 @@ def explore2Graph(exploreresults):
                 if layer == 0:
                     G.add_node(_input, type='bioentity', color=color_schema[layer])
                 if 'output' in _result:
+                    """
                     output_type = _result['output'][1]
                     i = 0
                     for _output_result in _result['output'][0]:
@@ -141,7 +144,11 @@ def explore2Graph(exploreresults):
                         else:
                             _output = output_type + ' ' + str(i)
                             i += 1
-                        G.add_node(_output, type='bioentity', color=color_schema[layer+1])
-                        G.add_edge(_input, _output, label=_output_result[1])
+                    """
+                    G.add_node(_result['output']['object']['id'], type='bioentity', color=color_schema[layer+1], object_info=_result['output']['object'])
+                    if 'edge' in _result['output']:
+                        G.add_edge(_input, _result['output']['object']['id'], label=_result['predicate'], edge_info=_result['output']['edge'])
+                    else:
+                        G.add_edge(_input, _result['output']['object']['id'], label=_result['predicate'])
     return G
 
