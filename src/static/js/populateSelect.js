@@ -111,6 +111,10 @@ function populateSelectInSideBar() {
     populateEndpoints("#select-endpoint");
     populateBioEntity("#select-input");
     populateBioEntity("#select-output");
+    populateBioEntity("#direct-input");
+    populateBioEntity("#direct-output");
+    populateBioEntity("#semantic-input");
+    populateBioEntity("#semantic-output");
     populateBioEntity("#select-input1");
     populateBioEntity("#select-output1");
     populateInput("#customize1");
