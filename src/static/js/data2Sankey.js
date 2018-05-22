@@ -3,8 +3,9 @@
  * @return {Sankey Plot}
 */
 function displayInput() {
-	$("#select-input").change(function(){
-		_input = $(this).find("option:selected").attr('value');
+	$("#input-search-button").click(function(){
+        console.log('input-search-button clicked!');
+		_input = $("#select-input").find("option:selected").attr('value');
 		findOutputTypeBasedOnInputType(_input).done(function(jsonResponse){
 	    	drawSankeyPlot(jsonResponse, type='path');
 		});
@@ -16,8 +17,9 @@ function displayInput() {
  * @return {Sankey Plot}
 */
 function displayOutput() {
-    $("#select-output").change(function(){
-        _output = $(this).find("option:selected").attr('value');
+    $("#output-search-button").click(function(){
+        console.log("output-search-button clicked!");
+        _output = $("#select-output").find("option:selected").attr('value');
         findInputTypeBasedOnOutputType(_output).done(function(jsonResponse){
             drawSankeyPlot(jsonResponse, type='path');
         });
@@ -29,8 +31,8 @@ function displayOutput() {
  * @return {Sankey Plot}
 */
 function displayEndpoint() {
-    $("#select-endpoint").change(function(){
-        _endpoint = $(this).find("option:selected").attr('value');
+    $("#endpoint-search-button").click(function(){
+        _endpoint = $("#select-endpoint").find("option:selected").attr('value');
         findInputOutputBasedOnEndpoint(_endpoint).done(function(jsonResponse){
             drawSankeyPlot(jsonResponse, type='path');
         });

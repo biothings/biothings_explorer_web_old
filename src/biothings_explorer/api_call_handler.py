@@ -221,6 +221,11 @@ class ApiCallHandler:
             output_type = self.registry.prefix2uri(output_type)
         if not predicate:
             predicate = self.nh.find_edge_label(endpoint_name, self.registry.bioentity_info[output_type]['preferred_name'])
+            jsonld_context = self.registry.endpoint_info[endpoint_name]['jsonld_context']
+            with open(jsonld_context) as f:
+                data = f.read()
+                jsonld = json.loads(data)
+            context = self.jh.fetch_properties_for_association_in_jsonld_context_file(jsonld, predicate)
             if type(predicate) != list:
                 predicate = predicate.replace('assoc:', 'http://biothings.io/explorer/vocab/objects/')
             else:
@@ -252,7 +257,7 @@ class ApiCallHandler:
             for i in range(len(outputs)):
                 if outputs[i]:
                     for _output in outputs[i]:
-                        final_results.append({'input': (processed_input[i], self.registry.bioentity_info[input_type]['preferred_name']), 'output': _output, 'endpoint': endpoint_name, 'target': _output['object']['id'], 'predicate': predicate.split('/')[-1]})
+                        final_results.append({'input': (processed_input[i], self.registry.bioentity_info[input_type]['preferred_name']), 'context': context, 'output': _output, 'endpoint': endpoint_name, 'target': _output['object']['id'], 'predicate': predicate.split('/')[-1]})
         else:
             for _predicate in predicate:
                 outputs = self.extract_output(valid_responses, endpoint_name, output_type, predicate=_predicate)

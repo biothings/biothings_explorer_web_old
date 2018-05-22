@@ -40,16 +40,3 @@ function SemanticOutput2Graph(){
     })
 }
 
-function createUnorderedList(ul) {
-    if (typeof ul == 'string') {
-        console.log('string!');
-        return '<ul><li>' + ul + '</li></ul>';
-    } else {
-        results = '<ul>'
-        ul.forEach(function(ele){
-            results += '<li>' + ele + '</li>'
-        });
-        results += '</ul>'
-        return results;
-    }
-}

@@ -1,0 +1,168 @@
+<html>
+   <head>
+      <title>BioThings Explorer</title>
+      <meta name = "viewport" content = "width = device-width, initial-scale = 1">      
+      <link rel = "stylesheet"
+         href = "https://fonts.googleapis.com/icon?family=Material+Icons">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.3/css/materialize.min.css">
+      <link href="./static/css/metadata.css" rel="stylesheet" />
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.3/js/materialize.min.js"></script>
+      <script type="text/javascript" src="./static/js/populateSelect.js"></script>
+      <script type="text/javascript" src="./static/js/metadata.js"></script>
+      <script type="text/javascript" src="./static/js/find_path.js"></script>
+      <script type="text/javascript" src="./static/js/data2Sankey.js"></script>
+      <script type="text/javascript" src="./static/js/drawSankey.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+      <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> 
+      <link href="./static/css/select2-materialize.css" rel="stylesheet" type="text/css" />
+   </head>
+   <body> 
+      <!-- This section is for the header-->
+        <div>
+            <nav>
+                <div class="nav-wrapper orange">
+                    <div class="col s4">
+                        <a href="#" id="menu" class="left"><i class="left material-icons">menu</i></a>
+                        <a href="/explorer" class="breadcrumb">BioThings Explorer</a>
+                        <a href="#!" class="breadcrumb" id="metadata-header">MetaData Explorer</a>
+                        <ul class="right hide-on-med-and-down">
+                            <li><a href="/tutorial" id="map">TUTORIAL</a></li>
+                            <li><a href="/explorer" id="explore">EXPLORE</a></li>
+                            <li><a href="/#" id="api">API</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <!-- Side Nav Menu here -->
+        <div>
+            <ul id="slide-out" class="sidenav">
+                <li>
+                    <div class="user-view">
+                        <h2 class="center valign-wrapperß"> MetaData Explorer</h2>
+                    </div>
+                </li>
+                <li>
+                    <a href="#" class="try-explore-endpoint"><i class = "material-icons orange-text text-darken-2">compare_arrows</i>Explore Endpoints</a>
+                </li>
+                <li>
+                    <a href="#" class="try-explore-input"><i class = "material-icons orange-text text-darken-2">call_made</i>Explore Bio-Entity as Input</a>
+                </li>
+                <li>
+                    <a href="#" class="try-explore-output"><i class = "material-icons orange-text text-darken-2">call_received</i>Explore Bio-Entity as Output</a>
+                </li>
+            </ul>
+        </div>
+        <!-- Main Menu at Landing Page-->
+        <div class="row main-menu">
+            </br>
+            <div class="row">
+                <div class="col s12 m8 l4 offset-m2 offset-l4">
+                    <div class="card light-blue darken-3">
+                        <div class="card-content white-text">
+                            <span class="card-title">Explore an Endpoint</span>
+                            <p>This service will return metadata information, including input(s) and output(s), about any API endpoint integrated in BioThings Explorer.</p>
+                        </div>
+                        <div class="card-action">
+                            <a href="#" class="try-explore-endpoint">Try it out!</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12 m8 l4 offset-m2 offset-l4">
+                    <div class="card green darken-3">
+                        <div class="card-content white-text">
+                            <span class="card-title">Explore Bio-Entity as Input</span>
+                            <p>This service will return you all API Endpoints which take the given bio-entity (e.g. ncbigene) as input.</p>
+                        </div>
+                        <div class="card-action">
+                            <a href="#" class="try-explore-input">Try it out!</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12 m8 l4 offset-m2 offset-l4">
+                    <div class="card deep-purple lighten-1">
+                        <div class="card-content white-text">
+                            <span class="card-title">Explore Bio-Entity as Output</span>
+                            <p>This service will return you all API Endpoints which return the given bio-entity (e.g. ncbigene) as output.</p>
+                        </div>
+                        <div class="card-action">
+                            <a href="#" class="try-explore-output">Try it out!</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Search bar -->
+        <div class="row valign-wrapper endpoint-search-bar search-bar-center">    
+            <div class="col s12">
+                <div class="row">
+                    <div class="col s12 crawler-header">
+                        <h1 class="orange-text" style="font-family: Ubuntu; text-align: center;"> MetaData Explorer </h1>
+                        <br>
+                        <br>
+                    </div>
+                    <div class="col s6 offset-s2 select-wrapper">
+                        <select id="select-endpoint"></select>
+                    </div>
+                    <div class="col s2">
+                        <a class="waves-effect waves-light btn search-button" id="endpoint-search-button">Explore</a>
+                    </div>
+                    <div class="col s8 offset-s2">
+                        <p class="orange-text"> Please select the endpoint you want to explore!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row valign-wrapper input-search-bar search-bar-center">    
+            <div class="col s12">
+                <div class="row">
+                    <div class="col s12 crawler-header">
+                        <h1 class="orange-text" style="font-family: Ubuntu; text-align: center;"> MetaData Explorer </h1>
+                        <br>
+                        <br>
+                    </div>
+                    <div class="col s6 offset-s2 select-wrapper">
+                        <select id="select-input"></select>
+                    </div>
+                    <div class="col s2">
+                        <a class="waves-effect waves-light btn search-button" id="input-search-button">Explore</a>
+                    </div>
+                    <div class="col s8 offset-s2">
+                        <p class="orange-text"> Please select the input you want to explore!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row valign-wrapper output-search-bar search-bar-center">    
+            <div class="col s12">
+                <div class="row">
+                    <div class="col s12 crawler-header">
+                        <h1 class="orange-text" style="font-family: Ubuntu; text-align: center;"> MetaData Explorer </h1>
+                        <br>
+                        <br>
+                    </div>
+                    <div class="col s6 offset-s2 select-wrapper">
+                        <select id="select-output"></select>
+                    </div>
+                    <div class="col s2">
+                        <a class="waves-effect waves-light btn search-button" id="output-search-button">Explore</a>
+                    </div>
+                    <div class="col s8 offset-s2">
+                        <p class="orange-text"> Please select the output you want to explore!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Sankey Plot div -->
+        <div id="path-plotly-div" class="row">
+            <div id="path-plotly" class="col s12"></div>
+        </div>
+    </body>
+</html>

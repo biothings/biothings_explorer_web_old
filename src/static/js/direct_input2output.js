@@ -15,24 +15,29 @@ function retrieveDirectOutput(input_prefix, input_value, output_prefix){
 
 function DirectOutput2Graph(){
     $("#DirectInput2OutputButton").click(function(){
+        $("#intro").hide();
+        $(".landing-page").hide();
         hide_all_graph_div();
         $(".direct_output_display").show();
+        $(".mainview").hide()
         var _input = $("#direct-input").find("option:selected").attr('value');
         var _output = $("#direct-output").find("option:selected").attr('value');
         var _value = $("#direct_input_value").val();
     	retrieveDirectOutput(_input, _value, _output).done(function(jsonResonse){
             $(".progress").hide();
+            $(".mainview").show();
     		var results = jsonResonse.data;
             var node_title = 'prefix: ' + _input;
     		var nodes = [{'id': 1, 'label': _value, 'title': node_title, 'font': {'color': 'red'}, 'group': 1}];
     		var nodes_id = 2;
     		var edges = [];
     		results.forEach(function(_result) {
-                console.log(_result['endpoint']);
-                node_label = _result['output'][0]['object']['id'];
+                node_label = _result['output']['object']['id'];
                 node_title = 'prefix: ' + _output;
-                nodes.push({'id': nodes_id, 'object_info': _result['output'][0]['object'], 'title': node_title, 'font': {'color': 'blue'}, 'label': node_label.slice(node_label.split(':')[0].length + 1), 'group': 2});
-                edges.push({'from': 1, 'to': nodes_id, 'endpoint': _result['endpoint'], 'edge_info': _result['output'][0]['edge'], 'arrows': 'to', 'title': _result['predicate']})
+                var edge_info = _result['output']['edge'];
+                edge_info['predicate'] = _result['predicate'];
+                nodes.push({'id': nodes_id, 'object_info': _result['output']['object'], 'title': node_title, 'font': {'color': 'blue'}, 'label': node_label.slice(node_label.split(':')[0].length + 1), 'group': 2});
+                edges.push({'from': 1, 'to': nodes_id, 'context': _result['context'], 'endpoint': _result['endpoint'], 'edge_info': edge_info, 'arrows': 'to', 'title': _result['predicate']})
                 nodes_id += 1;
     		});
             drawInputOutputGraph(new vis.DataSet(nodes), new vis.DataSet(edges));
@@ -42,7 +47,6 @@ function DirectOutput2Graph(){
 
 function createUnorderedList(ul) {
     if (typeof ul == 'string') {
-        console.log('string!');
         return '<ul><li>' + ul + '</li></ul>';
     } else {
         results = '<ul>'
@@ -52,7 +56,63 @@ function createUnorderedList(ul) {
         results += '</ul>'
         return results;
     }
+};
+
+function createTableRow(ul) {
+    if (typeof ul == 'string') {
+        return ul;
+    } else {
+        results = ''
+        ul.forEach(function(ele) {
+            results += ele + '<br />';
+        });
+        return results;
+    }
+};
+
+/**
+function generateNodeTable(object_info) {
+    var append_text = '<h4>Description</h4>';
+    for (var key in object_info) {
+        append_text += '<b>' + key + '</b>';
+        append_text += createUnorderedList(object_info[key]);
+    };
+    return append_text;
+};
+**/
+
+
+function generateNodeTable(object_info) {
+    var table_html = '<table style="width:100%" class="centered striped responsive-table"><thead><tr><th style="width:30%">Name</th><th style="width:70%">Value</th></tr></thead><tbody>';
+    for (var key in object_info) {
+        table_html += '<tr><td>' + key + '</td><td>' + createTableRow(object_info[key]) + '</td></tr>';
+    };
+    table_html += '</tbody></table>';
+    return table_html;
+};
+
+function generateEdgeTable(endpoint_info, edge_info) {
+    var table_html = '<table style="width:100%" class="centered striped responsive-table"><thead><tr><th style="width:30%">Name</th><th style="width:70%">Value</th></tr></thead><tbody>';
+    table_html += '<tr><td>Endpoint</td><td>' + endpoint_info + '</td></tr>';
+    for (var key in edge_info) {
+        table_html += '<tr><td>' + key + '</td><td>' + createTableRow(edge_info[key]) + '</td></tr>';
+    };
+    return table_html;
+};
+
+/**
+function generateEdgeTable(endpoint_info, edge_info) {
+    var append_text = '<h4>Description</h4>';
+    append_text += '<b>Endpoint</b>';
+    append_text += createUnorderedList(endpoint_info);
+    for (var key in edge_info) {
+        append_text += '<b>' + key + '</b>';
+        append_text += createUnorderedList(edge_info[key]);
+    };
+    return append_text;
 }
+**/
+
 function drawInputOutputGraph(nodes, edges){
   // create a network
   var container = document.getElementById('cy');
@@ -86,34 +146,28 @@ function drawInputOutputGraph(nodes, edges){
     var clicked_node_id = params.nodes;
     var clicked_edge_id = params.edges;
     if (clicked_node_id.length > 0) {
-        $("#node_edge_description").empty();
-        var append_text = '<h4>Description</h4>';
-        var object_info = nodes.get(params.nodes)[0]['object_info'];
-        for (var key in object_info) {
-            append_text += '<b>' + key + '</b>';
-            append_text += createUnorderedList(object_info[key]);
-        };
-        console.log(append_text);
-        $("#node_edge_description").html(append_text);
+        $("#edge_info").empty();
+        $("#node_info").empty();
+        var node_info = nodes.get(params.nodes)[0]['object_info'];
+        var node_message = generateNodeTable(node_info);
+        $("#node_info").html(node_message);
     } else {
-        $("#node_edge_description").empty();
-        var append_text = '<h4>Description</h4>';
+        $("#node_info").empty();
+        $("#edge_info").empty();
+        var target_node_id = edges.get(params.edges)[0]['to'];
+        var instance = M.Tabs.getInstance($(".tabs"));
+        var node_info = nodes.get(target_node_id)['object_info']
+        var node_message = generateNodeTable(node_info);
         var edge_info = edges.get(params.edges)[0]['edge_info'];
-        console.log(edges.get(params.edges)[0]['endpoint']);
-        append_text += '<b>Endpoint</b>';
-        append_text += createUnorderedList(edges.get(params.edges)[0]['endpoint']);
-        for (var key in edge_info) {
-            append_text += '<b>' + key + '</b>';
-            append_text += createUnorderedList(edge_info[key]);
-        };
-        $("#node_edge_description").html(append_text);
-        console.log(append_text);
+        console.log(edge_info);
+        var endpoint_info = edges.get(params.edges)[0]['endpoint'];
+        var edge_message = generateEdgeTable(endpoint_info, edge_info);
+        var context_message = generateNodeTable(edges.get(params.edges)[0]['context'])
+        console.log(context_message);
+        $("#edge_info").html(edge_message);
+        $("#node_info").html(node_message);
+        $("#context_info").html(context_message);
+        instance.select('edge_info');
     }
-    
-    nodes.forEach(function(node_info){
-        if (node_info['id'] == clicked_node_id) {
-            //console.log(node_info);
-        }
-    })
   })
 };

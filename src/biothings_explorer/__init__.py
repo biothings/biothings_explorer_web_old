@@ -9,11 +9,11 @@ from .visjupyter_helper import find_edge_label, path2Graph, explore2Graph
 from .utils import output2input
 
 # add path for the config folder
-sys.path.append('/Users/kevinxin/Documents/myvariant.info/json-ld/bt_explorer_web_development/config_folder/bt_explorer_2')
-from .config import LOG_FOLDER
+#sys.path.append('/Users/kevinxin/Documents/myvariant.info/json-ld/bt_explorer_web_development/config_folder/bt_explorer_2')
+#from .config import LOG_FOLDER
 
 formatter = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-logging.basicConfig(level=logging.DEBUG, filename=os.path.join(LOG_FOLDER, 'debug.log'), format=formatter)
+#logging.basicConfig(level=logging.DEBUG, filename=os.path.join(LOG_FOLDER, 'debug.log'), format=formatter)
 
 class BioThingsExplorer:
     def __init__(self, loadroadmap=True):

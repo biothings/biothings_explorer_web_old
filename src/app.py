@@ -27,7 +27,7 @@ client = Client('https://9dd387ee33954e9887ef4a6b55c7aa29:d98404d6199a4db1aa9b5a
 class MainHandler(tornado.web.RequestHandler):
     @tornado.web.addslash
     def get(self):
-        self.render("index.html", messages=None)
+        self.render("home.html", messages=None)
 
 class APIHandler(tornado.web.RequestHandler):
     @tornado.web.addslash
@@ -43,12 +43,22 @@ class CrawlerHandler(tornado.web.RequestHandler):
     @tornado.web.addslash
     def get(self):
         self.render("crawler.html", messages=None)
-"""
+
 class ExplorerHandler(tornado.web.RequestHandler):
     @tornado.web.addslash
     def get(self):
         self.render("explorer.html", messages=None)
-"""
+
+class MetaDataWebHandler(tornado.web.RequestHandler):
+    @tornado.web.addslash
+    def get(self):
+        self.render("metadata.html", messages=None)
+
+class NavigatorHandler(tornado.web.RequestHandler):
+    @tornado.web.addslash
+    def get(self):
+        self.render("navigator.html", messages=None)
+
 class Application(tornado.web.Application):
     def __init__(self):
         settings = {
@@ -60,12 +70,16 @@ class Application(tornado.web.Application):
             (r"/explorer/?", MainHandler),
             (r"/explorer/tutorial/?", TutorialHandler),
             (r"/explorer/api/?", APIHandler),
-            #(r"/explorer/explorer/?", ExplorerHandler),
-            #(r"/explorer/explorer/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
+            (r"/explorer/explorer/?", ExplorerHandler),
+            (r"/explorer/explorer/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
             (r"/explorer/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
             (r"/explorer/tutorial/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
             (r"/explorer/crawler/?", CrawlerHandler),
             (r"/explorer/crawler/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
+            (r"/explorer/metadata/?", MetaDataWebHandler),
+            (r"/explorer/metadata/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
+            (r"/explorer/navigator/?", NavigatorHandler),
+            (r"/explorer/navigator/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
             (r"/explorer/path", ConnectingPathHandler),
             (r"/explorer/input", ConnectingInputHandler),
             (r"/explorer/apimap", ApiMapHandler),

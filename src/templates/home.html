@@ -1,0 +1,99 @@
+<html>
+   <head>
+        <title>BioThings Explorer</title>
+        <meta name = "viewport" content = "width = device-width, initial-scale = 1">      
+        <link rel = "stylesheet"
+         href = "https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.3/css/materialize.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.3/js/materialize.min.js"></script>
+        <link href="./static/css/select2-materialize.css" rel="stylesheet" type="text/css" />
+        <link href="./static/css/home.css" rel="stylesheet" />
+    </head>
+    <body>
+      <!-- This section is for the header-->
+        <div>
+            <nav>
+                <div class="nav-wrapper orange">
+                    <div class="col s4">
+                        <a href="#" id="menu" class="left"><i class="left material-icons">menu</i></a>
+                        <a href="#" class="breadcrumb">BioThings Explorer</a>
+                        <ul class="right hide-on-med-and-down">
+                            <li><a href="/tutorial" id="map">TUTORIAL</a></li>
+                            <li><a href="/explorer" id="explore">EXPLORE</a></li>
+                            <li><a href="/#" id="api">API</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div class="row grey lighten-5 landing-page">
+            <div class="col s12 l8">
+                <h1 class="black-text center">BioThings Explorer</h1>
+                <p class="black-text center"> Exploring Biological Data Through Linked API Services </p>
+            </div>
+            <div class="col s12 l4 hide-on-small-only">
+                <img width="100%" src="./static/img/linked_data.png">
+            </div>
+        </div>
+        <div id="intro" class="grey lighten-5">
+            <div class="container">
+                <div class="row sub-intro">
+                    <div class="col l4 m4 right hide-on-small-only">
+                        <img width="100%" src="./static/img/metadat.png">
+                    </div>
+                    <div class="col l8 m8">
+                        <h2 class="center"> MetaData Explorer</h2>
+                        <p class="blue-grey-text">Whether you're a biologist, a software engineer or a bioinformatician -- in fact, anyone in need of understanding how to utilize a biological API service -- MetaData Explorer is right place to go. It consumes the <a href="http://smart-api.info" target="_blank">Smart-API Specifications</a> of APIs and convert them into Sankey Plot, where you could easily understand what are the inputs and outputs of an API as well as their relationships.</p>
+                        <a class="waves-effect waves-light btn light-blue lighten-3 try-it-out-button" id="try-crawler-button" href="metadata">Try it out</a>
+                    </div>
+                </br>
+                </div>
+                <div class="row sub-intro">
+                    <div class="col l4 m4 hide-on-small-only">
+                        <img width="100%" src="./static/img/crawler_green.png">
+                    </div>
+                    <div class="col l8 m8">
+                        <h2 class="center"> API Crawler</h2>
+                        <p class="blue-grey-text">As a biologist, you might ask for all the biological knowledge (e.g. protein, pathway, chemical, anatomy, etc.) relevant to your research interest (e.g. gene CXCR4). API Crawler the right place to go. It is essentially a linked-data service which can return connected biological data for a specific biological entity (e.g. Gene Symbol CXCR4). </p>
+                        <a class="waves-effect waves-light btn green right try-it-out-button" id="try-crawler-button" href="crawler"> Try it out</a>
+                    </div>
+                </div>
+                <div class="row sub-intro">
+                    <div class="col l4 m4 right hide-on-small-only">
+                        <img width="100%" src="./static/img/navigator.png">
+                    </div>
+                    <div class="col l8 m8">
+                        <h2 class="center"> BioThings Navigator</h2>
+                        <p class="blue-grey-text">BioThings Explorer is the "Google Map" for biologists. It utilizes <a href="http://smart-api.info" target="_blank">Smart-API Specifications</a> to build a network of APIs. And by traversing through the network, BioThings Explorer could help user identify potential paths connecting two biological entities through multiple API calls. In addition, BioThings Explorer could chain those API calls together and fetch relevant biological data through <a href="https://json-ld.org" target="_blank">JSON-LD</a> technology.</p>
+                        <a class="waves-effect waves-light btn red accent-2 try-it-out-button" id="try-navigator-button" href="navigator">Try it out</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="page-footer orange">
+            <div class="container">
+                <div class="row">
+                    <div class="col l6 s12">
+                        <h5 class="white-text">BioThings Explorer</h5>
+                        <p class="grey-text text-lighten-4">Utilizing JSON-LD and SmartAPI Specifications to link biological data for knowledge exploration.</p>
+                    </div>
+                    <div class="col l4 offset-l2 s12">
+                        <h5 class="white-text">Useful Links</h5>
+                        <ul>
+                            <li><a class="grey-text text-lighten-3" href="http://biothings.io/#" target="_blank">BioThings API</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://smart-api.info/" target="_blank">SmartAPI Specification</a></li>
+                            <li><a class="grey-text text-lighten-3" href="https://json-ld.org/" target="_blank">JSON-LD</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                <div class="container">
+                    © 2017-2018 Copyright Text
+                    <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+                </div>
+            </div>
+        </footer>
+    </body>
+</html>

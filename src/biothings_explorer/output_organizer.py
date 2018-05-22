@@ -103,6 +103,7 @@ class OutputOrganizor:
 
         """
         reorganized_data = {'object': {}, 'edge': {}}
+        print(properties)
         for attribute_uri, _value in properties.items():
             attribute_label = self.attribute_dict[attribute_uri]['name']
             attribute_category = self.attribute_dict[attribute_uri]['category']

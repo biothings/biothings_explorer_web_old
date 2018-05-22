@@ -16,6 +16,8 @@ function drawSankeyPlot(jsonResponse, type){
 
   var fig = jsonResponse;
   var data = {
+    width: 500,
+    height: 500,
     type: "sankey",
     domain: {
       x: [0,1],

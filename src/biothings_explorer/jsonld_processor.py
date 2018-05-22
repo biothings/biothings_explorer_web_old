@@ -17,6 +17,7 @@ class JSONLDHelper:
     def __init__(self):
         self.processor = jsonld.JsonLdProcessor()
         self.temp_attr_id = None
+        self.temp_properties = None
 
     def jsonld2nquads_helper(self, jsonld_doc):
         """
@@ -263,6 +264,37 @@ class JSONLDHelper:
         association_results = self.fetch_properties_by_association_in_nquads(nquads, [association])
         association_and_prefix_results = [_doc for _doc in association_results[association] if _doc['http://biothings.io/explorer/vocab/attributes/id'][0].startswith(prefix)]
         return association_and_prefix_results
+
+    def locate_association_in_jsonld_context_file(self, jsonld_context, association):
+        if "@context" in jsonld_context:
+            content = jsonld_context['@context']
+            for k, v in content.items():
+                if type(v) != dict:
+                    pass
+                elif "@id" in v and v["@id"] == association:
+                    self.temp_properties = v["@context"]
+                else:
+                    self.locate_association_in_jsonld_context_file(v, association)
+    
+    def organize_properties_in_jsonld_context_file(self, properties):
+        for k, v in properties.items():
+            if type(v) != dict:
+                pass
+            elif "@id" in v and (v["@id"].startswith("attr") or v["@id"].startswith("rel")):
+                _key = v["@id"]
+                _key = _key.replace('attr', 'node').replace('rel', 'edge')
+                self.organized_properties[_key] = v["@context"]["@base"]
+            elif k == "@base":
+                self.organized_properties["node:id"] = v
+            else:
+                self.organize_properties_in_jsonld_context_file(v)
+
+    def fetch_properties_for_association_in_jsonld_context_file(self, jsonld_context, association):
+        self.locate_association_in_jsonld_context_file(jsonld_context, association)
+        if self.temp_properties:
+            self.organized_properties = {}
+            self.organize_properties_in_jsonld_context_file(self.temp_properties)
+            return self.organized_properties
 
 t = jsonld.JsonLdProcessor()
 
