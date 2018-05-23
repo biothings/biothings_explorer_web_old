@@ -63,7 +63,7 @@ class JSONLDHelper:
             return self.processor.parse_nquads(nquads)
         except Exception as e:
             logger.error("Something Unexpected happend when JSON-LD Python client tries to parse the JSON-LD. \
-                         The first 100 chars of the JSON document is %s", json.dumps(jsonld_doc[:100]))
+                         The first 100 chars of the JSON document is")
             logger.error(e, exc_info=True)
             return None
 
@@ -218,12 +218,14 @@ class JSONLDHelper:
         find the corresponding object value(s)
         """
         object_values = []
-        if '@default' in nquads:
+        if nquads and '@default' in nquads:
             nquads = nquads['@default']
-        for _nquad in nquads:
-            if _nquad['predicate']['value'] == predicate_value:
-                object_values.append(_nquad['object']['value'])
-        return object_values
+            for _nquad in nquads:
+                if _nquad['predicate']['value'] == predicate_value:
+                    object_values.append(_nquad['object']['value'])
+            return object_values
+        else:
+            return object_values
 
     def fetch_object_and_predicate_value_by_subject_value_in_nquads(self, nquads, subject_value, results=None):
         """
