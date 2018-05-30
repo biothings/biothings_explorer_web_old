@@ -4,6 +4,7 @@ function drawSankeyPlot(jsonResponse, type){
   $(".overview_map").hide();
   $("#cy").hide();
   if (type=='path'){
+      $("#error-message").empty();
       Plotly.purge('path-plotly');
       $("#explore-plotly-div").hide();
       $("#path-plotly-div").show();
