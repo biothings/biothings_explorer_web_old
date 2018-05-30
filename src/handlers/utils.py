@@ -7,13 +7,19 @@ sys.path.append(path.dirname(path.dirname(path.abspath(lib_path))))
 from biothings_explorer import BioThingsExplorer
 
 
-color_dict = {'clinical trial': 'rgba(144, 144, 28, 0.4)', 'gene': 'rgba(55, 230, 84, 0.93)',
-              'chemical': 'rgba(230, 55, 218, 0.93)', 'protein': 'rgba(55, 227, 230, 0.6)',
-              'variant': 'rgba(230, 174, 55, 0.83)', 'anatomy': 'rgba(86, 28, 144, 0.3)',
-              'phenotype': 'rgba(28, 86, 144, 0.3)', 'pathway': 'rgba(230, 55, 116, 0.63)',
-              'disease': 'rgba(166, 55, 230, 0.84)', 'transcript': 'rgba(100, 88, 77, 0.4)',
-              'clinical significance': 'rgba(70, 33, 77, 0.4)', 'organism': 'rgba(10, 133, 177, 0.4)',
-              'structure': 'rgba(8, 233, 7, 0.4)', 'ontology': 'rgba(99,123,4,0.4'}
+color_dict = {
+              'gene': 'rgba(55, 230, 84, 0.93)',
+              'chemical': 'rgba(230, 55, 218, 0.93)', 
+              'protein': 'rgba(55, 227, 230, 0.6)',
+              'variant': 'rgba(230, 174, 55, 0.83)', 
+              'anatomy': 'rgba(86, 28, 144, 0.3)',
+              'phenotype': 'rgba(28, 86, 144, 0.3)', 
+              'pathway': 'rgba(230, 55, 116, 0.63)',
+              'disease': 'rgba(166, 55, 230, 0.84)', 
+              'transcript': 'rgba(100, 88, 77, 0.4)',
+              'organism': 'rgba(10, 133, 177, 0.4)',
+              'structure': 'rgba(8, 233, 7, 0.4)', 
+              'ontology': 'rgba(99,123,4,0.4'}
 
 class HandlerUtils:
     def __init__(self):
@@ -122,3 +128,20 @@ class HandlerUtils:
             else:
                 output_json['value'].append(1)
         return output_json
+
+    def construct_knowledge_map(self):
+        triples = []
+        for _endpoint, _endpoint_info in self.bt_explorer.registry.endpoint_info.items():
+            relation = _endpoint_info['relation']
+            inputs = _endpoint_info['input']
+            for _input in inputs:
+                _input_curie = self.bt_explorer.registry.bioentity_info[_input]['preferred_name']
+                _input_type = self.bt_explorer.registry.bioentity_info[_input]['semantic type']
+                for _output, _relation in relation.items():
+                    _output_curie = self.bt_explorer.registry.bioentity_info[_output]['preferred_name']
+                    _output_type = self.bt_explorer.registry.bioentity_info[_output]['semantic type']
+                    for _relate in _relation:
+                        triples.append({'subject': {'prefix': _input_curie, 'semantic_type': _input_type}, 
+                                       'object': {'prefix': _output_curie, 'semantic_type': _output_type}, 
+                                       'predicate': _relate.split(':')[-1], 'endpoint': _endpoint})
+        return triples
