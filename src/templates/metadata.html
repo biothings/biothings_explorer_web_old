@@ -98,6 +98,20 @@
                     </div>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col s12 m8 l4 offset-m2 offset-l4">
+                    <div class="card deep-purple lighten-1">
+                        <div class="card-content white-text">
+                            <span class="card-title">How to connect between two semantic types</span>
+                            <p>The user could specify what semantic type he wants as input and what semantic type he wants as output. This service will automatically tell user which API can connect from the input to the output</p>
+                        </div>
+                        <div class="card-action">
+                            <a href="#" class="try-explore-semantic">Try it out!</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <!-- Search bar -->
         <div class="row valign-wrapper endpoint-search-bar search-bar-center">    
@@ -160,9 +174,39 @@
                 </div>
             </div>
         </div>
+        <div class="row valign-wrapper semantic-search-bar search-bar-center">    
+            <div class="col s12">
+                <div class="row">
+                    <div class="col s12 crawler-header">
+                        <h1 class="orange-text" style="font-family: Ubuntu; text-align: center;"> MetaData Explorer </h1>
+                        <br>
+                        <br>
+                    </div>
+                    <div class="col s12 m3 offset-m2 select-wrapper">
+                        <label for="select-semantic-input">
+                            Input Semantic Type
+                            <select id="select-semantic-input"></select>
+                        </label>
+                    </div>
+                    <div class="col s12 m3 offset-m1 select-wrapper">
+                        <label for="select-semantic-output">
+                            Output Semantic Type
+                            <select id="select-semantic-output"></select>
+                        </label>
+                    </div>
+                    <div class="col s12 m2">
+                        <a class="waves-effect waves-light btn search-button" id="semantic-search-button">Explore</a>
+                    </div>
+                    <div class="col s12 m8 offset-m2">
+                        <p class="orange-text"> Please select the input and output semantic type you want to explore!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- Sankey Plot div -->
         <div id="path-plotly-div" class="row">
             <div id="path-plotly" class="col s12"></div>
+            <div id="error-message" class="col s12"></div>
         </div>
     </body>
 </html>
