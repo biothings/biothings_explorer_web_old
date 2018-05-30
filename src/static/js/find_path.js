@@ -21,13 +21,13 @@ function findStartEndConnection(_start, _end, _max_api=3){
  * @return {Promise} findOutputTypeBasedOnInputType
 */
 function findOutputTypeBasedOnInputType(_input){
-	var promise = $.ajax({
-		type: "GET",
-		url: "/explorer/input",
-		data: {input: _input},
-		datatype: "json"
-	});
-	return promise;
+    var promise = $.ajax({
+        type: "GET",
+        url: "/explorer/api/v2/input",
+        data: {input: _input, format: 'plotly'},
+        datatype: "json"
+    });
+    return promise;
 };
 
 /**
@@ -36,13 +36,13 @@ function findOutputTypeBasedOnInputType(_input){
  * @return {Promise} findInputTypeBasedOnOutputType
 **/
 function findInputTypeBasedOnOutputType(_output){
-	var promise = $.ajax({
-		type: "GET",
-		url: "/explorer/output",
-		data: {output: _output},
-		datatype: "json"
-	});
-	return promise;
+    var promise = $.ajax({
+        type: "GET",
+        url: "/explorer/api/v2/output",
+        data: {output: _output, format: 'plotly'},
+        datatype: "json"
+    });
+    return promise;
 }
 
 /**
@@ -51,13 +51,29 @@ function findInputTypeBasedOnOutputType(_output){
  * @return {Promise} findInputTypeBasedOnOutputType
 **/
 function findInputOutputBasedOnEndpoint(endpoint_name) {
-	var promise = $.ajax({
-		type: "GET",
-		url: "/explorer/endpoint",
-		data: {endpoint: endpoint_name},
-		datatype: "json"
-	});
-	return promise;
+    var promise = $.ajax({
+        type: "GET",
+        url: "/explorer/api/v2/endpoint",
+        data: {endpoint: endpoint_name, format: 'plotly'},
+        datatype: "json"
+    });
+    return promise;
+}
+
+/**
+ * Given two semantic types as input and output, 
+ * Return all paths connecting these two inputs and outputs
+ * @param {String} endpoint_name
+ * @return {Promise} findPathBetweenTwoSemanticTypes
+**/
+function findPathBetweenTwoSemanticTypes(input_semantic_type, output_semantic_type) {
+    var promise = $.ajax({
+        type: "GET",
+        url: "/explorer/api/v2/connectsemantictype",
+        data: {input: input_semantic_type, output: output_semantic_type, format: 'plotly'},
+        datatype: "json"
+    });
+    return promise;
 }
 
 /**
@@ -67,12 +83,12 @@ function findInputOutputBasedOnEndpoint(endpoint_name) {
  * @return {Promise} findInputTypeBasedOnOutputType
 **/
 function findOutputBasedOnInputAndPath(input_value, _path, _level) {
-	var promise = $.ajax({
-		type: "GET",
-		url: "/explorer/findoutput",
-		data: {path: JSON.stringify(_path), input: JSON.stringify(input_value), level: _level},
-		datatype: "json"
-	});
-	return promise;
-}
+    var promise = $.ajax({
+        type: "GET",
+        url: "/explorer/findoutput",
+        data: {path: JSON.stringify(_path), input: JSON.stringify(input_value), level: _level},
+        datatype: "json"
+    });
+    return promise;
+};
 
