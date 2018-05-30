@@ -37,6 +37,16 @@ $(document).ready(function() {
         // hide the ploty graph display
         $("#path-plotly-div").hide();
     });
+    $(".try-explore-semantic").click(function() {
+        $(".main-menu").hide();
+        //recenter the search bar and show header
+        $(".semantic-search-bar").show();
+        $(".semantic-search-bar").addClass("search-bar-center");
+        $(".semantic-search-bar-search-bar").removeClass("search-bar-top");
+        $(".crawler-header").show();
+        // hide the ploty graph display
+        $("#path-plotly-div").hide();
+    });
     $(".search-button").click(function() {
         $(".crawler-header").hide();
         $(".search-bar-center").addClass("search-bar-top");
