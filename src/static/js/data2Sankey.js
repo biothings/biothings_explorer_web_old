@@ -39,6 +39,26 @@ function displayEndpoint() {
     });
 };
 
+/**
+ * Display Sankey Plot for the selected input semantic types and output semantic types
+ * @return {Sankey Plot}
+*/
+function displaySemanticType() {
+    $("#semantic-search-button").click(function(){
+        _input = $("#select-semantic-input").find("option:selected").attr('value');
+        _output = $("#select-semantic-output").find("option:selected").attr('value');
+        findPathBetweenTwoSemanticTypes(_input, _output).done(function(jsonResponse){
+            console.log(jsonResponse);
+            drawSankeyPlot(jsonResponse, type='path');
+        }).catch(function (err) { // <- See this <<<<<<<<
+            console.log(err.responseJSON);
+            Plotly.purge('path-plotly');
+            $("#path-plotly-div").show();
+            $("#error-message").html('<h2 class="center">' + err.responseJSON['error message'].replace('\n', '<br />') + '</h2>')
+        });
+    });
+};
+
 
 /**
  * Display Sankey Plot for the Paths Connecting Input and Output
@@ -65,4 +85,5 @@ function displaySankeyBasedOnUserSelect(){
     displayOutput();
     displayEndpoint();
     displayPathsBetweenInputOutput();
+    displaySemanticType();
 }
