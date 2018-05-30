@@ -48,3 +48,9 @@
 .user-view {
 	background-color: orange;
 }
+
+#error-message h2 {
+	font-family: "Ubuntu";
+	font-size: 1.6rem !important;
+	color: grey;
+}
