@@ -8,7 +8,11 @@ function displayInput() {
 		_input = $("#select-input").find("option:selected").attr('value');
 		findOutputTypeBasedOnInputType(_input).done(function(jsonResponse){
 	    	drawSankeyPlot(jsonResponse, type='path');
-		});
+		}).catch(function (err) {
+            Plotly.purge('path-plotly');
+            $("#path-plotly-div").show();
+            $("#error-message").html('<h2 class="center">' + err.responseJSON['error message'].replace('\n', '<br />') + '</h2>')
+        });
 	});
 };
 
@@ -22,6 +26,10 @@ function displayOutput() {
         _output = $("#select-output").find("option:selected").attr('value');
         findInputTypeBasedOnOutputType(_output).done(function(jsonResponse){
             drawSankeyPlot(jsonResponse, type='path');
+        }).catch(function (err) {
+            Plotly.purge('path-plotly');
+            $("#path-plotly-div").show();
+            $("#error-message").html('<h2 class="center">' + err.responseJSON['error message'].replace('\n', '<br />') + '</h2>')
         });
     });
 };
@@ -35,6 +43,10 @@ function displayEndpoint() {
         _endpoint = $("#select-endpoint").find("option:selected").attr('value');
         findInputOutputBasedOnEndpoint(_endpoint).done(function(jsonResponse){
             drawSankeyPlot(jsonResponse, type='path');
+        }).catch(function (err) {
+            Plotly.purge('path-plotly');
+            $("#path-plotly-div").show();
+            $("#error-message").html('<h2 class="center">' + err.responseJSON['error message'].replace('\n', '<br />') + '</h2>')
         });
     });
 };
@@ -48,10 +60,8 @@ function displaySemanticType() {
         _input = $("#select-semantic-input").find("option:selected").attr('value');
         _output = $("#select-semantic-output").find("option:selected").attr('value');
         findPathBetweenTwoSemanticTypes(_input, _output).done(function(jsonResponse){
-            console.log(jsonResponse);
             drawSankeyPlot(jsonResponse, type='path');
-        }).catch(function (err) { // <- See this <<<<<<<<
-            console.log(err.responseJSON);
+        }).catch(function (err) {
             Plotly.purge('path-plotly');
             $("#path-plotly-div").show();
             $("#error-message").html('<h2 class="center">' + err.responseJSON['error message'].replace('\n', '<br />') + '</h2>')
