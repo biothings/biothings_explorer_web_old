@@ -193,57 +193,6 @@ class ConnectingPathHandler(BaseHandler):
         plotly_results = networkx_to_plotly(edges, duplicates_not_allowed=no_duplicate)
         self.write(json.dumps({"plotly": plotly_results, "paths": paths}))
 
-
-class ConnectingInputHandler(BaseHandler):
-    def get(self):
-        _input = self.get_argument('input')
-        print(_input)
-        edges = []
-        endpoints = bt_explorer.api_map.successors(_input)
-        if endpoints:
-            for _endpoint in endpoints:
-                edges.append((_input, _endpoint, find_edge_label(bt_explorer.api_map, _input, _endpoint)))
-                outputs = bt_explorer.api_map.successors(_endpoint)
-                if outputs:
-                    edges.extend([(_endpoint, _output, find_edge_label(bt_explorer.api_map, _endpoint, _output)) for _output in outputs])
-        plotly_results = networkx_to_plotly(edges, duplicates_not_allowed=bt_explorer.registry.endpoint_info.keys())
-        self.write(json.dumps({"plotly": plotly_results}))
-
-class Input2EndpointHandler(BaseHandler):
-    """
-    Return endpoints which accepts given input
-    """
-    def post(self):
-        _input = self.get_argument('input')
-        endpoints = list(bt_explorer.api_map.successors(_input))
-        self.write(json.dumps({"endpoints": endpoints, "input": _input}))
-
-class Endpoint2OutputHandler(BaseHandler):
-    """
-    Return
-    ======
-    Outputs which can be returned by the given endpoint
-    """
-    def post(self):
-        _endpoint = self.get_argument('endpoint')
-        outputs = list(bt_explorer.api_map.successors(_endpoint))
-        self.write(json.dumps({"endpoint": _endpoint, "output": outputs}))
-
-class ConnectingOutputHandler(BaseHandler):
-    def get(self):
-        _output = self.get_argument('output')
-        edges = []
-        endpoints = bt_explorer.api_map.predecessors(_output)
-        if endpoints:
-            for _endpoint in endpoints:
-                edges.append((_endpoint, _output, find_edge_label(bt_explorer.api_map, _endpoint, _output)))
-                inputs = bt_explorer.api_map.predecessors(_endpoint)
-                inputs = [_input for _input in inputs if bt_explorer.api_map.node[_input]['type'] == 'bioentity']
-                if inputs:
-                    edges.extend([(_input, _endpoint, find_edge_label(bt_explorer.api_map, _input, _endpoint)) for _input in inputs])
-        plotly_results = networkx_to_plotly(edges, duplicates_not_allowed=bt_explorer.registry.endpoint_info.keys())
-        self.write(json.dumps({"plotly": plotly_results}))
-
 class ApiMapHandler(BaseHandler):
     def get(self):
         bio_entity_list = [_item['preferred_name'] for _item in list(bt_explorer.registry.bioentity_info.values())]
