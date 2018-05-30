@@ -40,7 +40,7 @@ class ConnectingInputHandler(BaseHandler):
                 self.write(json.dumps({"endpoints": endpoints, "input": _input}))
         else:
             self.set_status(400)
-            self.write(json.dumps({"status": 400, 'error message': "Could not find any APIs in BioThings Explorer which can take the input"}))
+            self.write(json.dumps({"status": 400, 'error message': "Could not find any APIs in BioThings Explorer which can take the input '" + _input + "'.\n Please try other inputs!"}))
             self.finish()
 
 class EndpointHandler(BaseHandler):
@@ -100,7 +100,7 @@ class ConnectingOutputHandler(BaseHandler):
                 self.write(json.dumps({"endpoints": endpoints, "output": _output}))
         else:
             self.set_status(400)
-            self.write(json.dumps({"status": 400, 'error message': "Could not find any APIs in BioThings Explorer which can produce the output"}))
+            self.write(json.dumps({"status": 400, 'error message': "Could not find any APIs in BioThings Explorer which can produce the output '" + _output + "'.\n Please try other outputs!"}))
             self.finish()
 
 class ConnectingSemanticTypesHandler(BaseHandler):
@@ -114,14 +114,14 @@ class ConnectingSemanticTypesHandler(BaseHandler):
         else:
             temp_output = []
             self.set_status(400)
-            self.write(json.dumps({"status": 400, "message": "The input semantic type '" + input_semantic_type + "' is not in BioThings Explorer."}))
+            self.write(json.dumps({"status": 400, "error message": "The input semantic type '" + input_semantic_type + "' is not in BioThings Explorer."}))
             return
         if output_semantic_type in [_association['object']['semantic_type'] for _association in KNOWLEDGE_MAP]:
             temp_output = [_association for _association in temp_output if _association['object']['semantic_type'] == output_semantic_type]
         else:
             temp_output = []
             self.set_status(400)
-            self.write(json.dumps({"status": 400, "message": "The output semantic type '" + output_semantic_type + "' you input is not in BioThings Explorer."}))
+            self.write(json.dumps({"status": 400, "error message": "The output semantic type '" + output_semantic_type + "' you input is not in BioThings Explorer."}))
             return
         if temp_output:
             edges = []
@@ -230,7 +230,7 @@ class KnowledgeMap(BaseHandler):
             else:
                 temp_output = []
                 self.set_status(400)
-                self.write(json.dumps({"status": 400, "message": "The endpoint '" + input_endpoint + "' you input is not in BioThings Explorer. \
+                self.write(json.dumps({"status": 400, "error message": "The endpoint '" + input_endpoint + "' you input is not in BioThings Explorer. \
                                       Please refer to 'http://biothings.io/explorer/api/v1/metadata/endpoints' for all endpoints currently integrated!"}))
                 return
         if input_predicate and not END_OUTPUT:
@@ -239,7 +239,7 @@ class KnowledgeMap(BaseHandler):
             else:
                 temp_output = []
                 self.set_status(400)
-                self.write(json.dumps({"status": 400, "message": "The predicate '" + input_predicate + "' you input is not in BioThings Explorer."}))
+                self.write(json.dumps({"status": 400, "error message": "The predicate '" + input_predicate + "' you input is not in BioThings Explorer."}))
                 return
         if input_subject_prefix and not END_OUTPUT:
             if input_subject_prefix in [_association['subject']['prefix'] for _association in KNOWLEDGE_MAP]:
@@ -247,7 +247,7 @@ class KnowledgeMap(BaseHandler):
             else:
                 temp_output = []
                 self.set_status(400)
-                self.write(json.dumps({"status": 400, "message": "The subject prefix '" + input_subject_prefix + "' you input is not in BioThings Explorer."}))
+                self.write(json.dumps({"status": 400, "error message": "The subject prefix '" + input_subject_prefix + "' you input is not in BioThings Explorer."}))
                 return
         if input_subject_type and not END_OUTPUT:
             if input_subject_type in [_association['subject']['semantic_type'] for _association in KNOWLEDGE_MAP]:
@@ -255,7 +255,7 @@ class KnowledgeMap(BaseHandler):
             else:
                 temp_output = []
                 self.set_status(400)
-                self.write(json.dumps({"status": 400, "message": "The subject semantic type '" + input_subject_type + "' you input is not in BioThings Explorer."}))
+                self.write(json.dumps({"status": 400, "error message": "The subject semantic type '" + input_subject_type + "' you input is not in BioThings Explorer."}))
                 return
         if input_object_prefix and not END_OUTPUT:
             if input_object_prefix in [_association['object']['prefix'] for _association in KNOWLEDGE_MAP]:
@@ -263,7 +263,7 @@ class KnowledgeMap(BaseHandler):
             else:
                 temp_output = []
                 self.set_status(400)
-                self.write(json.dumps({"status": 400, "message": "The object prefix '" + input_object_prefix + "' you input is not in BioThings Explorer."}))
+                self.write(json.dumps({"status": 400, "error message": "The object prefix '" + input_object_prefix + "' you input is not in BioThings Explorer."}))
                 return
         if input_object_type and not END_OUTPUT:
             if input_object_type in [_association['object']['semantic_type'] for _association in KNOWLEDGE_MAP]:
@@ -271,11 +271,11 @@ class KnowledgeMap(BaseHandler):
             else:
                 temp_output = []
                 self.set_status(400)
-                self.write(json.dumps({"status": 400, "message": "The object semantic type '" + input_object_type + "' you input is not in BioThings Explorer."}))
+                self.write(json.dumps({"status": 400, "error message": "The object semantic type '" + input_object_type + "' you input is not in BioThings Explorer."}))
                 return
         # output
         if temp_output:
             self.write(json.dumps({"associations": temp_output}))
         else:
             self.set_status(400)
-            self.write(json.dumps({"status": 400, "message": "No associations could be found for the input you give!!"}))
+            self.write(json.dumps({"status": 400, "error message": "No associations could be found for the input you give!!"}))
