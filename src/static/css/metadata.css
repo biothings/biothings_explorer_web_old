@@ -1,28 +1,5 @@
-.card p {
-	font-size: 0.9rem;
-	font-family: "Roboto";
-	text-align: justify;
-}
-
 #metadata-header {
 	color: white !important;
-}
-
-.card-title {
-	font-size: 1.6rem !important;
-}
-
-.card {
-	max-height: 200px;
-}
-
-.card-content {
-	padding-bottom: 10px !important;
-}
-
-.card-action {
-	padding-top: 5px !important;
-	padding-bottom: 10px !important;
 }
 
 .search-bar-center {
@@ -71,6 +48,10 @@
 .landing-page p {
 	font-family: "Ubuntu";
 	font-size: 1.5rem !important;
+}
+
+.sub-intro-text {
+	height: 120px;
 }
 
 #error-message h2 {
