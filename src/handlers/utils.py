@@ -19,7 +19,8 @@ color_dict = {
               'transcript': 'rgba(100, 88, 77, 0.4)',
               'organism': 'rgba(10, 133, 177, 0.4)',
               'structure': 'rgba(8, 233, 7, 0.4)', 
-              'ontology': 'rgba(99,123,4,0.4'}
+              'ontology': 'rgba(99,123,4,0.4)',
+              'bioassay': "rgba(100, 100, 100, 0.3)"}
 
 class HandlerUtils:
     def __init__(self):
