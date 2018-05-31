@@ -60,4 +60,12 @@ $(document).ready(function() {
     //when user select a bioentity/endpoint, display the sankey plot 
     //related to the user request
     displaySankeyBasedOnUserSelect();
+    $("#metadata-header").click(function() {
+        $(".landing-page").show();
+        $("#main-menu").show();
+        $(".search-bar-top").addClass("search-bar-center");
+        $(".search-bar-center").removeClass("search-bar-top");
+        $(".search-bar-center").hide();
+        $("#path-plotly-div").hide();
+    })
 });
