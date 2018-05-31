@@ -5,7 +5,8 @@ from tornado.escape import json_encode
 from .basehandler import BaseHandler
 from .utils import HandlerUtils
 
-KNOWLEDGE_MAP = HandlerUtils().construct_knowledge_map()
+HU = HandlerUtils()
+KNOWLEDGE_MAP = HU.construct_knowledge_map()
 
 class ConnectingInputHandler(BaseHandler):
     """
@@ -14,10 +15,12 @@ class ConnectingInputHandler(BaseHandler):
     """
     def get(self):
         _input = self.get_query_argument('input')
+        print(_input)
         output_format = self.get_query_argument('format', None)
         edges = []
         try:
-            endpoints = HandlerUtils().bt_explorer.api_map.successors(_input)
+            print('finding endpoints')
+            endpoints = HU.bt_explorer.api_map.successors(_input)
             endpoints = list(endpoints)
         except:
             endpoints = None
@@ -25,18 +28,21 @@ class ConnectingInputHandler(BaseHandler):
             self.write(json.dumps({"status": 400, 'error message': "The input '" + _input + "' you give is not in BioThings Explorer."}))
             return
         if endpoints:
+            print('finding outputs')
             for _endpoint in endpoints:
-                edges.append((_input, _endpoint, HandlerUtils().find_edge_label(HandlerUtils().bt_explorer.api_map, _input, _endpoint)))
-                outputs = HandlerUtils().bt_explorer.api_map.successors(_endpoint)
+                edges.append((_input, _endpoint, HU.find_edge_label(HU.bt_explorer.api_map, _input, _endpoint)))
+                outputs = HU.bt_explorer.api_map.successors(_endpoint)
                 if outputs:
                     edges.extend([(_endpoint, _output,
-                                   HandlerUtils().find_edge_label(HandlerUtils().bt_explorer.api_map,
+                                   HU.find_edge_label(HU.bt_explorer.api_map,
                                                                   _endpoint, _output)) for _output in outputs])
-            plotly_results = HandlerUtils().networkx_to_plotly(edges,
-                                                               duplicates_not_allowed=HandlerUtils().bt_explorer.registry.endpoint_info.keys())
+            plotly_results = HU.networkx_to_plotly(edges,
+                                                   duplicates_not_allowed=HU.bt_explorer.registry.endpoint_info.keys())
             if output_format == 'plotly':
+                print('organizing results')
                 self.write(json.dumps({"plotly": plotly_results}))
             else:
+                print('organizing results')
                 self.write(json.dumps({"endpoints": endpoints, "input": _input}))
         else:
             self.set_status(400)
@@ -51,21 +57,21 @@ class EndpointHandler(BaseHandler):
     def get(self):
         endpoint_name = self.get_query_argument('endpoint')
         output_format = self.get_query_argument('format', None)
-        if endpoint_name not in HandlerUtils().bt_explorer.registry.endpoint_info:
+        if endpoint_name not in HU.bt_explorer.registry.endpoint_info:
             self.set_status(400)
             self.write(json.dumps({"status": 400, 'error message': "The API Endpoint you give is not in BioThings Explorer."}))
             return
         else:
             edges = []
-            outputs = list(HandlerUtils().bt_explorer.api_map.successors(endpoint_name))
+            outputs = list(HU.bt_explorer.api_map.successors(endpoint_name))
             edges.extend([(endpoint_name, _output,
-                           HandlerUtils().find_edge_label(HandlerUtils().bt_explorer.api_map, endpoint_name, _output)) for _output in outputs])
-            inputs = list(HandlerUtils().bt_explorer.api_map.predecessors(endpoint_name))
-            inputs = [_input for _input in inputs if HandlerUtils().bt_explorer.api_map.node[_input]['type'] == 'bioentity']
+                           HU.find_edge_label(HU.bt_explorer.api_map, endpoint_name, _output)) for _output in outputs])
+            inputs = list(HU.bt_explorer.api_map.predecessors(endpoint_name))
+            inputs = [_input for _input in inputs if HU.bt_explorer.api_map.node[_input]['type'] == 'bioentity']
             edges.extend([(_input, endpoint_name,
-                           HandlerUtils().find_edge_label(HandlerUtils().bt_explorer.api_map, _input, endpoint_name)) for _input in inputs])
+                           HU.find_edge_label(HU.bt_explorer.api_map, _input, endpoint_name)) for _input in inputs])
             if output_format == 'plotly':
-                plotly_results = HandlerUtils().networkx_to_plotly(edges, duplicates_not_allowed=HandlerUtils().bt_explorer.registry.endpoint_info.keys())
+                plotly_results = HU.networkx_to_plotly(edges, duplicates_not_allowed=HU.bt_explorer.registry.endpoint_info.keys())
                 self.write(json.dumps({"plotly": plotly_results}))
             else:
                 self.write(json.dumps({"endpoint": endpoint_name, "input": inputs, "output": outputs}))
@@ -80,21 +86,21 @@ class ConnectingOutputHandler(BaseHandler):
         output_format = self.get_query_argument('format', None)
         edges = []
         try:
-            endpoints = list(HandlerUtils().bt_explorer.api_map.predecessors(_output))
+            endpoints = list(HU.bt_explorer.api_map.predecessors(_output))
         except:
             self.set_status(400)
             self.write(json.dumps({"status": 400, 'error message': "The output '" + _output + "' you give is not in BioThings Explorer."}))
             return
         if endpoints:
             for _endpoint in endpoints:
-                edges.append((_endpoint, _output, HandlerUtils().find_edge_label(HandlerUtils().bt_explorer.api_map, _endpoint, _output)))
-                inputs = HandlerUtils().bt_explorer.api_map.predecessors(_endpoint)
-                inputs = [_input for _input in inputs if HandlerUtils().bt_explorer.api_map.node[_input]['type'] == 'bioentity']
+                edges.append((_endpoint, _output, HU.find_edge_label(HU.bt_explorer.api_map, _endpoint, _output)))
+                inputs = HU.bt_explorer.api_map.predecessors(_endpoint)
+                inputs = [_input for _input in inputs if HU.bt_explorer.api_map.node[_input]['type'] == 'bioentity']
                 if inputs:
                     edges.extend([(_input, _endpoint,
-                                   HandlerUtils().find_edge_label(HandlerUtils().bt_explorer.api_map, _input, _endpoint)) for _input in inputs])
+                                   HU.find_edge_label(HU.bt_explorer.api_map, _input, _endpoint)) for _input in inputs])
             if output_format == 'plotly':
-                plotly_results = HandlerUtils().networkx_to_plotly(edges, duplicates_not_allowed=HandlerUtils().bt_explorer.registry.endpoint_info.keys())
+                plotly_results = HU.networkx_to_plotly(edges, duplicates_not_allowed=HU.bt_explorer.registry.endpoint_info.keys())
                 self.write(json.dumps({"plotly": plotly_results}))
             else:
                 self.write(json.dumps({"endpoints": endpoints, "output": _output}))
@@ -129,7 +135,7 @@ class ConnectingSemanticTypesHandler(BaseHandler):
                 edges.append((_pair['subject']['prefix'], _pair['endpoint'], 'has_input'))
                 edges.append((_pair['endpoint'], _pair['object']['prefix'], _pair['predicate']))
             if output_format == 'plotly':
-                plotly_results = HandlerUtils().networkx_to_plotly(edges, duplicates_not_allowed=HandlerUtils().bt_explorer.registry.endpoint_info.keys())
+                plotly_results = HU.networkx_to_plotly(edges, duplicates_not_allowed=HU.bt_explorer.registry.endpoint_info.keys())
                 self.write(json.dumps({"plotly": plotly_results}))
             else:
                 self.write(json.dumps({"associations": temp_output}))
@@ -145,7 +151,7 @@ class Input2EndpointHandler(BaseHandler):
     def get(self):
         _input = self.get_query_argument('input')
         try:
-            endpoints = list(HandlerUtils().bt_explorer.api_map.successors(_input))
+            endpoints = list(HU.bt_explorer.api_map.successors(_input))
         except:
             endpoints = None
             self.set_status(400)
@@ -162,28 +168,28 @@ class Endpoint2OutputHandler(BaseHandler):
     """
     def post(self):
         _endpoint = self.get_argument('endpoint')
-        outputs = list(HandlerUtils().bt_explorer.api_map.successors(_endpoint))
+        outputs = list(HU.bt_explorer.api_map.successors(_endpoint))
         self.write(json.dumps({"endpoint": _endpoint, "output": outputs}))
 
 class MetaDataHandler(BaseHandler):
     def get(self, type):
         if type == 'apis':
-            self.write(json.dumps({'api': sorted(list(HandlerUtils().bt_explorer.registry.api_info.keys()))}))
+            self.write(json.dumps({'api': sorted(list(HU.bt_explorer.registry.api_info.keys()))}))
         elif type == 'endpoints':
-            self.write(json.dumps({'endpoint': sorted(list(HandlerUtils().bt_explorer.registry.endpoint_info.keys()))}))
+            self.write(json.dumps({'endpoint': sorted(list(HU.bt_explorer.registry.endpoint_info.keys()))}))
         elif type == 'bioentities':
             # group all bioentity ids together based on their semantic type
             bioentity_dict = defaultdict(list)
-            for _item in HandlerUtils().bt_explorer.registry.bioentity_info.values():
+            for _item in HU.bt_explorer.registry.bioentity_info.values():
                 bioentity_dict[_item['semantic type']].append(_item['preferred_name'])
             for k, v in bioentity_dict.items():
                 bioentity_dict[k] = sorted(v)
             self.write(json_encode({'bioentity': bioentity_dict}))
         elif type == 'semantic_types':
-            self.write(json_encode({'semantic_types': list(set([_item['semantic type'] for _item in HandlerUtils().bt_explorer.registry.bioentity_info.values()]))}))
+            self.write(json_encode({'semantic_types': list(set([_item['semantic type'] for _item in HU.bt_explorer.registry.bioentity_info.values()]))}))
         elif type == 'bioentity_input':
-            bio_entity_list = [_item['preferred_name'] for _item in list(HandlerUtils().bt_explorer.registry.bioentity_info.values())]
-            inputs = [_edge[0] for _edge in HandlerUtils().bt_explorer.api_map.edges()]
+            bio_entity_list = [_item['preferred_name'] for _item in list(HU.bt_explorer.registry.bioentity_info.values())]
+            inputs = [_edge[0] for _edge in HU.bt_explorer.api_map.edges()]
             bioentity_inputs = [_entity for _entity in bio_entity_list if _entity in inputs]
             self.write(json.dumps({'input': bioentity_inputs}))
         else:
@@ -225,7 +231,7 @@ class KnowledgeMap(BaseHandler):
         # check if user want to filter for a specific field or combination of fields
         if input_endpoint:
             # check whether user input is valid
-            if input_endpoint in HandlerUtils().bt_explorer.registry.endpoint_info:
+            if input_endpoint in HU.bt_explorer.registry.endpoint_info:
                 temp_output = [_association for _association in temp_output if _association['endpoint'] == input_endpoint]
             else:
                 temp_output = []
