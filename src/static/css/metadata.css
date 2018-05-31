@@ -49,8 +49,37 @@
 	background-color: orange;
 }
 
+.nav-bar i {
+	display: inline !important;
+	margin-top: 10%;
+}
+
+.nav-bar a {
+	font-size: 20px;
+	font-family: "Ubuntu";
+}
+.landing-page {
+	width: 100vw;
+	height: 50vh;
+}
+.landing-page h1 {
+	font-family: "Ubuntu";
+	font-size: 3rem !important;
+	margin-top: 17%;
+}
+
+.landing-page p {
+	font-family: "Ubuntu";
+	font-size: 1.5rem !important;
+}
+
 #error-message h2 {
 	font-family: "Ubuntu";
-	font-size: 1.6rem !important;
+	font-size: 1.8rem !important;
 	color: grey;
+}
+
+.sub-intro h2 {
+	font-family: "Ubuntu";
+	font-size: 1.2rem !important;
 }

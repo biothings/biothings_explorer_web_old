@@ -1,31 +1,44 @@
 <html>
    <head>
-      <title>BioThings Explorer</title>
-      <meta name = "viewport" content = "width = device-width, initial-scale = 1">      
-      <link rel = "stylesheet"
+        <meta property="og:locale" content="en_US">
+        <meta property="og:url" content="http://biothings.io/explorer/">
+        <meta property="og:site_name" content="BioThings Explorer">
+        <meta property="og:title" content="BioThings Explorer | Exploring Biological Data Through Linked API Services">
+        <meta name="description" content="BioThings Explorer utilize JSON-LD and SmartAPI Specifications to link biological API for knowledge exploration. Users could get metadata information about APIs as well as fetching linked biological data through BioThings Explorer.">
+        <meta property="og:type" content="website">
+        <meta property="og:description" content="BioThings Explorer utilize JSON-LD and SmartAPI Specifications to link biological API for knowledge exploration. Users could get metadata information about APIs as well as fetching linked biological data through BioThings Explorer.">
+        <meta property="og:image" content="./static/img/linked_data.png">
+        <meta property="og:image:type" content="image/png">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
+        <title>BioThings Explorer</title>
+        <meta name = "viewport" content = "width = device-width, initial-scale = 1">      
+        <link rel="shortcut icon" href="./static/img/linked_data.png">     
+        <link rel = "stylesheet"
          href = "https://fonts.googleapis.com/icon?family=Material+Icons">
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.3/css/materialize.min.css">
-      <link href="./static/css/metadata.css" rel="stylesheet" />
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.3/js/materialize.min.js"></script>
-      <script type="text/javascript" src="./static/js/populateSelect.js"></script>
-      <script type="text/javascript" src="./static/js/metadata.js"></script>
-      <script type="text/javascript" src="./static/js/find_path.js"></script>
-      <script type="text/javascript" src="./static/js/data2Sankey.js"></script>
-      <script type="text/javascript" src="./static/js/drawSankey.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-      <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> 
-      <link href="./static/css/select2-materialize.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.3/css/materialize.min.css">
+        <link href="./static/css/metadata.css" rel="stylesheet" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.3/js/materialize.min.js"></script>
+        <script type="text/javascript" src="./static/js/populateSelect.js"></script>
+        <script type="text/javascript" src="./static/js/metadata.js"></script>
+        <script type="text/javascript" src="./static/js/find_path.js"></script>
+        <script type="text/javascript" src="./static/js/data2Sankey.js"></script>
+        <script type="text/javascript" src="./static/js/drawSankey.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> 
+        <link href="./static/css/select2-materialize.css" rel="stylesheet" type="text/css" />
    </head>
    <body> 
       <!-- This section is for the header-->
         <div>
             <nav>
-                <div class="nav-wrapper orange">
-                    <div class="col s4">
+                <div class="orange">
+                    <div class="col s12 nav-bar">
                         <a href="#" id="menu" class="left"><i class="left material-icons">menu</i></a>
-                        <a href="/explorer" class="breadcrumb">BioThings Explorer</a>
-                        <a href="#!" class="breadcrumb" id="metadata-header">MetaData Explorer</a>
+                        <a href="/explorer" class="nav-item">BioThings Explorer</a>
+                        <i class="large material-icons">navigate_next</i>
+                        <a href="#!" class="nav-item" id="metadata-header">MetaData Explorer</a>
                         <ul class="right hide-on-med-and-down">
                             <li><a href="/tutorial" id="map">TUTORIAL</a></li>
                             <li><a href="/explorer" id="explore">EXPLORE</a></li>
@@ -40,7 +53,7 @@
             <ul id="slide-out" class="sidenav">
                 <li>
                     <div class="user-view">
-                        <h2 class="center valign-wrapperß"> MetaData Explorer</h2>
+                        <h2 class="center valign-wrapper"> KnowledgeMap Explorer</h2>
                     </div>
                 </li>
                 <li>
@@ -55,59 +68,70 @@
             </ul>
         </div>
         <!-- Main Menu at Landing Page-->
-        <div class="row main-menu">
-            </br>
-            <div class="row">
-                <div class="col s12 m8 l4 offset-m2 offset-l4">
-                    <div class="card light-blue darken-3">
-                        <div class="card-content white-text">
-                            <span class="card-title">Explore an Endpoint</span>
-                            <p>This service will return metadata information, including input(s) and output(s), about any API endpoint integrated in BioThings Explorer.</p>
+        <div class="row grey lighten-5 landing-page">
+            <div class="col s12 m6 offset-m3">
+                <h1 class="grey-text center-align">Knowledge Map Explorer</h1>
+            </div>
+            <div class="col s12 m10 offset-m1">
+                <p class="grey-tex center-align">Find out how different APIs could be utilized for your own research purpose</p>
+            </div>
+
+        </div>
+        <div id="main-menu" class="row">
+            <div class="container">
+                <div class="col s12 m6 l3 sub-intro">
+                    <div>
+                        <div class="center-align hide-on-small-only">
+                            <i class="large material-icons blue-text text-lighten-2">info_outline</i>
                         </div>
-                        <div class="card-action">
-                            <a href="#" class="try-explore-endpoint">Try it out!</a>
+                        <div class="center-align sub-intro-text">
+                            <h2 class="center"> Endpoint Info</h2>
+                            <p class="blue-grey-text center">Return metadata information, including input(s) and output(s) for any API endpoint.</p>
+                        </div>
+                        <div class="center-align">
+                            <a class="waves-effect waves-light btn light-blue lighten-3 try-it-out-button center try-explore-endpoint" href="#">Try it out</a>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="row">
-                <div class="col s12 m8 l4 offset-m2 offset-l4">
-                    <div class="card green darken-3">
-                        <div class="card-content white-text">
-                            <span class="card-title">Explore Bio-Entity as Input</span>
-                            <p>This service will return you all API Endpoints which take the given bio-entity (e.g. ncbigene) as input.</p>
+                <div class="col s12 m6 l3 sub-intro">
+                    <div>
+                        <div class="center-align hide-on-small-only">
+                            <i class="large material-icons indigo-text text-lighten-2">arrow_forward</i>
                         </div>
-                        <div class="card-action">
-                            <a href="#" class="try-explore-input">Try it out!</a>
+                        <div class="center-align sub-intro-text">
+                            <h2 class="center"> Connect from Input </h2>
+                            <p class="blue-grey-text center">Return all API Endpoints which can take the given bio-entity (e.g. ncbigene) as input.</p>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col s12 m8 l4 offset-m2 offset-l4">
-                    <div class="card deep-purple lighten-1">
-                        <div class="card-content white-text">
-                            <span class="card-title">Explore Bio-Entity as Output</span>
-                            <p>This service will return you all API Endpoints which return the given bio-entity (e.g. ncbigene) as output.</p>
-                        </div>
-                        <div class="card-action">
-                            <a href="#" class="try-explore-output">Try it out!</a>
+                        <div class="center-align">
+                            <a class="waves-effect waves-light btn light-blue lighten-3 try-it-out-button center try-explore-input" href="#">Try it out</a>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="row">
-                <div class="col s12 m8 l4 offset-m2 offset-l4">
-                    <div class="card deep-purple lighten-1">
-                        <div class="card-content white-text">
-                            <span class="card-title">How to connect between two semantic types</span>
-                            <p>The user could specify what semantic type he wants as input and what semantic type he wants as output. This service will automatically tell user which API can connect from the input to the output</p>
+                <div class="col s12 m6 l3 sub-intro">
+                    <div>
+                        <div class="center-align hide-on-small-only">
+                            <i class="large material-icons cyan-text text-lighten-2">arrow_back</i>
                         </div>
-                        <div class="card-action">
-                            <a href="#" class="try-explore-semantic">Try it out!</a>
+                        <div class="center-align sub-intro-text">
+                            <h2 class="center"> Connect to Output </h2>
+                            <p class="blue-grey-text center">Return all API Endpoints which can take the given bio-entity (e.g. ncbigene) as output.</p>
+                        </div>
+                        <div class="center-align">
+                            <a class="waves-effect waves-light btn light-blue lighten-3 try-it-out-button center try-explore-output" href="#">Try it out</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12 m6 l3 sub-intro">
+                    <div>
+                        <div class="center-align hide-on-small-only">
+                            <i class="large material-icons green-text text-lighten-2">compare_arrows</i>
+                        </div>
+                        <div class="center-align sub-intro-text">
+                            <h2 class="center"> Connect Semantic Types </h2>
+                            <p class="blue-grey-text center">Return all API Endpoints which can conncet from your input to output semantic type.</p>
+                        </div>
+                        <div class="center-align">
+                            <a class="waves-effect waves-light btn light-blue lighten-3 try-it-out-button center try-explore-semantic" href="#">Try it out</a>
                         </div>
                     </div>
                 </div>

@@ -10,7 +10,8 @@ $(document).ready(function() {
 	});
     populateSelectInSideBar()
     $(".try-explore-endpoint").click(function() {
-        $(".main-menu").hide();
+        $("#main-menu").hide();
+        $(".landing-page").hide();
         $(".endpoint-search-bar").show();
         $(".endpoint-search-bar").addClass("search-bar-center");
         $(".endpoint-search-bar").removeClass("search-bar-top");
@@ -18,7 +19,8 @@ $(document).ready(function() {
         $("#path-plotly-div").hide();
     });
     $(".try-explore-input").click(function() {
-        $(".main-menu").hide();
+        $("#main-menu").hide();
+        $(".landing-page").hide();
         //recenter the search bar and show header
         $(".input-search-bar").show();
         $(".input-search-bar").addClass("search-bar-center");
@@ -28,7 +30,8 @@ $(document).ready(function() {
         $("#path-plotly-div").hide();
     });
     $(".try-explore-output").click(function() {
-        $(".main-menu").hide();
+        $("#main-menu").hide();
+        $(".landing-page").hide();
         //recenter the search bar and show header
         $(".output-search-bar").show();
         $(".output-search-bar").addClass("search-bar-center");
@@ -38,7 +41,8 @@ $(document).ready(function() {
         $("#path-plotly-div").hide();
     });
     $(".try-explore-semantic").click(function() {
-        $(".main-menu").hide();
+        $("#main-menu").hide();
+        $(".landing-page").hide();
         //recenter the search bar and show header
         $(".semantic-search-bar").show();
         $(".semantic-search-bar").addClass("search-bar-center");
