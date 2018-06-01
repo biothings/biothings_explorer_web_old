@@ -242,7 +242,6 @@ class ApiCallHandler:
             if additional_parameters:
                 uri_value.update(additional_parameters)
             api_call_params.append(self.call_api(uri_value, endpoint_name))
-        print(api_call_params)
         start = time.time()
         rs = (grequests.get(u, params=v) for (u,v) in api_call_params)
         responses = grequests.map(rs)
@@ -251,12 +250,10 @@ class ApiCallHandler:
             responses = grequests.map(rs)
             #api_call_response = self.call_api(uri_value, endpoint_name)
         valid_responses = [self.preprocess_json_doc(api_call_response.json(), endpoint_name) if api_call_response.status_code == 200 else {} for api_call_response in responses]
-        print(valid_responses)
         print('Time used in making API calls: {:.2f} seconds'.format(time.time() - start))
         start = time.time()
         if type(predicate) != list:
             outputs = self.extract_output(valid_responses, endpoint_name, output_type, predicate=predicate)
-            print(outputs)
             for i in range(len(outputs)):
                 if outputs[i]:
                     for _output in outputs[i]:
