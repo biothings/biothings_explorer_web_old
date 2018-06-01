@@ -65,7 +65,7 @@ def read_id_mapping_file():
 
 registry = read_id_mapping_file()
 PREFIXES = [_item['preferred_name'].lower() for _item in registry.values()]
-print(PREFIXES)
+
 def int2str(d):
     """
     Iterrative function
