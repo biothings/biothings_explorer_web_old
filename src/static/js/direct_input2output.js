@@ -15,9 +15,11 @@ function retrieveDirectOutput(input_prefix, input_value, output_prefix){
 
 function DirectOutput2Graph(){
     $("#DirectInput2OutputButton").click(function(){
+        $(".search-bar-header").hide();
         $("#intro").hide();
         $(".landing-page").hide();
         hide_all_graph_div();
+        $("#main").show();
         $(".direct_output_display").show();
         $(".mainview").hide()
         var _input = $("#direct-input").find("option:selected").attr('value');
