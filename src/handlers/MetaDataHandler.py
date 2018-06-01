@@ -19,7 +19,6 @@ class ConnectingInputHandler(BaseHandler):
         output_format = self.get_query_argument('format', None)
         edges = []
         try:
-            print('finding endpoints')
             endpoints = HU.bt_explorer.api_map.successors(_input)
             endpoints = list(endpoints)
         except:
@@ -28,7 +27,6 @@ class ConnectingInputHandler(BaseHandler):
             self.write(json.dumps({"status": 400, 'error message': "The input '" + _input + "' you give is not in BioThings Explorer."}))
             return
         if endpoints:
-            print('finding outputs')
             for _endpoint in endpoints:
                 edges.append((_input, _endpoint, HU.find_edge_label(HU.bt_explorer.api_map, _input, _endpoint)))
                 outputs = HU.bt_explorer.api_map.successors(_endpoint)
@@ -39,10 +37,8 @@ class ConnectingInputHandler(BaseHandler):
             plotly_results = HU.networkx_to_plotly(edges,
                                                    duplicates_not_allowed=HU.bt_explorer.registry.endpoint_info.keys())
             if output_format == 'plotly':
-                print('organizing results')
                 self.write(json.dumps({"plotly": plotly_results}))
             else:
-                print('organizing results')
                 self.write(json.dumps({"endpoints": endpoints, "input": _input}))
         else:
             self.set_status(400)
