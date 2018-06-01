@@ -24,10 +24,10 @@ class OutputOrganizor:
         for _uri in uris:
             if URI.startswith(_uri):
                 prefix = self.registry.bioentity_info[_uri]['preferred_name']
-                _value = URI[len(_uri):]
+                _value = URI[len(_uri):].replace('$$$$', ':')
                 return (prefix + ':' + _value)
         if not _value:
-            return URI
+            return URI.replace('$$$$', ':')
         """
         # deprecated because it can't handle cases where the value contains '/'
         _value = URI.split('/')[-1]

@@ -3,33 +3,8 @@ import yaml
 import pandas as pd
 import requests
 from pathlib import Path
+from .config import FILE_PATHS
 
-def int2str(d):
-    """
-    Iterrative function
-    Convert all integer values in the dictionary/JSON to string
-
-
-    Params
-    ======
-    d: (dict)
-        dictionary to perform int2str function
-    """
-    for k, v in d.items():
-        if isinstance(v, dict):
-            int2str(v)
-        elif isinstance(v, list):
-            new_list = []
-            for _v in v:
-                if isinstance(_v, dict):
-                    int2str(_v)
-                elif isinstance(_v, int):
-                    new_list.append(str(_v))
-            if new_list:
-                d.update({k: new_list})
-        else:
-            if type(v) == int:
-                d.update({k: str(v)})
 
 def readFile(file_path):
     """
@@ -73,6 +48,61 @@ def readFile(file_path):
             return json.loads(data)
     else:
         print("readFile function could not handle file format other than csv, yml or json!")
+
+
+def read_id_mapping_file():
+    """
+    read in the ID-MAPPING.csv file
+    and parse it into bioentity_info dictionary
+    The dictionary key is the URI, and it's value contains registry_identifier, etc.
+    """
+    data = readFile(FILE_PATHS['id_mapping']['file'])
+    bioentity_info = {}
+    # turn data frame into a dictionary and store in bioentity_info
+    for index, row in data.iterrows():
+        bioentity_info[row['URI']] = {'description': row['Description'], 'preferred_name': row['Recommended name'], 'semantic type': row['Semantic Type']}
+    return bioentity_info
+
+registry = read_id_mapping_file()
+PREFIXES = [_item['preferred_name'].lower() for _item in registry.values()]
+print(PREFIXES)
+def int2str(d):
+    """
+    Iterrative function
+    Convert all integer values in the dictionary/JSON to string
+
+
+    Params
+    ======
+    d: (dict)
+        dictionary to perform int2str function
+    """
+    for k, v in d.items():
+        if isinstance(v, dict):
+            int2str(v)
+        elif isinstance(v, list):
+            new_list = []
+            for _v in v:
+                if isinstance(_v, dict):
+                    int2str(_v)
+                elif isinstance(_v, int):
+                    new_list.append(str(_v))
+                elif isinstance(_v, str):
+                    if ':' not in _v:
+                        new_list.append(_v)
+                    elif ':' in _v and _v.split(':')[0].lower() in PREFIXES:
+                        new_list.append(_v)
+                    else:
+                        new_list.append(_v.replace(':', '$$$$'))
+            if new_list:
+                d.update({k: new_list})
+        else:
+            if type(v) == int:
+                d.update({k: str(v)})
+            elif type(v) == str:
+                if ':' in v and v.split(':')[0].lower() in PREFIXES:
+                    d.update({k: v.replace(':', '$$$$')})
+
 
 def str2list(_input):
     """
