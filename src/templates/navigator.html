@@ -1,7 +1,19 @@
 <html>
    <head>
-        <title>BioThings Explorer</title>
+        <meta property="og:locale" content="en_US">
+        <meta property="og:url" content="http://biothings.io/explorer/navigator">
+        <meta property="og:site_name" content="BioThings Navigator">
+        <meta property="og:title" content="BioThings Navigator | Exploring Biological Data Through Linked API Services">
+        <meta name="description" content="BioThings Explorer utilize JSON-LD and SmartAPI Specifications to link biological API for knowledge exploration. Users could get metadata information about APIs as well as fetching linked biological data through BioThings Explorer.">
+        <meta property="og:type" content="website">
+        <meta property="og:description" content="BioThings Explorer utilize JSON-LD and SmartAPI Specifications to link biological API for knowledge exploration. Users could get metadata information about APIs as well as fetching linked biological data through BioThings Explorer.">
+        <meta property="og:image" content="./static/img/navigator.png">
+        <meta property="og:image:type" content="image/png">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
+        <title>BioThings Navigator</title>
         <meta name = "viewport" content = "width = device-width, initial-scale = 1">      
+        <link rel="shortcut icon" href="./static/img/navigator.png">      
         <link rel = "stylesheet"
          href = "https://fonts.googleapis.com/icon?family=Material+Icons">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.3/css/materialize.min.css">
@@ -38,7 +50,6 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
         <link href="./static/css/select2-materialize.css" rel="stylesheet" type="text/css" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-        <script src="./static/js/cytoscape-navigator.js"></script>
         <script src="http://d3js.org/d3.v3.min.js"></script>
     </head>
     <body>
@@ -70,143 +81,99 @@
         </div>
         <div>
             <ul id="slide-out" class="sidenav">
-                <li class="no-padding">
-                    <ul class="collapsible collapsible-accordion">
-                        <li>
-                            <div class = "collapsible-header">
-                                <i class = "material-icons orange-text text-darken-2">call_received</i>Find Direct Output</div>
-                            <div class = "collapsible-body"><p> Return outputs directly linked to input.<br>
-                                <div class="select-wrapper">
-                                    <label for="direct-input">
-                                    Input prefix
-                                        <select id="direct-input">
-                                            <option value="" disabled selected>Choose your option</option>
-                                        </select>
-                                    </label>
-                                </div>
-                                <div class="select-wrapper"> 
-                                    <label for="select-output1">
-                                    Output prefix
-                                        <select id="direct-output">
-                                            <option value="" disabled selected>Choose your option</option>
-                                        </select>
-                                    </label>
-                                </div>
-                                <div class="input-field">
-                                    <input id="direct_input_value" type="text" class="validate">
-                                    <label for="direct_input_value">Specify input value here.</label>
-                               </div>
-                                <a class="orange lighten-2 btn" id="DirectInput2OutputButton">Explore</a>
-                            </div>
-                        </li>
-                        <li>
-                            <div class = "collapsible-header">
-                                <i class = "material-icons orange-text text-darken-2">call_received</i>Semantic Query</div>
-                            <div class = "collapsible-body"><p> Return outputs aligned from multiple sources.<br>
-                                <div class="select-wrapper">
-                                    <label for="semantic-input">
-                                    Input prefix
-                                        <select id="semantic-input">
-                                            <option value="" disabled selected>Choose your option</option>
-                                        </select>
-                                    </label>
-                                </div>
-                                <div class="select-wrapper"> 
-                                    <label for="semantic-output">
-                                    Output prefix
-                                        <select id="semantic-output">
-                                            <option value="" disabled selected>Choose your option</option>
-                                        </select>
-                                    </label>
-                                </div>
-                                <div class="input-field">
-                                    <input id="semantic_input_value" type="text" class="validate">
-                                    <label for="semantic_input_value">Specify input value here.</label>
-                               </div>
-                                <a class="orange lighten-2 btn" id="SemanticInput2OutputButton">Explore</a>
-                            </div>
-                        </li>
-                        <li>
-                           <div class = "collapsible-header">
-                              <i class = "material-icons orange-text text-darken-2">directions</i>Navigator</div>
-                           <div class = "collapsible-body"><p> Please select the <b>bioentities</b> you would like to explore. A sankey plot would appear on the right showing all the <b>paths</b> connecting the <b>input</b> and <b>output</b> you selected.</p>
-                             <div class="select-wrapper"> 
-                               <label for="select-input1">
-                                 Input
-                                 <select id="select-input1">
-                                    <option value="" disabled selected>Choose your option</option>
-                                 </select>
-                               </label>
-                             </div>
-                             <div class="select-wrapper"> 
-                               <label for="select-output1">
-                                 Output
-                                 <select id="select-output1">
-                                    <option value="" disabled selected>Choose your option</option>
-                                 </select>
-                                </label>
-                             </div>
-                             <div class="select-wrapper">
-                               <label for="select-max-api">
-                                 Maximum number of APIs used
-                                 <select id="select-max-api">
-                                   <option value="3" disabled selected>3</option>
-                                   <option value="1">1</option>
-                                   <option value="2">2</option>
-                                   <option value="3">3</option>
-                                   <option value="4">4</option>
-                                 </select>
-                               </label>
-                             </div>
-                             <a class="orange lighten-2 btn" id="inputOutputPathButton">Find Path</a>
-                             <div id="explore-path">
-                               <p> Please select the <b>path</b> using the <b>drop-down</b> menu below. The detailed <b>description</b> for each path could be found under the <b>Sankey Plot</b> on the right. After selecting the path, please <b>specify the input</b>. If you have <b>multiple</b> inputs, separate them by <b>comma</b>.</p>
-                               <div class="select-wrapper">
-                                 <label for="select-path">
-                                   <select id="select-path">
-                                   </select>
-                                 </label>
-                               </div>
-                               <div class="input-field">
-                                 <input id="input_value" type="text" class="validate">
-                                 <label for="input_value">Please put your input value here.</label>
-                               </div>
-                               <a class="orange lighten-2 btn" id="explorePathButton">Explore This Path</a>
-                             </div>
-                           </div>
-                        </li>
-                    </ul>
+                <li>
+                    <div class="user-view">
+                        <h2 class="center valign-wrapper"> BioThings Navigator</h2>
+                    </div>
+                </li>
+                <li>
+                    <a href="#" class="try-explore-single-edge"><i class = "material-icons orange-text text-darken-2">call_made</i>Single Edge Exploration</a>
+                </li>
+                <li>
+                    <a href="#" class="try-explore-semantic"><i class = "material-icons orange-text text-darken-2">call_merge</i>Semantic Exploration</a>
+                </li>
+                <li>
+                    <a href="#" class="try-explore-multi-edge"><i class = "material-icons orange-text text-darken-2">call_missed_outgoing</i>Multi-edge Exploration</a>
                 </li>
             </ul>
         </div>
         <div class="row grey lighten-5 landing-page">
-            <div class="col s12 l6 landing-page-text">
-                <h1 class="grey-text center">BioThings Navigator</h1>
-                <p class="grey-text center">Service for Path Planning and API Call Chaining</p>
-                <a class="center waves-effect waves-light btn light-blue lighten-3 try-it-out-button center-align" id="try-crawler-button" href="metadata">Try it out</a>
+            <div class="col s12 m6 offset-m3">
+                <h1 class="grey-text center-align">BioThings Navigator</h1>
             </div>
-            <div class="col s12 l4 offset-l2 hide-on-small-only">
-                <img width="80%" class="center" src="./static/img/navigator.png">
+            <div class="col s12 m10 offset-m1">
+                <p class="grey-tex center-align">Service for Path Planning and API Call Chaining</p>
             </div>
         </div>
+
         <div id="intro" class="row">
             <div class="container">
-                <div class="col s12 m4 offset-m1 sub-intro">
+                <div class="col s12 m4 sub-intro">
                     <div>
                         <div class="center-align hide-on-small-only">
-                            <img width="50%" src="./static/img/navigator_gps.png">
+                            <i class="large material-icons pink-text text-lighten-2">call_made</i>
                         </div>
-                        <h2 class="center"> Path Planning</h2>
-                        <p class="blue-grey-text">It utilizes <a href="http://smart-api.info" target="_blank">Smart-API Specifications</a> to build a network of APIs. And by traversing through the network, BioThings Explorer could help user identify potential paths connecting two biological entities through multiple API calls.</p>
+                        <h2 class="center"> Single Edge Exploration</h2>
+                        <p class="blue-grey-text center">Fetching data by user specified input and output by calling one API only.</p>
+                        <div class="center-align">
+                            <a class="waves-effect waves-light btn pink lighten-3 try-it-out-button center try-explore-single-edge" href="#">Try it out</a>
+                        </div>
                     </div>
                 </div>
-                <div class="col s12 m4 offset-m2 sub-intro">
+                <div class="col s12 m4 sub-intro">
                     <div>
                         <div class="center-align hide-on-small-only">
-                            <img width="50%" src="./static/img/navigator_data.png">
+                            <i class="large material-icons indigo-text text-lighten-2">call_merge</i>
                         </div>
-                        <h2 class="center"> Data Fetching </h2>
-                        <p class="blue-grey-text">In addition, BioThings Explorer could chain those API calls together and fetch relevant biological data through JSON-LD technology.</p>
+                        <h2 class="center"> Semantic Exploration</h2>
+                        <p class="blue-grey-text center">Semantically merge the data from multiple API calls to align the results.</p>
+                        <div class="center-align">
+                            <a class="waves-effect waves-light btn indigo lighten-3 try-it-out-button center try-explore-semantic" href="#">Try it out</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12 m4 sub-intro">
+                    <div>
+                        <div class="center-align hide-on-small-only">
+                            <i class="large material-icons green-text text-lighten-2">call_missed_outgoing</i>
+                        </div>
+                        <h2 class="center"> Multi-edge Exploration</h2>
+                        <p class="blue-grey-text center">Calling multiple APIs to connect from the input to the output</p>
+                        <div class="center-align">
+                            <a class="waves-effect waves-light btn green lighten-3 try-it-out-button center try-explore-multi-edge" href="#">Try it out</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row valign-wrapper single-edge-search-bar search-bar-center search-bar">    
+            <div class="col s12">
+                <div class="row">
+                    <div class="col s12 search-bar-header">
+                        <h1 class="orange-text" style="font-family: Ubuntu; text-align: center;"> Single Edge Exploration </h1>
+                        <br>
+                        <br>
+                    </div>
+                    <div class="col s12 m2 offset-m2 select-wrapper">
+                        <label for="select-input">
+                            Input Bio-entity
+                            <select id="direct-input"></select>
+                        </label>
+                    </div>
+                    <div class="col s12 m2 offset-m1 select-wrapper">
+                        <label for="select-output">
+                            Output Bio-entity
+                            <select id="direct-output"></select>
+                        </label>
+                    </div>
+                    <div class="col s12 m3 crawler_input">
+                        <label for="crawler-input-value">
+                            Input Value
+                            <input id="direct_input_value" type="text" class="validate" placeholder="Type your input value here..."/>
+                        </label>
+                    </div>
+                    <div class="col s12 m2">
+                        <a class="waves-effect waves-light btn search-button" id="DirectInput2OutputButton">Explore</a>
                     </div>
                 </div>
             </div>
@@ -262,14 +229,15 @@
                             <li><a class="grey-text text-lighten-3" href="http://biothings.io/#" target="_blank">BioThings API</a></li>
                             <li><a class="grey-text text-lighten-3" href="http://smart-api.info/" target="_blank">SmartAPI Specification</a></li>
                             <li><a class="grey-text text-lighten-3" href="https://json-ld.org/" target="_blank">JSON-LD</a></li>
+                            <li><a class="grey-text text-lighten-4" href="http://wulab.io/" target="_blank">The Wu Lab</a></li>
+                            <li><a class="grey-text text-lighten-4" href="http://sulab.org/" target="_blank">The Su Lab</a></li>
                         </ul>
                     </div>
                 </div>
             </div>
             <div class="footer-copyright">
                 <div class="container">
-                    © 2017-2018 Copyright Text
-                    <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+                    Copyright © 2017-2018 The Su/Wu Lab.</p>
                 </div>
             </div>
         </footer>
