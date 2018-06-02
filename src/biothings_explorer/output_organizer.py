@@ -25,7 +25,7 @@ class OutputOrganizor:
             if URI.startswith(_uri):
                 prefix = self.registry.bioentity_info[_uri]['preferred_name']
                 _value = URI[len(_uri):].replace('$$$$', ':')
-                return (prefix + ':' + _value)
+                return (prefix.upper() + ':' + _value)
         if not _value:
             return URI.replace('$$$$', ':')
         """
