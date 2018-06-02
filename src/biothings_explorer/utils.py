@@ -100,7 +100,7 @@ def int2str(d):
             if type(v) == int:
                 d.update({k: str(v)})
             elif type(v) == str:
-                if ':' in v and v.split(':')[0].lower() in PREFIXES:
+                if ':' in v and v.split(':')[0].lower() not in PREFIXES:
                     d.update({k: v.replace(':', '$$$$')})
 
 
