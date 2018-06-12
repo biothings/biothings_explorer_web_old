@@ -21,7 +21,8 @@ function DirectOutput2Graph(){
         hide_all_graph_div();
         $("#main").show();
         $(".direct_output_display").show();
-        $(".mainview").hide()
+        $(".mainview").hide();
+        $(".tabs").tabs();
         var _input = $("#direct-input").find("option:selected").attr('value');
         var _output = $("#direct-output").find("option:selected").attr('value');
         var _value = $("#direct_input_value").val();
@@ -149,6 +150,7 @@ function drawInputOutputGraph(nodes, edges){
   };
   var network_semantic = new vis.Network(container, data, options);
   network_semantic.on("click", function(params) {
+    $(".tabs").tabs();
     var clicked_node_id = params.nodes;
     var clicked_edge_id = params.edges;
     if (clicked_node_id.length > 0) {
@@ -162,14 +164,12 @@ function drawInputOutputGraph(nodes, edges){
         $("#edge_info").empty();
         var target_node_id = edges.get(params.edges)[0]['to'];
         var instance = M.Tabs.getInstance($(".tabs"));
-        var node_info = nodes.get(target_node_id)['object_info']
+        var node_info = nodes.get(target_node_id)['object_info'];
         var node_message = generateNodeTable(node_info);
         var edge_info = edges.get(params.edges)[0]['edge_info'];
-        console.log(edge_info);
         var endpoint_info = edges.get(params.edges)[0]['endpoint'];
         var edge_message = generateEdgeTable(endpoint_info, edge_info);
         var context_message = generateNodeTable(edges.get(params.edges)[0]['context'])
-        console.log(context_message);
         $("#edge_info").html(edge_message);
         $("#node_info").html(node_message);
         $("#context_info").html(context_message);

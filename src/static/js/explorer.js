@@ -11,6 +11,7 @@ $(document).ready(function() {
     $(".search-bar").hide();
     populateSelectInSideBar();
     DirectOutput2Graph();
+    $(".tabs").tabs();
     $(".try-explore-single-edge").click(function() {
         $(".search-bar").hide();
         $("#intro").hide();
