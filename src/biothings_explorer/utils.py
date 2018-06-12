@@ -146,7 +146,7 @@ def timing(f):
     return wrap
 
 property_uri_2_prefix_dict = {'http://biothings.io/explorer/vocab/attributes/id': 'object.id',
-                              'http://biothings.io/explorer/vocab/attributes/id-secondary': 'object.id-secondary',
+                              'http://biothings.io/explorer/vocab/attributes/secondary-id': 'object.secondary-id',
                               'http://biothings.io/explorer/vocab/attributes/label': 'object.label',
                               'http://biothings.io/explorer/vocab/attributes/taxonomy': 'object.taxonomy',
                               'http://biothings.io/explorer/vocab/attributes/label': 'object.label',
