@@ -284,7 +284,7 @@ class JSONLDHelper:
                 pass
             elif "@id" in v and (v["@id"].startswith("attr") or v["@id"].startswith("rel")):
                 _key = v["@id"]
-                _key = _key.replace('attr', 'node').replace('rel', 'edge')
+                _key = _key.replace('attr', 'object').replace('rel', 'edge')
                 self.organized_properties[_key] = v["@context"]["@base"]
             elif k == "@base":
                 self.organized_properties["node:id"] = v
