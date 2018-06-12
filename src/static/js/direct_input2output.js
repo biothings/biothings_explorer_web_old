@@ -20,9 +20,20 @@ function DirectOutput2Graph(){
         $(".landing-page").hide();
         hide_all_graph_div();
         $("#main").show();
+        $(".progress").show();
         $(".direct_output_display").show();
         $(".mainview").hide();
         $(".tabs").tabs();
+        var instance = M.Tabs.getInstance($(".tabs"));
+        var helper_text = '<div id="graph-details-info"><p class="help-text">Click on one of the nodes or edges in the network to view more details...</p><img src="./static/img/help-left-arrow.png" width="75"></div>'
+        $("#node_info").empty();
+        $("#edge_info").empty();
+        $("#context_info").empty();
+        $("#node_info").html(helper_text);
+        $("#edge_info").html(helper_text);
+        $("#context_info").html(helper_text);
+        $("#error-message").empty();
+        instance.select('node_info');
         var _input = $("#direct-input").find("option:selected").attr('value');
         var _output = $("#direct-output").find("option:selected").attr('value');
         var _value = $("#direct_input_value").val();
@@ -48,7 +59,11 @@ function DirectOutput2Graph(){
                 nodes_id += 1;
     		});
             drawInputOutputGraph(new vis.DataSet(nodes), new vis.DataSet(edges));
-    	})
+    	}).fail(function (err) {
+            $(".progress").hide();
+            $(".mainview").hide();
+            $("#error-message").html('<h2 class="center">' + err.responseJSON['error message'].replace('\n', '<br />') + '</h2>')
+        });
     })
 }
 
