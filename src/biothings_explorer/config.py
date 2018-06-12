@@ -49,6 +49,13 @@ MYCHEM_URI2SCOPE = {
     "drugname": "drugbank.name"
 }
 
-MYGENE_QUERY_JSONLD = dict((y,x) for x,y in MYGENE_URI2SCOPE.items())
+MYDISEASE_URI2SCOPE = {
+    "doid": "mondo.xrefs.doid",
+    "omim.disease": "mondo.xrefs.omim",
+    "umls.disease": "mondo.xrefs.umls",
+    "mondo": "_id"
+}
 
+MYGENE_QUERY_JSONLD = dict((y,x) for x,y in MYGENE_URI2SCOPE.items())
+MYDISEASE_QUERY_JSONLD = dict((y,x) for x,y in MYDISEASE_URI2SCOPE.items())
 MYCHEM_QUERY_JSONLD = dict((y,x) for x,y in MYCHEM_URI2SCOPE.items())
