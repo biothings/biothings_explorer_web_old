@@ -37,10 +37,8 @@ function DirectOutput2Graph(){
                 node_label = _result['output']['object']['id'];
                 node_title = 'prefix: ' + _output;
                 if ('edge' in _result['output']) {
-                    console.log('edge in output!')
                     var edge_info = _result['output']['edge'];
                 } else {
-                    console.log('edge not in output!')
                     var edge_info = {};
                 }
                 edge_info['predicate'] = _result['predicate'];
