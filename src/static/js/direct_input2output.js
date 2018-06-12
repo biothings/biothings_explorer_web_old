@@ -36,7 +36,13 @@ function DirectOutput2Graph(){
     		results.forEach(function(_result) {
                 node_label = _result['output']['object']['id'];
                 node_title = 'prefix: ' + _output;
-                var edge_info = _result['output']['edge'];
+                if ('edge' in _result['output']) {
+                    console.log('edge in output!')
+                    var edge_info = _result['output']['edge'];
+                } else {
+                    console.log('edge not in output!')
+                    var edge_info = {};
+                }
                 edge_info['predicate'] = _result['predicate'];
                 nodes.push({'id': nodes_id, 'object_info': _result['output']['object'], 'title': node_title, 'font': {'color': 'blue'}, 'label': node_label.slice(node_label.split(':')[0].length + 1), 'group': 2});
                 edges.push({'from': 1, 'to': nodes_id, 'context': _result['context'], 'endpoint': _result['endpoint'], 'edge_info': edge_info, 'arrows': 'to', 'title': _result['predicate']})
