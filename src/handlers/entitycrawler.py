@@ -209,7 +209,7 @@ def exploreinput(input_type, input_value):
                                 summary[semantic_type][_prefix].add(_value_no_prefix)
                             else:
                                 summary[semantic_type][_property].add(_single_value)
-                elif _property not in ['object.id-secondary', 'object.label']:
+                elif _property not in ['object.secondary-id', 'object.label']:
                     if type(_value) != list:
                         summary[semantic_type][_property].add(_value)
                     else:
