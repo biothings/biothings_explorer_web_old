@@ -27,3 +27,9 @@
 h1 {
     font-size: 1rem;
 };
+
+#error-message h2 {
+	font-family: "Ubuntu";
+	font-size: 1.8rem !important;
+	color: grey;
+}
