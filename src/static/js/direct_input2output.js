@@ -153,17 +153,18 @@ function drawInputOutputGraph(nodes, edges){
     $(".tabs").tabs();
     var clicked_node_id = params.nodes;
     var clicked_edge_id = params.edges;
+    var instance = M.Tabs.getInstance($(".tabs"));
     if (clicked_node_id.length > 0) {
         $("#edge_info").empty();
         $("#node_info").empty();
         var node_info = nodes.get(params.nodes)[0]['object_info'];
         var node_message = generateNodeTable(node_info);
         $("#node_info").html(node_message);
+        instance.select('node_info');
     } else {
         $("#node_info").empty();
         $("#edge_info").empty();
         var target_node_id = edges.get(params.edges)[0]['to'];
-        var instance = M.Tabs.getInstance($(".tabs"));
         var node_info = nodes.get(target_node_id)['object_info'];
         var node_message = generateNodeTable(node_info);
         var edge_info = edges.get(params.edges)[0]['edge_info'];
