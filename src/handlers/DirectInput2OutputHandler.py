@@ -28,18 +28,18 @@ class DirectInput2OutputHandler(BaseHandler):
         output_uri = ah.registry.prefix2uri(output_prefix)
         if not input_uri:
             self.set_status(400)
-            self.write(json.dumps({"status": 400, "message": "Your input prefix " + input_prefix + " is not in the registry!"}))
+            self.write(json.dumps({"status": 400, "error message": "Your input prefix " + input_prefix + " is not in the registry!"}))
             self.finish()
         if not output_uri:
             self.set_status(400)
-            self.write(json.dumps({"status": 400, "message": "Your output prefix " + output_prefix + " is not in the registry!"}))
+            self.write(json.dumps({"status": 400, "error message": "Your output prefix " + output_prefix + " is not in the registry!"}))
             self.finish()
 
         # Step 1: Find all endpoints which could connect from input_type to output_type
         endpoints = ah.api_endpoint_locator(input_uri, output_uri)
         if not endpoints:
             self.set_status(400)
-            self.write(json.dumps({"status": 400, "message": "No endpoints could be found to connect " + input_prefix + " to " + output_prefix + "!"}))
+            self.write(json.dumps({"status": 400, "error message": "No endpoints could be found to connect " + input_prefix + " to " + output_prefix + "!"}))
             self.finish()
         # Step 2: Make calls to all these API endpoints, and extract the output
         outputs = []
@@ -54,6 +54,6 @@ class DirectInput2OutputHandler(BaseHandler):
         # handle cases where no output could be extracted!
         else:
             self.set_status(400)
-            self.write(json.dumps({"status": 400, "message": "Endpoints could be located connecting " + input_prefix +
+            self.write(json.dumps({"status": 400, "error message": "Endpoints could be located connecting " + input_prefix +
                                    " to " + output_prefix + ". The endpoints are " + str(endpoints) +
                                    ". However, no output could be found using the endpoint!"}))
