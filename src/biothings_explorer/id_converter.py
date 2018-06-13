@@ -136,7 +136,7 @@ class IDConverter:
         results = defaultdict(list)
         for _synonym in synonyms:
             if target_type in _synonym:
-                _input = str(_synonym[input_type]).upper()
+                _input = str(_synonym[input_type]).split(':')[1].upper()
                 results[_input].append(_synonym[target_type])
         return results
 
