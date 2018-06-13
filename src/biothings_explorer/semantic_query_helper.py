@@ -24,6 +24,7 @@ class SemanticQueryHelper:
         return (prefix, value)
 
     async def fetch_async(self, input_type, endpoint_name, output_type, input_value, predicate=None):
+        print('currently working on {}'.format(endpoint_name))
         input_type = self.registry.prefix2uri(input_type)
         output_type = self.registry.prefix2uri(output_type)
         uri_value = {input_type: input_value}
@@ -43,9 +44,11 @@ class SemanticQueryHelper:
             predicate = predicate.replace('assoc:', 'http://biothings.io/explorer/vocab/objects/')
         try:
             response = await aiohttp.request('GET', api_call_params[0], params=api_call_params[1], headers={'Accept': 'application/json'})
+            print('current response: {}'.format(response))
+            json_response = await response.json()
         except:
-            return None
-        json_response = await response.json()
+            return []
+        
         json_response = self.ah.preprocess_json_doc(json_response, 1)
         final_results = []
         processed_input = self.ah.preprocessing_input(input_value, endpoint_name)
@@ -102,8 +105,9 @@ class SemanticQueryHelper:
         actual_paths = []
         for _path in potential_paths:
             if _path[0] in input_synonyms:
-                _path.append(input_synonyms[_path[0]])
+                _path.append(str(input_synonyms[_path[0]]))
                 actual_paths.append(_path)
+        print(actual_paths)
         # use actual paths to get output
         results = []
         """
@@ -126,7 +130,7 @@ class SemanticQueryHelper:
             output_synonyms = {output_curies: output_curies}
         for _result in results:
             if _result['input'].split(':')[0].lower() != input_prefix.lower():
-                _item = [{"input": input_prefix.upper() + ":" + input_value, "output": {'object': {'id': _result['input']}}, "predicate": "EquivalentAssociation", "endpoint": "biothings api"}, _result]
+                _item = [{"input": input_prefix.upper() + ":" + str(input_value), "output": {'object': {'id': _result['input']}}, "predicate": "EquivalentAssociation", "endpoint": "biothings api"}, _result]
             else:
                 _item = [_result]
             output_id = _result['output']['object']['id']
@@ -135,7 +139,7 @@ class SemanticQueryHelper:
             if output_id_prefix != output_prefix.lower() and output_id_value in output_synonyms:
                 output_synonyms_id = output_synonyms[output_id_value]
                 for _synonym in output_synonyms_id:
-                    _item.append({"input": output_id, "output": {'object': {'id': output_prefix.upper() + ":" + _synonym}}, 'predicate': "EquivalentAssociation"})             
+                    _item.append({"input": output_id, "output": {'object': {'id': output_prefix.upper() + ":" + str(_synonym)}}, 'predicate': "EquivalentAssociation"})             
                     final_results.append(_item)
             else:
                 final_results.append(_item)

@@ -24,7 +24,7 @@ FILE_PATHS = {
 }
 
 MYGENE_URI2SCOPE = {
-    "uniprot": "uniprot.Swiss-Prot",
+    "uniprot": "uniprot",
     "hgnc.symbol": "symbol",
     "hgnc": "hgnc",
     "omim.gene": "MIM",
@@ -35,7 +35,7 @@ MYGENE_URI2SCOPE = {
 }
 
 MYCHEM_URI2SCOPE = {
-    "inchikey": "pubchem.inchi_key",
+    "inchikey": "_id",
     "rxcui": "aeolus.drug_rxcui",
     "chebi": "chembl.chebi_par_id",
     "chembl.compound": "chembl.molecule_chembl_id",
@@ -57,5 +57,6 @@ MYDISEASE_URI2SCOPE = {
 }
 
 MYGENE_QUERY_JSONLD = dict((y,x) for x,y in MYGENE_URI2SCOPE.items())
+MYGENE_QUERY_JSONLD['uniprot.Swiss-Prot'] = "uniprot"
 MYDISEASE_QUERY_JSONLD = dict((y,x) for x,y in MYDISEASE_URI2SCOPE.items())
 MYCHEM_QUERY_JSONLD = dict((y,x) for x,y in MYCHEM_URI2SCOPE.items())
