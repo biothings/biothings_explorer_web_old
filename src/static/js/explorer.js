@@ -12,8 +12,9 @@ $(document).ready(function() {
     populateSelectInSideBar();
     DirectOutput2Graph();
     SemanticOutput2Graph();
-    $(".tabs").tabs();
     $(".try-explore-single-edge").click(function() {
+        $(".search-bar-header").show();
+        $("#main").hide();
         $(".search-bar").hide();
         $("#intro").hide();
         $(".landing-page").hide();
@@ -25,6 +26,8 @@ $(document).ready(function() {
         $("#path-plotly-div").hide();
     });
     $(".try-explore-semantic").click(function() {
+        $(".search-bar-header").show();
+        $("#main").hide();
         $(".search-bar").hide();
         $("#intro").hide();
         $(".landing-page").hide();

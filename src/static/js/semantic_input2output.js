@@ -50,7 +50,7 @@ function SemanticOutput2Graph(){
             var input_curie = input_prefix + ":" + _value;
             var node_dict = {}
             node_dict[input_curie] = 1;
-            var nodes = [{'id': 1, 'label': _value, 'title': node_title, 'font': {'color': 'red'}, 'group': 1}];
+            var nodes = [{'id': 1, 'label': _value, 'title': node_title, 'size': 15, 'font': {'color': 'red'}, 'group': 1}];
             var nodes_id = 2;
             var edges = [];
             results.forEach(function(_item) {
