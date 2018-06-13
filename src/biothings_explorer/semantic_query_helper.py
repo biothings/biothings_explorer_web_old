@@ -2,6 +2,7 @@ import asyncio
 import aiohttp
 import time
 from collections import defaultdict
+import json
 
 from .path_planner import PathPlanner
 from .api_registry_parser import RegistryParser
@@ -22,16 +23,24 @@ class SemanticQueryHelper:
         value = curie[len(prefix)+1:]
         return (prefix, value)
 
-    async def fetch_async(self, input_type, endpoint_name, output_type, input_value):
+    async def fetch_async(self, input_type, endpoint_name, output_type, input_value, predicate=None):
         input_type = self.registry.prefix2uri(input_type)
         output_type = self.registry.prefix2uri(output_type)
         uri_value = {input_type: input_value}
         api_call_params = self.ah.call_api(uri_value, endpoint_name)
-        predicate = self.nh.find_edge_label(endpoint_name, self.registry.bioentity_info[output_type]['preferred_name'])
-        if type(predicate) != list:
-            predicate = predicate.replace('assoc:', 'http://biothings.io/explorer/vocab/objects/')
+        if not predicate:
+            predicate = self.nh.find_edge_label(endpoint_name, self.registry.bioentity_info[output_type]['preferred_name'])
+            jsonld_context = self.registry.endpoint_info[endpoint_name]['jsonld_context']
+            with open(jsonld_context) as f:
+                data = f.read()
+                jsonld = json.loads(data)
+            context = self.ah.jh.fetch_properties_for_association_in_jsonld_context_file(jsonld, predicate)
+            if type(predicate) != list:
+                predicate = predicate.replace('assoc:', 'http://biothings.io/explorer/vocab/objects/')
+            else:
+                predicate = [_predicate.replace('assoc:', 'http://biothings.io/explorer/vocab/objects/') for _predicate in predicate]
         else:
-            predicate = [_predicate.replace('assoc:', 'http://biothings.io/explorer/vocab/objects/') for _predicate in predicate]
+            predicate = predicate.replace('assoc:', 'http://biothings.io/explorer/vocab/objects/')
         try:
             response = await aiohttp.request('GET', api_call_params[0], params=api_call_params[1], headers={'Accept': 'application/json'})
         except:
@@ -39,19 +48,23 @@ class SemanticQueryHelper:
         json_response = await response.json()
         json_response = self.ah.preprocess_json_doc(json_response, 1)
         final_results = []
+        processed_input = self.ah.preprocessing_input(input_value, endpoint_name)
         if type(predicate) != list:
             outputs = self.ah.extract_output(json_response, endpoint_name, output_type, predicate=predicate)
             for i in range(len(outputs)):
                 if outputs[i]:
-                    final_results.append({'input': (input_value, self.registry.bioentity_info[input_type]['preferred_name']), 'output': (outputs[i]),
-                                          'endpoint': endpoint_name, 'target': outputs[i][0]['object']['id']})
+                    for _output in outputs[i]:
+                        input_value = processed_input[i]
+                        input_curie = self.registry.bioentity_info[input_type]['preferred_name'].upper() + ':' + input_value
+                        final_results.append({'input': input_curie, 'context': context, 'output': _output, 'endpoint': endpoint_name, 'target': _output['object']['id'], 'predicate': predicate.split('/')[-1]})
         else:
             for _predicate in predicate:
                 outputs = self.ah.extract_output(valid_responses, endpoint_name, output_type, predicate=_predicate)
             for i in range(len(outputs)):
                 if outputs[i]:
-                    final_results.append({'input': (input_value, self.registry.bioentity_info[input_type]['preferred_name']), 'output': (outputs[i]),
-                                          'endpoint': endpoint_name, 'target': outputs[i][0]['object']['id']})
+                    input_value = processed_input[i]
+                    input_curie = self.registry.bioentity_info[input_type]['preferred_name'].upper() + ':' + input_value
+                    final_results.append({'input': input_curie, 'output': (outputs[i]), 'endpoint': endpoint_name, 'target': outputs[i][0]['object']['id'], 'predicate': predicate})
         return final_results
 
     async def asynchronous(self, paths):
@@ -79,6 +92,8 @@ class SemanticQueryHelper:
             input_synonyms = self.converter.find_gene_synonym(input_value, input_prefix)[0]
         elif input_semantic_type == 'chemical':
             input_synonyms = self.converter.find_chemical_synonym(input_value, input_prefix)[0]
+        elif input_semantic_type == 'disease':
+            input_synonyms = self.converter.find_disease_synonym(input_value, input_prefix)[0]
         else:
             input_synonyms = {input_prefix: input_value}
         # find all paths connecting input_semantic_type and output_semantic_type
@@ -99,6 +114,33 @@ class SemanticQueryHelper:
         done, _ = ioloop.run_until_complete(self.asynchronous(actual_paths))
         for fut in done:
             results+= fut.result()
+        final_results = []
+        output_curies = [_output['output']['object']['id'] for _output in results]
+        print('output curies: {}'.format(output_curies))
+        if output_semantic_type == 'gene':
+            output_synonyms = self.converter.convert_gene_ids_in_curies_in_batch(output_curies, output_prefix)
+        elif output_semantic_type == 'chemical':
+            output_synonyms = self.converter.convert_chemical_ids_in_curies_in_batch(output_curies, output_prefix)
+        elif output_semantic_type == 'disease':
+            output_synonyms = self.converter.convert_disease_ids_in_curies_in_batch(output_curies, output_prefix)
+        else:
+            output_synonyms = {output_prefix: output_curies}
+        print(output_synonyms)
+        for _result in results:
+            if _result['input'].split(':')[0].lower() != input_prefix.lower():
+                _item = [{"input": input_prefix.upper() + ":" + input_value, "output": {'object': {'id': _result['input']}}, "predicate": "EquivalentAssociation", "endpoint": "biothings api"}, _result]
+            else:
+                _item = [_result]
+            output_id = _result['output']['object']['id']
+            output_id_prefix = output_id.split(':')[0].lower()
+            output_id_value = output_id[len(output_id_prefix)+1:]
+            if output_id_prefix != output_prefix.lower() and output_id_value in output_synonyms:
+                output_synonyms_id = output_synonyms[output_id_value]
+                for _synonym in output_synonyms_id:
+                    _item.append({"input": output_id, "output": {'object': {'id': output_prefix.upper() + ":" + _synonym}}, 'predicate': "EquivalentAssociation"})             
+                    final_results.append(_item)
+            else:
+                final_results.append(_item)
         #ioloop.close()
         # align output
         """
@@ -114,4 +156,4 @@ class SemanticQueryHelper:
             res[prefix].append(value)
         """
 
-        return results
+        return final_results
