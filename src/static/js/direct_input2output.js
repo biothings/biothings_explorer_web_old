@@ -161,6 +161,8 @@ function drawInputOutputGraph(nodes, edges){
         align: 'middle'
       }
     },
+    physics: {barnesHut: {gravitationalConstant: 0,
+        centralGravity: 0, springConstant: 0}},
     layout:{randomSeed:3}
   };
   var network_semantic = new vis.Network(container, data, options);
