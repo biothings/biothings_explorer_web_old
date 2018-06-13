@@ -17,6 +17,7 @@ var NODES = []
 var EDGES = []
 var NODES_NO_INTERMEDIATE = []
 var EDGES_NO_INTERMEDIATE = []
+var EDGE_COLOR_DICT = {1: 'green', 2: 'blue', 3: 'red', 4: 'orange', 5: 'pink'}
 CURRENT_SELECTION = 'intermediate'
 function SemanticOutput2Graph(){
     $("#SemanticInput2OutputButton").click(function(){
@@ -54,6 +55,8 @@ function SemanticOutput2Graph(){
             var input_prefix = _input.toUpperCase();
             var input_curie = input_prefix + ":" + _value;
             var node_dict = {}
+            var nodes_no_intermediate_dict = {}
+            nodes_no_intermediate_dict[input_curie] = 1;
             node_dict[input_curie] = 1;
             NODES = [{'id': 1, 'label': _value, 'title': node_title, 'size': 15, 'font': {'color': 'red'}, 'group': 1}];
             var nodes_id = 2;
@@ -61,8 +64,17 @@ function SemanticOutput2Graph(){
             var nodes_no_intermediate_id = 2;
             EDGES = [];
             EDGES_NO_INTERMEDIATE = []
+            var endpoint_dict = {}
+            var endpoint_id = 1
             results.forEach(function(_item) {
                 _item.forEach(function(_result){
+                    var endpoint_name =  _result['endpoint']
+                    if (!(endpoint_name in endpoint_dict)){
+                        endpoint_dict[endpoint_name] = endpoint_id;
+                        endpoint_id += 1
+                    };
+                    var edge_color = EDGE_COLOR_DICT[endpoint_dict[endpoint_name]];
+                    console.log(edge_color);
                     node_label = _result['output']['object']['id'];
                     node_prefix = node_label.split(':')[0].toLowerCase();
                     if (node_prefix == _output){
@@ -90,11 +102,14 @@ function SemanticOutput2Graph(){
                         node_dict[node_label] = nodes_id;
                         nodes_id += 1; 
                     };
-                    EDGES.push({'from': source_node_id, 'to': node_dict[node_label], 'context': _result['context'], 'endpoint': _result['endpoint'], 'edge_info': edge_info, 'arrows': 'to', 'title': _result['predicate']});
+                    EDGES.push({'from': source_node_id, 'to': node_dict[node_label], 'context': _result['context'], 'color': {'color': edge_color}, 'endpoint': _result['endpoint'], 'edge_info': edge_info, 'arrows': 'to', 'title': _result['predicate']});
                     if (node_prefix == _output) {
-                        NODES_NO_INTERMEDIATE.push({'id': nodes_no_intermediate_id, 'object_info': _result['output']['object'], 'title': node_title, 'font': {'color': 'blue'}, 'label': node_value, 'group': node_group});
-                        EDGES_NO_INTERMEDIATE.push({'from': 1, 'to': nodes_no_intermediate_id, 'context': _result['context'], 'endpoint': _result['endpoint'], 'edge_info': edge_info, 'arrows': 'to', 'title': _result['predicate']});
-                        nodes_no_intermediate_id += 1;
+                        if (! (node_label in nodes_no_intermediate_dict)){
+                            NODES_NO_INTERMEDIATE.push({'id': nodes_no_intermediate_id, 'object_info': _result['output']['object'], 'title': node_title, 'font': {'color': 'blue'}, 'label': node_value, 'group': node_group});
+                            nodes_no_intermediate_dict[node_label] = nodes_no_intermediate_id;
+                            nodes_no_intermediate_id += 1
+                        } 
+                        EDGES_NO_INTERMEDIATE.push({'from': 1, 'to': nodes_no_intermediate_dict[node_label], 'context': _result['context'], 'endpoint': _result['endpoint'], 'edge_info': edge_info, 'arrows': 'to', 'title': _result['predicate']});
                     }
                 })
             });
@@ -159,7 +174,9 @@ function drawSemanticInputOutputGraph(nodes, edges){
     edges: {
         width:0.5,
         shadow: false,
-        color: 'grey',
+        color: {
+            inherit: false
+        },
       font: {
         size:8,
         align: 'middle'
