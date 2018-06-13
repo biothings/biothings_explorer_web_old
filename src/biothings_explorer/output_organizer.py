@@ -68,7 +68,7 @@ class OutputOrganizor:
         ======
         value
         """
-        return URI.split('/')[-1]
+        return URI.split('/')[-1].replace('$$$$', ':')
     
     def uri2value(self, URIs):
         """
