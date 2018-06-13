@@ -116,7 +116,6 @@ class SemanticQueryHelper:
             results+= fut.result()
         final_results = []
         output_curies = [_output['output']['object']['id'] for _output in results]
-        print('output curies: {}'.format(output_curies))
         if output_semantic_type == 'gene':
             output_synonyms = self.converter.convert_gene_ids_in_curies_in_batch(output_curies, output_prefix)
         elif output_semantic_type == 'chemical':
@@ -124,8 +123,7 @@ class SemanticQueryHelper:
         elif output_semantic_type == 'disease':
             output_synonyms = self.converter.convert_disease_ids_in_curies_in_batch(output_curies, output_prefix)
         else:
-            output_synonyms = {output_prefix: output_curies}
-        print(output_synonyms)
+            output_synonyms = {output_curies: output_curies}
         for _result in results:
             if _result['input'].split(':')[0].lower() != input_prefix.lower():
                 _item = [{"input": input_prefix.upper() + ":" + input_value, "output": {'object': {'id': _result['input']}}, "predicate": "EquivalentAssociation", "endpoint": "biothings api"}, _result]
