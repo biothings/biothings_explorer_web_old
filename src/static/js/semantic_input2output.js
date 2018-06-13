@@ -13,6 +13,11 @@ function retrieveSemanticOutput(input_prefix, input_value, output_prefix){
   return promise;
 };
 
+var NODES = []
+var EDGES = []
+var NODES_NO_INTERMEDIATE = []
+var EDGES_NO_INTERMEDIATE = []
+CURRENT_SELECTION = 'intermediate'
 function SemanticOutput2Graph(){
     $("#SemanticInput2OutputButton").click(function(){
         $(".search-bar-header").hide();
@@ -50,9 +55,12 @@ function SemanticOutput2Graph(){
             var input_curie = input_prefix + ":" + _value;
             var node_dict = {}
             node_dict[input_curie] = 1;
-            var nodes = [{'id': 1, 'label': _value, 'title': node_title, 'size': 15, 'font': {'color': 'red'}, 'group': 1}];
+            NODES = [{'id': 1, 'label': _value, 'title': node_title, 'size': 15, 'font': {'color': 'red'}, 'group': 1}];
             var nodes_id = 2;
-            var edges = [];
+            NODES_NO_INTERMEDIATE = [{'id': 1, 'label': _value, 'title': node_title, 'size': 15, 'font': {'color': 'red'}, 'group': 1}];
+            var nodes_no_intermediate_id = 2;
+            EDGES = [];
+            EDGES_NO_INTERMEDIATE = []
             results.forEach(function(_item) {
                 _item.forEach(function(_result){
                     node_label = _result['output']['object']['id'];
@@ -78,14 +86,29 @@ function SemanticOutput2Graph(){
                     }
                     edge_info['predicate'] = _result['predicate'];
                     if (! (node_label in node_dict)){
-                        nodes.push({'id': nodes_id, 'object_info': _result['output']['object'], 'title': node_title, 'font': {'color': 'blue'}, 'label': node_value, 'group': node_group});
+                        NODES.push({'id': nodes_id, 'object_info': _result['output']['object'], 'title': node_title, 'font': {'color': 'blue'}, 'label': node_value, 'group': node_group});
                         node_dict[node_label] = nodes_id;
                         nodes_id += 1; 
                     };
-                    edges.push({'from': source_node_id, 'to': node_dict[node_label], 'context': _result['context'], 'endpoint': _result['endpoint'], 'edge_info': edge_info, 'arrows': 'to', 'title': _result['predicate']})
+                    EDGES.push({'from': source_node_id, 'to': node_dict[node_label], 'context': _result['context'], 'endpoint': _result['endpoint'], 'edge_info': edge_info, 'arrows': 'to', 'title': _result['predicate']});
+                    if (node_prefix == _output) {
+                        NODES_NO_INTERMEDIATE.push({'id': nodes_no_intermediate_id, 'object_info': _result['output']['object'], 'title': node_title, 'font': {'color': 'blue'}, 'label': node_value, 'group': node_group});
+                        EDGES_NO_INTERMEDIATE.push({'from': 1, 'to': nodes_no_intermediate_id, 'context': _result['context'], 'endpoint': _result['endpoint'], 'edge_info': edge_info, 'arrows': 'to', 'title': _result['predicate']});
+                        nodes_no_intermediate_id += 1;
+                    }
                 })
             });
-            drawInputOutputGraph(new vis.DataSet(nodes), new vis.DataSet(edges));
+            drawSemanticInputOutputGraph(new vis.DataSet(NODES), new vis.DataSet(EDGES));
+            switchController();
+            /**
+            if (! ($("#intermediate").checked)) {
+                console.log('intermediate set to false!')
+                drawInputOutputGraph(new vis.DataSet(nodes_no_intermediate), new vis.DataSet(edges_no_intermediate))
+            } else {
+                console.log('intermediate set to true!')
+                drawInputOutputGraph(new vis.DataSet(nodes), new vis.DataSet(edges));
+            }
+            **/
         }).fail(function (err) {
             $(".progress").hide();
             $(".mainview").hide();
@@ -94,3 +117,86 @@ function SemanticOutput2Graph(){
     })
 }
 
+function switchController() {
+    $("#intermediate").change(function() {
+        if($(this).is(":checked") && CURRENT_SELECTION != 'intermediate') {
+            CURRENT_SELECTION = 'intermediate';
+            drawSemanticInputOutputGraph(new vis.DataSet(NODES), new vis.DataSet(EDGES));
+        }
+        else if (!$(this).is(":checked")) {
+            drawSemanticInputOutputGraph(new vis.DataSet(NODES_NO_INTERMEDIATE), new vis.DataSet(EDGES_NO_INTERMEDIATE));
+            CURRENT_SELECTION = 'non-intermediate'
+        }
+    })
+    /*
+    if ($("#intermediate").attr('checked') == 'checked' ) {
+        console.log('checked!');
+        
+    } else if ($("#intermediate").attr('checked') != 'checked') {
+        console.log('unchecked!')
+        
+    }
+    */
+}
+
+function drawSemanticInputOutputGraph(nodes, edges){
+  // create a network
+  var container = document.getElementById('cy');
+  var data = {
+    nodes: nodes,
+    edges: edges
+  };
+  var options = {
+    nodes: {
+        shape: 'dot',
+        size: 5,
+        font: {
+            size:7
+        },
+        borderWidth:1,
+        shadow: false
+    },
+    edges: {
+        width:0.5,
+        shadow: false,
+        color: 'grey',
+      font: {
+        size:8,
+        align: 'middle'
+      }
+    },
+    physics: {barnesHut: {gravitationalConstant: 0,
+        centralGravity: 0, springConstant: 0}},
+    layout:{randomSeed:3}
+  };
+  var network_semantic = new vis.Network(container, data, options);
+  network_semantic.on("click", function(params) {
+    $(".tabs").tabs();
+    var clicked_node_id = params.nodes;
+    var clicked_edge_id = params.edges;
+    var instance = M.Tabs.getInstance($(".tabs"));
+    if (clicked_node_id.length > 0) {
+        $("#edge_info").empty();
+        $("#node_info").empty();
+        var node_info = nodes.get(params.nodes)[0]['object_info'];
+        var node_message = generateNodeTable(node_info);
+        $("#node_info").html(node_message);
+        instance.select('node_info');
+    } else {
+        $("#node_info").empty();
+        $("#edge_info").empty();
+        var target_node_id = edges.get(params.edges)[0]['to'];
+        var node_info = nodes.get(target_node_id)['object_info'];
+        var node_message = generateNodeTable(node_info);
+        var edge_info = edges.get(params.edges)[0]['edge_info'];
+        var endpoint_info = edges.get(params.edges)[0]['endpoint'];
+        var edge_message = generateEdgeTable(endpoint_info, edge_info);
+        var context_message = generateNodeTable(edges.get(params.edges)[0]['context'])
+        $("#edge_info").html(edge_message);
+        $("#node_info").html(node_message);
+        $("#context_info").html(context_message);
+        instance.select('edge_info');
+    };
+  });
+  switchController();
+};
