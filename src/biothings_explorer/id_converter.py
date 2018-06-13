@@ -7,7 +7,7 @@ from .config import MYGENE_URI2SCOPE, MYCHEM_URI2SCOPE, MYDISEASE_URI2SCOPE, MYG
 class IDConverter:
     def __init__(self):
         self.mygene_params_template = 'q={input_value}&scopes={input_type}&fields=symbol,entrezgene,MIM,uniprot.Swiss-Prot,ensembl.gene,ensembl.protein,ensembl.transcript&dotfield=True&species=human'
-        self.mychem_params_template = 'q={input_value}&scopes={input_type}&fields=drugbank.name,pubchem.inchikey,aeolus.drug_rxcui,chembl.chebi_par_id,chembl.molecule_chembl_id,drugbank.drugbank_id,drugbank.iuphar,drugbank.kegg_drug,drugbank.kegg_compound,drugbank.pubchem_compound,unii.unii,chebi.inchi&dotfield=True'
+        self.mychem_params_template = 'q={input_value}&scopes={input_type}&fields=drugbank.name,pubchem.inchi_key,aeolus.drug_rxcui,chembl.chebi_par_id,chembl.molecule_chembl_id,drugbank.drugbank_id,drugbank.iuphar,drugbank.kegg_drug,drugbank.kegg_compound,drugbank.pubchem_compound,unii.unii,chebi.inchi&dotfield=True'
         self.mydisease_params_template = 'q={input_value}&scopes={input_type}&fields=mondo.xrefs&dotfield=true'
         self.mygene_url = 'http://mygene.info/v3/query'
         self.mychem_url = 'http://mychem.info/v1/query'
