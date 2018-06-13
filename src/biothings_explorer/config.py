@@ -35,7 +35,7 @@ MYGENE_URI2SCOPE = {
 }
 
 MYCHEM_URI2SCOPE = {
-    "inchikey": "pubchem.inchikey",
+    "inchikey": "pubchem.inchi_key",
     "rxcui": "aeolus.drug_rxcui",
     "chebi": "chembl.chebi_par_id",
     "chembl.compound": "chembl.molecule_chembl_id",
