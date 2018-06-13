@@ -107,7 +107,6 @@ class SemanticQueryHelper:
             if _path[0] in input_synonyms:
                 _path.append(str(input_synonyms[_path[0]]))
                 actual_paths.append(_path)
-        print(actual_paths)
         # use actual paths to get output
         results = []
         """
@@ -120,6 +119,7 @@ class SemanticQueryHelper:
             results+= fut.result()
         final_results = []
         output_curies = [_output['output']['object']['id'] for _output in results]
+        print('output_curies {}'.format(output_curies))
         if output_semantic_type == 'gene':
             output_synonyms = self.converter.convert_gene_ids_in_curies_in_batch(output_curies, output_prefix)
         elif output_semantic_type == 'chemical':
@@ -127,7 +127,10 @@ class SemanticQueryHelper:
         elif output_semantic_type == 'disease':
             output_synonyms = self.converter.convert_disease_ids_in_curies_in_batch(output_curies, output_prefix)
         else:
-            output_synonyms = {output_curies: output_curies}
+            output_synonyms = {}
+            for _curie in output_curies:
+                output_synonyms.update({_curie: _curie})
+        print(output_synonyms)
         for _result in results:
             if _result['input'].split(':')[0].lower() != input_prefix.lower():
                 _item = [{"input": input_prefix.upper() + ":" + str(input_value), "output": {'object': {'id': _result['input']}}, "predicate": "EquivalentAssociation", "endpoint": "biothings api"}, _result]
@@ -139,7 +142,7 @@ class SemanticQueryHelper:
             if output_id_prefix != output_prefix.lower() and output_id_value in output_synonyms:
                 output_synonyms_id = output_synonyms[output_id_value]
                 for _synonym in output_synonyms_id:
-                    _item.append({"input": output_id, "output": {'object': {'id': output_prefix.upper() + ":" + str(_synonym)}}, 'predicate': "EquivalentAssociation"})             
+                    _item.append({"input": output_id, "output": {'object': {'id': output_prefix.upper() + ":" + str(_synonym)}}, 'predicate': "EquivalentAssociation", 'endpoint': "biothings api"})             
                     final_results.append(_item)
             else:
                 final_results.append(_item)
