@@ -11,6 +11,7 @@ $(document).ready(function() {
     $(".search-bar").hide();
     populateSelectInSideBar();
     DirectOutput2Graph();
+    SemanticOutput2Graph();
     $(".tabs").tabs();
     $(".try-explore-single-edge").click(function() {
         $(".search-bar").hide();
@@ -23,35 +24,9 @@ $(document).ready(function() {
         $(".crawler-header").show();
         $("#path-plotly-div").hide();
     });
-    $(".try-explore-input").click(function() {
-        $(".search-bar").hide();
-        $("#main-menu").hide();
-        $(".landing-page").hide();
-        $(".page-footer").hide();
-        //recenter the search bar and show header
-        $(".input-search-bar").show();
-        $(".input-search-bar").addClass("search-bar-center");
-        $(".input-search-bar").removeClass("search-bar-top");
-        $(".crawler-header").show();
-        // hide the ploty graph display
-        $("#path-plotly-div").hide();
-    });
-    $(".try-explore-output").click(function() {
-        $(".search-bar").hide();
-        $("#main-menu").hide();
-        $(".landing-page").hide();
-        $(".page-footer").hide();
-        //recenter the search bar and show header
-        $(".output-search-bar").show();
-        $(".output-search-bar").addClass("search-bar-center");
-        $(".output-search-bar").removeClass("search-bar-top");
-        $(".crawler-header").show();
-        // hide the ploty graph display
-        $("#path-plotly-div").hide();
-    });
     $(".try-explore-semantic").click(function() {
         $(".search-bar").hide();
-        $("#main-menu").hide();
+        $("#intro").hide();
         $(".landing-page").hide();
         $(".page-footer").hide();
         //recenter the search bar and show header
