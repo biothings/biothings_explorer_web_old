@@ -91,6 +91,7 @@ class Application(tornado.web.Application):
             (r"/explorer/api/v2/output", ConnectingOutputHandler),
             (r"/explorer/api/v2/endpoint", EndpointHandler),
             (r"/explorer/api/v2/knowledgemap", KnowledgeMap),
+            (r"/explorer/api/v2/apigraph", KnowledgeMap),
             (r"/explorer/api/v1/path", KnowledgeMapPath),
             (r"/explorer/api/v2/metadata/([^/]+)", MetaDataHandler),
             (r"/explorer/api/v2/findpath", KnowledgeMapPath),
@@ -98,6 +99,7 @@ class Application(tornado.web.Application):
             (r"/explorer/api/v2/directoutput", DirectPathHandler),
             (r"/explorer/api/v2/findsynonym", SynonymHandler),
             (r"/explorer/api/v2/directinput2output", DirectInput2OutputHandler),
+            (r"/explorer/api/v2/findsingleedge", DirectInput2OutputHandler),
             (r"/explorer/api/v2/semanticquery", QuerySemanticsHandler),
             (r"/explorer/api/v2/connectsemantictype", ConnectingSemanticTypesHandler)
         ]
