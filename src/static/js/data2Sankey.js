@@ -4,7 +4,7 @@
 */
 function displayInput() {
 	$("#input-search-button").click(function(){
-        console.log('input-search-button clicked!');
+        $("#DownloadCodeButton").show();
 		_input = $("#select-input").find("option:selected").attr('value');
 		findOutputTypeBasedOnInputType(_input).done(function(jsonResponse){
 	    	drawSankeyPlot(jsonResponse, type='path');
@@ -22,7 +22,7 @@ function displayInput() {
 */
 function displayOutput() {
     $("#output-search-button").click(function(){
-        console.log("output-search-button clicked!");
+        $("#DownloadCodeButton").show();
         _output = $("#select-output").find("option:selected").attr('value');
         findInputTypeBasedOnOutputType(_output).done(function(jsonResponse){
             drawSankeyPlot(jsonResponse, type='path');
@@ -40,6 +40,7 @@ function displayOutput() {
 */
 function displayEndpoint() {
     $("#endpoint-search-button").click(function(){
+        $("#DownloadCodeButton").show();
         _endpoint = $("#select-endpoint").find("option:selected").attr('value');
         findInputOutputBasedOnEndpoint(_endpoint).done(function(jsonResponse){
             drawSankeyPlot(jsonResponse, type='path');
@@ -57,6 +58,7 @@ function displayEndpoint() {
 */
 function displaySemanticType() {
     $("#semantic-search-button").click(function(){
+        $("#DownloadCodeButton").show();
         _input = $("#select-semantic-input").find("option:selected").attr('value');
         _output = $("#select-semantic-output").find("option:selected").attr('value');
         findPathBetweenTwoSemanticTypes(_input, _output).done(function(jsonResponse){

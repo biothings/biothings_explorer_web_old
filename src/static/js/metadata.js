@@ -2,6 +2,8 @@ $(document).ready(function() {
     $("#path-plotly-div").hide();
 	$(".search-bar-center").hide();
     $(".search-bar-top").hide();
+    $('.tooltipped').tooltip();
+    $("#DownloadCodeButton").hide();
     var elems = document.querySelectorAll('.sidenav');
 	var instances = M.Sidenav.init(elems);
     var instance = M.Sidenav.getInstance($("#slide-out"));
