@@ -66,6 +66,15 @@ function construct_semantic_connect_text(_input, _output) {
     return final_string
 };
 
+function construct_directinput2output_text(_input, _value, _output) {
+    var final_string = COMMENT_LINE + '#This code is for finding the output "{output}" which can be connected from {input}:{input_value}\n'.replace('{input}', _input).replace('{output}', _output).replace('{input_value', _value) + COMMENT_LINE + REQUEST_LINE + COMMENT_CALL_BIOTHINGS
+    var query = "doc = requests.get('http://biothings.io/explorer/api/v2/directinput2output', params={'input_prefix': '{input}', 'output_prefix': '{output}', 'input_value': '{input_value}'})\n"
+    final_string += query.replace('{input}', _input).replace('{input}', _input).replace('{output}', _output).replace('{input_value', _value)
+    final_string += COMMENT_EXTRACT_JSON
+    final_string += EXTRACT_JSON_LINE
+    return final_string
+};
+
     function dynamic_text(_input, _output) {
 	    var final_string = IMPORT_LINE + INITIATE_LINE + DEFINE_PATH_LINE.replace('input_id', _input).replace('output_id', _output) + FIND_PATH_LINE.replace('input_id', _input).replace('output_id', _output);
 	    console.log(final_string);
