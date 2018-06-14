@@ -40,6 +40,7 @@ function DirectOutput2Graph(){
     	retrieveDirectOutput(_input, _value, _output).done(function(jsonResonse){
             $(".progress").hide();
             $(".mainview").show();
+
     		var results = jsonResonse.data;
             var node_title = 'prefix: ' + _input;
     		var nodes = [{'id': 1, 'label': _value, 'title': node_title, 'font': {'color': 'red'}, 'group': 1}];
@@ -59,7 +60,12 @@ function DirectOutput2Graph(){
                 nodes_id += 1;
     		});
             drawInputOutputGraph(new vis.DataSet(nodes), new vis.DataSet(edges));
+            $("#DownloadCodeButton").show();
+            $("#DownloadCodeButton").click(function() {
+                download_file('bt_explorer_code_directinput2output.py', construct_directinput2output_text(_input, _value, _output), 'text/plain');
+            });
     	}).fail(function (err) {
+            $("#DownloadCodeButton").hide();
             $(".progress").hide();
             $(".mainview").hide();
             $("#error-message").html('<h2 class="center">' + err.responseJSON['error message'].replace('\n', '<br />') + '</h2>')

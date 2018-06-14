@@ -9,6 +9,7 @@ $(document).ready(function() {
     //initialize, make the main graph section invisible
     $("#main").hide();
     $(".search-bar").hide();
+    $("#DownloadCodeButton").hide();
     populateSelectInSideBar();
     DirectOutput2Graph();
     SemanticOutput2Graph();
