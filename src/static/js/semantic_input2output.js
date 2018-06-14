@@ -117,6 +117,10 @@ function SemanticOutput2Graph(){
             });
             drawSemanticInputOutputGraph(new vis.DataSet(NODES), new vis.DataSet(EDGES));
             switchController();
+            $("#DownloadCodeButton").show();
+            $("#DownloadCodeButton").click(function() {
+                download_file('bt_explorer_code_semanticinput2output.py', construct_semanticinput2output_text(_input, _value, _output), 'text/plain');
+            });
             /**
             if (! ($("#intermediate").checked)) {
                 console.log('intermediate set to false!')
