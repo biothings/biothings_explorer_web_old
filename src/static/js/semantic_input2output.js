@@ -17,7 +17,7 @@ var NODES = []
 var EDGES = []
 var NODES_NO_INTERMEDIATE = []
 var EDGES_NO_INTERMEDIATE = []
-var EDGE_COLOR_DICT = {1: 'green', 2: 'blue', 3: 'red', 4: 'orange', 5: 'pink'}
+var EDGE_COLOR_DICT = {1: 'green', 2: 'blue', 3: 'red', 4: 'pink', 5: 'yellow'}
 CURRENT_SELECTION = 'intermediate'
 function SemanticOutput2Graph(){
     $("#SemanticInput2OutputButton").click(function(){
