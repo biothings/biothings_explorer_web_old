@@ -10,6 +10,7 @@ $(document).ready(function() {
     $("#main").hide();
     $(".search-bar").hide();
     $("#DownloadCodeButton").hide();
+    $('.tooltipped').tooltip();
     populateSelectInSideBar();
     DirectOutput2Graph();
     SemanticOutput2Graph();
