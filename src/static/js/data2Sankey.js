@@ -4,10 +4,13 @@
 */
 function displayInput() {
 	$("#input-search-button").click(function(){
-        $("#DownloadCodeButton").show();
 		_input = $("#select-input").find("option:selected").attr('value');
 		findOutputTypeBasedOnInputType(_input).done(function(jsonResponse){
 	    	drawSankeyPlot(jsonResponse, type='path');
+            $("#DownloadCodeButton").show();
+            $("#DownloadCodeButton").click(function() {
+                download_file('bt_explorer_code_input.py', construct_input_text(_input), 'text/plain');
+            });
 		}).catch(function (err) {
             $("#DownloadCodeButton").hide();
             Plotly.purge('path-plotly');
@@ -23,9 +26,12 @@ function displayInput() {
 */
 function displayOutput() {
     $("#output-search-button").click(function(){
-        $("#DownloadCodeButton").show();
         _output = $("#select-output").find("option:selected").attr('value');
         findInputTypeBasedOnOutputType(_output).done(function(jsonResponse){
+            $("#DownloadCodeButton").show();
+            $("#DownloadCodeButton").click(function() {
+                download_file('bt_explorer_code_output.py', construct_output_text(_output), 'text/plain');
+            });
             drawSankeyPlot(jsonResponse, type='path');
         }).catch(function (err) {
             $("#DownloadCodeButton").hide();
@@ -42,9 +48,12 @@ function displayOutput() {
 */
 function displayEndpoint() {
     $("#endpoint-search-button").click(function(){
-        $("#DownloadCodeButton").show();
         _endpoint = $("#select-endpoint").find("option:selected").attr('value');
         findInputOutputBasedOnEndpoint(_endpoint).done(function(jsonResponse){
+            $("#DownloadCodeButton").show();
+            $("#DownloadCodeButton").click(function() {
+                download_file('bt_explorer_code_endpoint.py', construct_endpoint_text(_endpoint), 'text/plain');
+            });
             drawSankeyPlot(jsonResponse, type='path');
         }).catch(function (err) {
             $("#DownloadCodeButton").hide();
@@ -61,11 +70,14 @@ function displayEndpoint() {
 */
 function displaySemanticType() {
     $("#semantic-search-button").click(function(){
-        $("#DownloadCodeButton").show();
         _input = $("#select-semantic-input").find("option:selected").attr('value');
         _output = $("#select-semantic-output").find("option:selected").attr('value');
         findPathBetweenTwoSemanticTypes(_input, _output).done(function(jsonResponse){
             drawSankeyPlot(jsonResponse, type='path');
+            $("#DownloadCodeButton").show();
+            $("#DownloadCodeButton").click(function() {
+                download_file('bt_explorer_code_semantic_connect.py', construct_semantic_connect_text(_input, _output), 'text/plain');
+            });
         }).catch(function (err) {
             $("#DownloadCodeButton").hide();
             Plotly.purge('path-plotly');
