@@ -71,6 +71,7 @@ $(document).ready(function() {
     //related to the user request
     displaySankeyBasedOnUserSelect();
     $("#metadata-header").click(function() {
+        $("#DownloadCodeButton").hide();
         $(".landing-page").show();
         $("#main-menu").show();
         $(".page-footer").show();
