@@ -14,6 +14,7 @@ $(document).ready(function() {
     DirectOutput2Graph();
     SemanticOutput2Graph();
     $(".try-explore-single-edge").click(function() {
+        $(".intermediate-switch").hide();
         $(".search-bar-header").show();
         $("#main").hide();
         $(".search-bar").hide();

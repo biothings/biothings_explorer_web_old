@@ -21,6 +21,7 @@ var EDGE_COLOR_DICT = {1: 'green', 2: 'blue', 3: 'red', 4: 'orange', 5: 'pink'}
 CURRENT_SELECTION = 'intermediate'
 function SemanticOutput2Graph(){
     $("#SemanticInput2OutputButton").click(function(){
+        $(".intermediate-switch").hide();
         $(".search-bar-header").hide();
         $("#intro").hide();
         $(".landing-page").hide();
@@ -48,6 +49,7 @@ function SemanticOutput2Graph(){
         var _output = $("#semantic-output").find("option:selected").attr('value');
         var _value = $("#semantic_input_value").val();
     	retrieveSemanticOutput(_input, _value, _output).done(function(jsonResonse){
+            $(".intermediate-switch").show();
             $(".progress").hide();
             $(".mainview").show();
             var results = jsonResonse.data;
