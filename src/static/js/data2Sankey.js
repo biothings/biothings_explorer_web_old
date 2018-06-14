@@ -9,6 +9,7 @@ function displayInput() {
 		findOutputTypeBasedOnInputType(_input).done(function(jsonResponse){
 	    	drawSankeyPlot(jsonResponse, type='path');
 		}).catch(function (err) {
+            $("#DownloadCodeButton").hide();
             Plotly.purge('path-plotly');
             $("#path-plotly-div").show();
             $("#error-message").html('<h2 class="center">' + err.responseJSON['error message'].replace('\n', '<br />') + '</h2>')
@@ -27,6 +28,7 @@ function displayOutput() {
         findInputTypeBasedOnOutputType(_output).done(function(jsonResponse){
             drawSankeyPlot(jsonResponse, type='path');
         }).catch(function (err) {
+            $("#DownloadCodeButton").hide();
             Plotly.purge('path-plotly');
             $("#path-plotly-div").show();
             $("#error-message").html('<h2 class="center">' + err.responseJSON['error message'].replace('\n', '<br />') + '</h2>')
@@ -45,6 +47,7 @@ function displayEndpoint() {
         findInputOutputBasedOnEndpoint(_endpoint).done(function(jsonResponse){
             drawSankeyPlot(jsonResponse, type='path');
         }).catch(function (err) {
+            $("#DownloadCodeButton").hide();
             Plotly.purge('path-plotly');
             $("#path-plotly-div").show();
             $("#error-message").html('<h2 class="center">' + err.responseJSON['error message'].replace('\n', '<br />') + '</h2>')
@@ -64,6 +67,7 @@ function displaySemanticType() {
         findPathBetweenTwoSemanticTypes(_input, _output).done(function(jsonResponse){
             drawSankeyPlot(jsonResponse, type='path');
         }).catch(function (err) {
+            $("#DownloadCodeButton").hide();
             Plotly.purge('path-plotly');
             $("#path-plotly-div").show();
             $("#error-message").html('<h2 class="center">' + err.responseJSON['error message'].replace('\n', '<br />') + '</h2>')
