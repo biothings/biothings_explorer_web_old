@@ -264,7 +264,7 @@ class JSONLDHelper:
 
     def fetch_properties_by_association_and_prefix_in_nquads(self, nquads, association, prefix):
         association_results = self.fetch_properties_by_association_in_nquads(nquads, [association])
-        association_and_prefix_results = [_doc for _doc in association_results[association] if _doc['http://biothings.io/explorer/vocab/attributes/id'][0].startswith(prefix)]
+        association_and_prefix_results = [_doc for _doc in association_results[association] if 'http://biothings.io/explorer/vocab/attributes/id' in _doc and _doc['http://biothings.io/explorer/vocab/attributes/id'][0].startswith(prefix)]
         return association_and_prefix_results
 
     def locate_association_in_jsonld_context_file(self, jsonld_context, association):
