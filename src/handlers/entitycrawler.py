@@ -1,6 +1,6 @@
 #import requests
 import asyncio
-import aiohttp
+from aiohttp import ClientSession
 import time
 from collections import defaultdict
 import json
@@ -22,7 +22,7 @@ from config import crawler_log_file
 logger = logging.getLogger('entitycrawler')
 logger.setLevel(logging.DEBUG)
 logger_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logger_handler = logging.FileHandler(crawler_log_file, mode='w')
+logger_handler = logging.FileHandler(crawler_log_file)
 logger_handler.setLevel(logging.DEBUG)
 logger_handler.setFormatter(logger_formatter)
 logger.addHandler(logger_handler)
@@ -42,19 +42,20 @@ def find_endpoint(input_type):
     """
     return list(bt_explorer.api_map.successors(input_type))
 
-async def get_json_helper(_endpoint, input_type, input_value):
+async def get_json_helper(_endpoint, input_type, input_value, session):
     api_call_params = bt_explorer.apiCallHandler.call_api({input_type: input_value}, _endpoint)
     try:
         #logger.info('Start making API calls to {}'.format(_endpoint))
-        response = await aiohttp.request('GET', api_call_params[0], params=api_call_params[1], headers={'Accept': 'application/json'})
+        async with session.get(api_call_params[0], params=api_call_params[1], headers={'Accept': 'application/json'}) as response:
+            json_response = await response.json()
+            data = bt_explorer.apiCallHandler.preprocess_json_doc(json_response, _endpoint)
+            return {'endpoint': _endpoint, 'data': data}
     except:
         return {'endpoint': _endpoint, 'data': {}}
     #response = requests.get(params[0], params=params[1], headers={'Accept': 'application/json'})
     #if response.status_code == 200:
     #logger.info('Start get json output from {}'.format(_endpoint))
-    json_response = await response.json()
-    data = bt_explorer.apiCallHandler.preprocess_json_doc(json_response, _endpoint)
-    return {'endpoint': _endpoint, 'data': data}
+    
 
 async def get_json(endpoints, input_type, input_value):
     """
@@ -69,9 +70,10 @@ async def get_json(endpoints, input_type, input_value):
     # this code transform prefix to URI
     input_type = bt_explorer.registry.prefix2uri(input_type)
     start = time.time()
-    tasks = [asyncio.ensure_future(get_json_helper(_endpoint, input_type, input_value)) for _endpoint in endpoints]
-    results = await asyncio.wait(tasks)
-    logger.info("Fetching json docs took: {:.2f} seconds".format(time.time() - start))
+    async with ClientSession() as session:
+        tasks = [asyncio.ensure_future(get_json_helper(_endpoint, input_type, input_value, session)) for _endpoint in endpoints]
+        results = await asyncio.gather(*tasks)
+        logger.info("Fetching json docs took: {:.2f} seconds".format(time.time() - start))
     return results
     """
     # construct API calls for each endpoint, organize them into a list
@@ -151,13 +153,10 @@ def exploreinput(input_type, input_value):
     This part use asyncio libary to asynchronously extract
     all the JSON outputs from individual API calls
     """
+    logger.info('Crawler takes input %s: %s', input_type, input_value)
     endpoints = find_endpoint(input_type)
     ioloop = asyncio.get_event_loop()
-    done, _ = ioloop.run_until_complete(get_json(endpoints, input_type, input_value))
-    json_docs = []
-    for fut in done:
-        #logger.info(fut.result())
-        json_docs.append(fut.result())
+    json_docs = ioloop.run_until_complete(get_json(endpoints, input_type, input_value))
     ###################################################################
     """
     This part add JSON-LD context file to individual JSON document
@@ -182,6 +181,7 @@ def exploreinput(input_type, input_value):
     start = time.time()
     endpoints = [_json['endpoint'] for _json in json_docs]
     # convert a list of jsonld documents to nquads documents
+    # this is the slowest step in the process
     nquads_list = jh.jsonld2nquads(jsonld_docs)
     logger.info("Converting jsonld docs to nquads docs took: {:.2f} seconds".format(time.time() - start))
     outputs = defaultdict(list)
