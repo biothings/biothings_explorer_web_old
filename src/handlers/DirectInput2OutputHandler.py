@@ -77,6 +77,8 @@ class DirectInput2OutputHandler(BaseHandler):
                 for _output in outputs:
                     reorganized_outputs['edge_list'].append({'source_id': _output['input'],
                                                              'target_id': _output['target'],
+                                                             'type': DictQuery(_output).get("predicate"),
+                                                             'api': DictQuery(_output).get("endpoint"),
                                                              'publications': DictQuery(_output).get("output/edge/publication"),
                                                              'provided_by': DictQuery(_output).get("output/edge/provided_by"),
                                                              'relation': DictQuery(_output).get("output/edge/label"),
