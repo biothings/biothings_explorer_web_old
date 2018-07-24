@@ -14,6 +14,18 @@ from biothings_explorer.jsonld_processor import JSONLDHelper
 from biothings_explorer.utils import property_uri_2_prefix_dict
 from biothings_explorer.output_organizer import OutputOrganizor
 from .basehandler import BaseHandler
+import logging
+import os,sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+from config import crawler_log_file
+
+logger = logging.getLogger('entitycrawler')
+logger.setLevel(logging.DEBUG)
+logger_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger_handler = logging.FileHandler(crawler_log_file, mode='w')
+logger_handler.setLevel(logging.DEBUG)
+logger_handler.setFormatter(logger_formatter)
+logger.addHandler(logger_handler)
 
 #requests_cache.install_cache('biothings_cache', backend='sqlite', expire_after=36000)
 bt_explorer = BioThingsExplorer()
@@ -33,13 +45,13 @@ def find_endpoint(input_type):
 async def get_json_helper(_endpoint, input_type, input_value):
     api_call_params = bt_explorer.apiCallHandler.call_api({input_type: input_value}, _endpoint)
     try:
-        print('Start making API calls to {}'.format(_endpoint))
+        #logger.info('Start making API calls to {}'.format(_endpoint))
         response = await aiohttp.request('GET', api_call_params[0], params=api_call_params[1], headers={'Accept': 'application/json'})
     except:
         return {'endpoint': _endpoint, 'data': {}}
     #response = requests.get(params[0], params=params[1], headers={'Accept': 'application/json'})
     #if response.status_code == 200:
-    print('Start get json output from {}'.format(_endpoint))
+    #logger.info('Start get json output from {}'.format(_endpoint))
     json_response = await response.json()
     data = bt_explorer.apiCallHandler.preprocess_json_doc(json_response, _endpoint)
     return {'endpoint': _endpoint, 'data': data}
@@ -59,7 +71,7 @@ async def get_json(endpoints, input_type, input_value):
     start = time.time()
     tasks = [asyncio.ensure_future(get_json_helper(_endpoint, input_type, input_value)) for _endpoint in endpoints]
     results = await asyncio.wait(tasks)
-    print("Process took: {:.2f} seconds".format(time.time() - start))
+    logger.info("Fetching json docs took: {:.2f} seconds".format(time.time() - start))
     return results
     """
     # construct API calls for each endpoint, organize them into a list
@@ -144,11 +156,13 @@ def exploreinput(input_type, input_value):
     done, _ = ioloop.run_until_complete(get_json(endpoints, input_type, input_value))
     json_docs = []
     for fut in done:
+        #logger.info(fut.result())
         json_docs.append(fut.result())
     ###################################################################
     """
     This part add JSON-LD context file to individual JSON document
     """
+    start = time.time()
     jsonld_docs = []
     for json_doc in json_docs:
         endpoint_name = json_doc['endpoint']
@@ -157,21 +171,26 @@ def exploreinput(input_type, input_value):
             jsonld_docs.append(jh.json2jsonld(json_doc['data'], jsonld_context_path))
         else:
             jsonld_docs.append(None)
+    logger.info("Converting json docs to jsonld docs took: {:.2f} seconds".format(time.time() - start))
+
     ###################################################################
     """
     This part convert JSON-LD document to Nquads format
     And extract and organize the data
     """
     # rearrange the endpoints, because Asyncio will reorder the sequence
+    start = time.time()
     endpoints = [_json['endpoint'] for _json in json_docs]
     # convert a list of jsonld documents to nquads documents
     nquads_list = jh.jsonld2nquads(jsonld_docs)
+    logger.info("Converting jsonld docs to nquads docs took: {:.2f} seconds".format(time.time() - start))
     outputs = defaultdict(list)
+    start = time.time()
     for endpoint, nquads in list(zip(endpoints, nquads_list)):
         # get all possible associations of the endpoint
         association_list = bt_explorer.registry.endpoint_info[endpoint]['associations']
         if "@default" in nquads:
-            _output = jh.fetch_properties_by_association_in_nquads(nquads["@default"], association_list)
+            _output = jh.fetch_properties_by_association_in_nquads(nquads, association_list)
             for _assoc, _objects in _output.items():
                 for _object in _objects:
                     reorganized_data = {'endpoint': endpoint, 'api': bt_explorer.registry.endpoint_info[endpoint]['api'],
@@ -181,6 +200,8 @@ def exploreinput(input_type, input_value):
                     reorganized_data.update({'prefix': object_id_prefix})
                     object_semantic_type = bt_explorer.registry.prefix2semantictype(object_id_prefix)
                     outputs[object_semantic_type].append(reorganized_data)
+    logger.info("Organizing nquads outputs took: {:.2f} seconds".format(time.time() - start))
+
     ###################################################################
 
     """
