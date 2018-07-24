@@ -7,9 +7,22 @@ from collections import defaultdict
 from subprocess import Popen, PIPE, STDOUT
 from joblib import Parallel, delayed
 import multiprocessing
-import logging
+import time
 
-logger = logging.getLogger(__name__)
+
+import inspect
+import logging
+import os,sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+from config import jsonld_log_file
+
+logger = logging.getLogger('jsonld')
+logger.setLevel(logging.DEBUG)
+logger_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger_handler = logging.FileHandler(jsonld_log_file)
+logger_handler.setLevel(logging.DEBUG)
+logger_handler.setFormatter(logger_formatter)
+logger.addHandler(logger_handler)
 
 from .utils import readFile
 
@@ -63,7 +76,7 @@ class JSONLDHelper:
             return self.processor.parse_nquads(nquads)
         except Exception as e:
             logger.error("Something Unexpected happend when JSON-LD Python client tries to parse the JSON-LD. \
-                         The first 100 chars of the JSON document is")
+                         The first 100 chars of the JSON document is %s", json.dumps(jsonld_doc)[:100])
             logger.error(e, exc_info=True)
             return None
 
@@ -88,8 +101,21 @@ class JSONLDHelper:
         if type(jsonld_docs) == list and type(jsonld_docs[0]) == dict:
             #results = Parallel(n_jobs=multiprocessing.cpu_count())(delayed(self.jsonld2nquads_helper)(_doc) for _doc in jsonld_docs)
             results = []
-            for _doc in jsonld_docs:
+            # parallel code
+            logger.info('number of cpus is %s', multiprocessing.cpu_count())
+            pool = multiprocessing.Pool(multiprocessing.cpu_count())
+            results = pool.map(self.jsonld2nquads_helper, jsonld_docs)
+            pool.close() 
+            pool.join()
+            """
+            # non parallel code
+            for i, _doc in enumerate(jsonld_docs):
+                start = time.time()
                 results.append(self.jsonld2nquads_helper(_doc))
+                if i == 1:
+                    logger.info('The first doc is %s', _doc)
+                logger.info("processing %s took: %s seconds", str(i), time.time() - start)
+            """
             if len(results) == 1:
                 return results[0]
             else:
@@ -107,7 +133,7 @@ class JSONLDHelper:
         # log error message and return None
         else:
             logger.warning("The input of the jsonld2nquads function should be a list of JSON docs or a single JSON dictionary doc. \
-                           You input is %s. The first 100 chars of the input is %s", type(jsonld_docs), jsonld_doc[:100])
+                           You input is %s. The first 100 chars of the input is %s", type(jsonld_docs), json.dumps(jsonld_doc)[:100])
             return None
 
     def json2jsonld(self, json_docs, jsonld_context_path):
@@ -165,7 +191,7 @@ class JSONLDHelper:
                 if "@base" in v["@context"]:
                     self.temp_attr_id = v["@context"]["@base"]
                 else:
-                    print('@base should be included here! Something wrong with the JSON-LD context file!!')
+                    logger.info('@base should be included here! Something wrong with the JSON-LD context file!!')
             # otherwise, recall this function to look into the child level
             elif isinstance(v, dict):
                 self.find_object_properties_in_jsonld(v)
@@ -189,7 +215,7 @@ class JSONLDHelper:
                     if self.temp_attr_id:
                         relation[self.temp_attr_id].add(v["@id"])
                     else:
-                        print("attr:id is missing in the object properties!")
+                        logger.warn("attr:id is missing in the object properties!")
             elif isinstance(v, dict):
                 self.jsonld_parser_helper(v, relation=relation)
         return relation
@@ -249,15 +275,19 @@ class JSONLDHelper:
     def fetch_properties_by_association_in_nquads(self, nquads, association_list):
         results = {}
         for _association in association_list:
+            #logger.info('currently processing association: %s', _association)
             results[_association] = []
             object_values = self.fetch_object_value_by_predicate_value_in_nquads(nquads, _association)
+            #logger.info('object_values: %s', object_values)
             for _object_value in object_values:
+                #logger.info('currently processing object_value: %s', _object_value)
                 if _object_value.startswith('_:'):
                     object_predicate_dict = self.fetch_object_and_predicate_value_by_subject_value_in_nquads(nquads, _object_value)
+                    #logger.info('current object_predicate_dict is %s', object_predicate_dict)
                     if object_predicate_dict:
                         results[_association].append(object_predicate_dict)
                     else:
-                        print("Could not fetch any properties from the given association: {}".format(_object_value))
+                        logger.warn("Could not fetch any properties from the given association: {}".format(_object_value))
                 else:
                     results[_association].append({'http://biothings.io/explorer/vocab/attributes/id': [_object_value]})
         return results
@@ -432,9 +462,9 @@ def fetchvalue(nquads, object_uri, predicate=None):
             elif not predicate and object_uri in _nquad['object']['value']:
                 results.append((_nquad['object']['value'].split(object_uri)[1], _nquad['predicate']['value'].split('/')[-1]))
     elif nquads:
-        print('This is a invalid nquads, missing "@default"!!!')
+        logger.warn('This is a invalid nquads, missing "@default"!!!')
     else:
-        print('The nquads is empty')
+        logger.warn('The nquads is empty')
     # if results is empty, it could be either nquads is empty or object_uri could not be found in nuqads
     if results:
         return list(set(results))
