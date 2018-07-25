@@ -23,6 +23,7 @@ logger_handler = logging.FileHandler(jsonld_log_file)
 logger_handler.setLevel(logging.DEBUG)
 logger_handler.setFormatter(logger_formatter)
 logger.addHandler(logger_handler)
+logger.info('number of cpus is %s', multiprocessing.cpu_count())
 
 from .utils import readFile
 
@@ -102,7 +103,6 @@ class JSONLDHelper:
             #results = Parallel(n_jobs=multiprocessing.cpu_count())(delayed(self.jsonld2nquads_helper)(_doc) for _doc in jsonld_docs)
             results = []
             # parallel code
-            logger.info('number of cpus is %s', multiprocessing.cpu_count())
             pool = multiprocessing.Pool(multiprocessing.cpu_count())
             results = pool.map(self.jsonld2nquads_helper, jsonld_docs)
             pool.close() 
