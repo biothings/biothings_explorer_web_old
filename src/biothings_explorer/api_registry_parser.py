@@ -199,7 +199,7 @@ class RegistryParser:
             for _assoc in relation.values():
                 associations = associations | _assoc
             associations = [_assoc.replace("assoc:", "http://biothings.io/explorer/vocab/objects/") for _assoc in associations]
-            parsed_result['endpoints'][endpoint_name].update({'output': _output, 'relation': relation, 'associations': associations, 'input': _input, 'api': data['servers'][0]['url']})
+            parsed_result['endpoints'][endpoint_name].update({'output': _output, 'relation': relation, 'associations': associations, 'input': _input, 'api': data['info']['title']})
             parsed_result['api'][api_name]['endpoints'].append(data['servers'][0]['url'] + _name)
         return parsed_result
 
