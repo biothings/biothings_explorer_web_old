@@ -22,6 +22,7 @@ from handlers.FindSynonymHandler import SynonymHandler
 from handlers.SemanticQueryHandler import QuerySemanticsHandler
 from handlers.MetaDataHandler import ConnectingInputHandler, EndpointHandler, ConnectingOutputHandler, ConnectingSemanticTypesHandler, MetaDataHandler
 from handlers.APIStatusHandler import APIStatusHandler, DatabaseStatusHandler
+from handlers.URIHandler import BioThingsURIHandler
 client = Client('https://9dd387ee33954e9887ef4a6b55c7aa29:d98404d6199a4db1aa9b5a1e9fc3c975@sentry.io/294205')
 
 
@@ -95,6 +96,7 @@ class Application(tornado.web.Application):
             (r"/explorer/api/v2/apigraph", KnowledgeMap),
             (r"/explorer/api/v1/path", KnowledgeMapPath),
             (r"/explorer/api/v2/metadata/([^/]+)", MetaDataHandler),
+            (r"/explorer/vocab/terms/([^/]+)", BioThingsURIHandler),
             (r"/explorer/api/v2/findpath", KnowledgeMapPath),
             (r"/explorer/api/v2/crawler", Crawler),
             (r"/explorer/api/v2/directoutput", DirectPathHandler),
