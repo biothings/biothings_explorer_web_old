@@ -9,7 +9,7 @@ class BioThingsURIHandler(BaseHandler):
         uri = 'http://biothings.io/explorer/vocab/terms/' + prefix
         print(uri)
         if uri in registry.bioentity_info:
-        	print('in registry')
+            print('in registry')
             self.write(json.dumps(registry.bioentity_info[uri]))
         elif (uri + '/') in registry.bioentity_info:
             self.write(json.dumps(registry.bioentity_info[uri + '/']))
