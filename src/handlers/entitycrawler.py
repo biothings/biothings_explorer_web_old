@@ -193,12 +193,12 @@ def exploreinput(input_type, input_value):
             _output = jh.fetch_properties_by_association_in_nquads(nquads, association_list)
             for _assoc, _objects in _output.items():
                 for _object in _objects:
-                    reorganized_data = {'endpoint': endpoint, 'api': bt_explorer.registry.endpoint_info[endpoint]['api'],
+                    reorganized_data = {'api': bt_explorer.registry.endpoint_info[endpoint]['api'],
                                         'predicate': _assoc.replace('http://biothings.io/explorer/vocab/objects/', '')}
                     reorganized_data.update(oo.nquads2dict(_object))
                     object_id_prefix = reorganized_data['object']['id'].split(':')[0]
                     reorganized_data.update({'prefix': object_id_prefix})
-                    object_semantic_type = bt_explorer.registry.prefix2semantictype(object_id_prefix)
+                    object_semantic_type = bt_explorer.registry.prefix2semantictype(object_id_prefix.lower())
                     outputs[object_semantic_type].append(reorganized_data)
     logger.info("Organizing nquads outputs took: {:.2f} seconds".format(time.time() - start))
 
