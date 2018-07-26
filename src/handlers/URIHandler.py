@@ -1,11 +1,11 @@
 import json
 
-from biothings_explorer.api_registry_handler import RegistryParser
+from biothings_explorer.api_call_handler import ApiCallHandler
 from .basehandler import BaseHandler
 
 class BioThingsURIHandler(BaseHandler):
     def get(self, prefix):
-        registry = RegistryParser(readmethod='filepath', initialize=True)
+        registry = ApiCallHandler().registry
         uri = 'http://biothings.io/explorer/vocab/terms/' + prefix
         print(uri)
         if uri in registry.bioentity_info:
