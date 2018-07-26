@@ -11,6 +11,9 @@
       <script type="text/javascript" src="./static/js/populateSelect.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
       <link href="./static/css/select2-materialize.css" rel="stylesheet" type="text/css" />
+      <!-- script for data table-->
+      <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+      <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
    </head>
    <body> 
       <!-- This section is for the header-->
@@ -64,16 +67,11 @@
       </div>
       <!-- This section is for the data display-->
       <div class="row main" style="display: none">
-        <div class="filter col m4 s12">
-          <ul class="collapsible filter-collapsible">
-          </ul>
-        </div>
-        <div class="col m7 s12 data-display">
+        <div class="col s12 data-display">
           <ul class="collapsible data-display-list">
           </ul>
-          <h5 style="text-align: center; background-color: #f4f5f7; font-family: Ubuntu; cursor: pointer" id="show-more"> SHOW MORE RESULTS </h5>
         </div>
       </div>
-      <script type="text/javascript" src="./static/js/crawler.js"></script>
+      <script type="text/javascript" src="./static/js/crawler_new.js"></script>
   </body>
 </html>
