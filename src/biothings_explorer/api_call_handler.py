@@ -130,7 +130,7 @@ class ApiCallHandler:
                                 if _template['template'] in endpoint_name:
                                     endpoint_name = endpoint_name.replace('{' + _para['name'] + '}', str(uri_value_dict[_input_type]))
                                 else:
-                                    endpoint_name = self.registry.endpoint_info[endpoint_name]['api'] + _template['template'].replace('{' + _para['name'] + '}', str(uri_value_dict[_input_type]))
+                                    endpoint_name = self.registry.endpoint_info[endpoint_name]['server'] + _template['template'].replace('{' + _para['name'] + '}', str(uri_value_dict[_input_type]))
             # handle cases for query
             else:
                 # check whether the parameter is required
@@ -244,6 +244,7 @@ class ApiCallHandler:
                 uri_value.update(additional_parameters)
             api_call_params.append(self.call_api(uri_value, endpoint_name))
         start = time.time()
+        print(api_call_params)
         rs = (grequests.get(u, params=v) for (u,v) in api_call_params)
         responses = grequests.map(rs)
         if responses and responses[0].status_code == 200:
