@@ -219,6 +219,7 @@ class ApiCallHandler:
         if _type == 'prefix':
             input_type = self.registry.prefix2uri(input_type)
             output_type = self.registry.prefix2uri(output_type)
+        print(endpoint_name)
         if not predicate:
             predicate = self.nh.find_edge_label(endpoint_name, self.registry.bioentity_info[output_type]['preferred_name'])
             jsonld_context = self.registry.endpoint_info[endpoint_name]['jsonld_context']
@@ -259,7 +260,7 @@ class ApiCallHandler:
                     for _output in outputs[i]:
                         input_value = processed_input[i]
                         input_curie = self.registry.bioentity_info[input_type]['preferred_name'].upper() + ':' + input_value
-                        final_results.append({'input': input_curie, 'context': context, 'output': _output, 'endpoint': endpoint_name, 'target': _output['object']['id'], 'predicate': predicate.split('/')[-1]})
+                        final_results.append({'input': input_curie, 'context': context, 'output': _output, 'api': self.registry.endpoint_info[endpoint_name]['api'], 'target': _output['object']['id'], 'predicate': predicate.split('/')[-1]})
         else:
             for _predicate in predicate:
                 outputs = self.extract_output(valid_responses, endpoint_name, output_type, predicate=_predicate)
@@ -267,6 +268,6 @@ class ApiCallHandler:
                 if outputs[i]:
                     input_value = processed_input[i]
                     input_curie = self.registry.bioentity_info[input_type]['preferred_name'].upper() + ':' + input_value
-                    final_results.append({'input': input_curie, 'output': (outputs[i]), 'endpoint': endpoint_name, 'target': outputs[i][0]['object']['id'], 'predicate': predicate})
+                    final_results.append({'input': input_curie, 'output': (outputs[i]), 'api': self.registry.endpoint_info[endpoint_name]['api'], 'target': outputs[i][0]['object']['id'], 'predicate': predicate})
         print('Time used in organizing outputs: {:.2f} seconds'.format(time.time() - start))
         return final_results
