@@ -1,6 +1,6 @@
 import json
 
-from biothings_explorer.api_registry_handler import RegistryHandler
+from biothings_explorer.api_registry_handler import RegistryParser
 from .basehandler import BaseHandler
 
 class BioThingsURIHandler(BaseHandler):
