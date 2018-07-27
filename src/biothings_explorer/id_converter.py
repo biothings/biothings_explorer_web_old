@@ -3,6 +3,7 @@ from collections import defaultdict
 from pyld import jsonld
 
 from .config import MYGENE_URI2SCOPE, MYCHEM_URI2SCOPE, MYDISEASE_URI2SCOPE, MYGENE_QUERY_JSONLD, MYCHEM_QUERY_JSONLD, MYDISEASE_QUERY_JSONLD
+from .api_registry_parser import RegistryParser
 
 class IDConverter:
     def __init__(self):
@@ -13,6 +14,7 @@ class IDConverter:
         self.mychem_url = 'http://mychem.info/v1/query'
         self.mydisease_url = 'http://mydisease.info/v1/query'
         self.header = {'content-type': 'application/x-www-form-urlencoded'}
+        self.registry = RegistryParser(readmethod='filepath', initialize=True)
 
     def group_curies_by_prefix(self, curie_list):
         id_group = defaultdict(list)
@@ -20,6 +22,20 @@ class IDConverter:
             _prefix = _curie.split(':')[0].lower()
             id_group[_prefix].append(_curie[len(_prefix)+1:])
         return id_group
+
+    def find_synonym(self, input_value, input_type):
+        """find synonym of given input
+        This is wrapper function for find_gene_synonym, find_chemical_synonym, find_disease_synonym
+        """
+        semantic_type = self.registry.prefix2semantictype(input_type)
+        if semantic_type == 'gene':
+            return find_gene_synonym(input_value, input_type)
+        elif semantic_type == 'chemical':
+            return find_chemical_synonym(input_value, input_type)
+        elif semantic_type == 'disease':
+            return find_disease_synonym(input_value, input_type)
+        else:
+            return [{input_type: input_value}]
     
     def find_gene_synonym(self, input_value, input_type):
         """
