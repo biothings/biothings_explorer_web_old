@@ -1,13 +1,66 @@
 import requests
 from collections import defaultdict
-from pyld import jsonld
 
-from .config import MYGENE_URI2SCOPE, MYCHEM_URI2SCOPE, MYDISEASE_URI2SCOPE, MYGENE_QUERY_JSONLD, MYCHEM_QUERY_JSONLD, MYDISEASE_QUERY_JSONLD
 from .api_registry_parser import RegistryParser
+from .utils import autolog
+
+import logging
+import os,sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+from config import id_converter_log_file
+
+# logging module
+logger = logging.getLogger('id_converter')
+logger.setLevel(logging.DEBUG)
+logger_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger_handler = logging.FileHandler(id_converter_log_file)
+logger_handler.setLevel(logging.DEBUG)
+logger_handler.setFormatter(logger_formatter)
+logger.addHandler(logger_handler)
+
+##########################################################
+MYGENE_FIELDNAME2QUERYNAME = {
+    "uniprot": "uniprot",
+    "hgnc.symbol": "symbol",
+    "hgnc": "hgnc",
+    "omim.gene": "MIM",
+    "ncbigene": "entrezgene",
+    "ensembl.gene": "ensembl.gene",
+    "ensembl.protein": "ensembl.protein",
+    "ensembl.transcript": "ensembl.transcript"
+}
+
+MYCHEM_URI2SCOPE = {
+    "inchikey": "_id",
+    "rxcui": "aeolus.drug_rxcui",
+    "chebi": "chembl.chebi_par_id",
+    "chembl.compound": "chembl.molecule_chembl_id",
+    "drugbank": "drugbank.drugbank_id",
+    "iuphar.ligand": "drugbank.iuphar",
+    "kegg.drug": "drugbank.kegg_drug",
+    "kegg.compound": "drugbank.kegg_compound",
+    "pubchem.compound": "drugbank.pubchem_compound",
+    "unii": "unii.unii",
+    "inchi": "chebi.inchi",
+    "drugname": "drugbank.name"
+}
+
+MYDISEASE_URI2SCOPE = {
+    "doid": "mondo.xrefs.doid",
+    "omim.disease": "mondo.xrefs.omim",
+    "umls.disease": "mondo.xrefs.umls",
+    "mondo": "_id"
+}
+
+MYGENE_QUERY_JSONLD = dict((y,x) for x,y in MYGENE_FIELDNAME2QUERYNAME.items())
+MYGENE_QUERY_JSONLD['uniprot.Swiss-Prot'] = "uniprot"
+MYDISEASE_QUERY_JSONLD = dict((y,x) for x,y in MYDISEASE_URI2SCOPE.items())
+MYCHEM_QUERY_JSONLD = dict((y,x) for x,y in MYCHEM_URI2SCOPE.items())
+##########################################################
 
 class IDConverter:
     def __init__(self):
-        self.mygene_params_template = 'q={input_value}&scopes={input_type}&fields=symbol,entrezgene,MIM,uniprot.Swiss-Prot,ensembl.gene,ensembl.protein,ensembl.transcript&dotfield=True&species=human'
+        self.mygene_params_template = 'q={input_value}&scopes={input_type}&fields=symbol,entrezgene,MIM,uniprot.Swiss-Prot,ensembl.gene&dotfield=True&species=human'
         self.mychem_params_template = 'q={input_value}&scopes={input_type}&fields=drugbank.name,pubchem.inchi_key,aeolus.drug_rxcui,chembl.chebi_par_id,chembl.molecule_chembl_id,drugbank.drugbank_id,drugbank.iuphar,drugbank.kegg_drug,drugbank.kegg_compound,drugbank.pubchem_compound,unii.unii,chebi.inchi&dotfield=True'
         self.mydisease_params_template = 'q={input_value}&scopes={input_type}&fields=mondo.xrefs&dotfield=true'
         self.mygene_url = 'http://mygene.info/v3/query'
@@ -29,11 +82,11 @@ class IDConverter:
         """
         semantic_type = self.registry.prefix2semantictype(input_type)
         if semantic_type == 'gene':
-            return find_gene_synonym(input_value, input_type)
+            return self.find_gene_synonym(input_value, input_type)
         elif semantic_type == 'chemical':
-            return find_chemical_synonym(input_value, input_type)
+            return self.find_chemical_synonym(input_value, input_type)
         elif semantic_type == 'disease':
-            return find_disease_synonym(input_value, input_type)
+            return self.find_disease_synonym(input_value, input_type)
         else:
             return [{input_type: input_value}]
     
@@ -47,38 +100,41 @@ class IDConverter:
                     "http://identifiers.org/uniprot": "P24941"
                 }
         """
-        params = self.mygene_params_template.replace('{input_value}', str(input_value)).replace('{input_type}', MYGENE_URI2SCOPE[input_type])
-        """
-        if mode == 'single':
-            # check whether input_value is single
-            # check whether input_type is uri and whether is in the URI2SCOPE dict            
-            # get json doc from mygene.info
-            mygene_doc = requests.get(self.mygene_url, params=params).json()['hits'][0]
-            # add jsonld context file
-            mygene_jsonld_doc = {}
-            for k,v in mygene_doc.items():
-                if k in MYGENE_QUERY_JSONLD:
-                    mygene_jsonld_doc[MYGENE_QUERY_JSONLD[k]] = v
-            return mygene_jsonld_doc
-        else:
-            """
+        # check whether the input_type is within MYGENE_FIELDNAME2QUERYNAME
+        try:
+            params = self.mygene_params_template.replace('{input_value}', str(input_value)).replace('{input_type}', MYGENE_FIELDNAME2QUERYNAME[input_type])
+        except KeyError:
+            error_message = input_type + ' is not in MYGENE_FIELDNAME2QUERYNAME'
+            autolog(logger, error_message, 'warn')
+            return
+        # make requests to mygene
         mygene_docs = requests.post(self.mygene_url, params=params, headers=self.header).json()
         mygene_flatten = []
         for _doc in mygene_docs:
+            # 
+            if 'notfound' in _doc and _doc['notfound'] == True:
+                error_message = 'The input is invalid: ' + input_type + ':' + _doc['query']
+                autolog(logger, error_message, 'warn')
             mygene_jsonld_doc = {}
             for k,v in _doc.items():
                 if k in MYGENE_QUERY_JSONLD:
                     mygene_jsonld_doc[MYGENE_QUERY_JSONLD[k]] = v
             mygene_flatten.append(mygene_jsonld_doc)
-        return mygene_flatten
+        if mygene_flatten == [{}]:
+            return
+        else:
+            return mygene_flatten
 
     def convert_gene_ids(self, input_value, input_type, target_type):
         synonyms = self.find_gene_synonym(input_value, input_type)
-        for _synonym in synonyms:
-            if target_type in _synonym:
-                yield _synonym[target_type]
-            else:
-                yield None
+        if synonyms:
+            for _synonym in synonyms:
+                if target_type in _synonym:
+                    yield _synonym[target_type]
+                else:
+                    yield None
+        else:
+            yield None
 
     def convert_gene_ids_in_batch(self, input_value, input_type, target_type):
         synonyms = self.find_gene_synonym(input_value, input_type)
