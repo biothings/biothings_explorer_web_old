@@ -14,6 +14,10 @@
       <!-- script for data table-->
       <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
       <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+      <!-- script for zingchart used to create radar chart here-->
+      <script src= "https://cdn.zingchart.com/zingchart.min.js"></script>
+      <script> zingchart.MODULESDIR = "https://cdn.zingchart.com/modules/";
+      ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9","ee6b7db5b51705a13dc2339db3edaf6d"];</script>
    </head>
    <body> 
       <!-- This section is for the header-->
@@ -69,6 +73,10 @@
       <div class="row main" style="display: none">
         <div class="col s12 data-display">
           <ul class="collapsible data-display-list">
+            <li class="active">
+              <div class="collapsible-header"><i class="material-icons">filter_drama</i>Summary</div>
+              <div class="collapsible-body"><div id="radar_chart"></div></div>
+            </li>
           </ul>
         </div>
       </div>

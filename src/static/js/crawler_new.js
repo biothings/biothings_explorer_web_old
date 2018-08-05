@@ -27,11 +27,44 @@ function organize_api_output_to_fit_datatable(dataset) {
 }
 
 /**
+ * calculate number of entries per semantic type
+ * used in radar chart
+*/
+SEMANTIC_TYPE_LIST = ["gene", "transcript", "chemical", "pathway", "bioassay", 'disease', 'ontology'];
+function count_entry_for_each_semantic_type(data) {
+	counter = [];
+	SEMANTIC_TYPE_LIST.forEach(function(semantic_type) {
+		if (semantic_type in data) {
+			counter.push(data[semantic_type].length);
+		} else {
+			counter.push(0);
+		}
+	});
+	return counter;
+}
+/**
  * Given prefix and input_value, display the results
 */
 function update_data_display(prefix, input_value) {
     fetch_crawler_results(prefix, input_value).done(function(jsonResponse) {
+    	var counter = count_entry_for_each_semantic_type(jsonResponse['linkedData']);
         // remove loading status
+        console.log(counter);
+        var myConfig = {
+		    "type": "radar",
+		    "series": [{
+		        "values": counter
+		    }],
+		    "scale-k": {
+    			"labels": SEMANTIC_TYPE_LIST}
+		};
+		 
+		zingchart.render({ 
+			id : 'radar_chart', 
+			data : myConfig, 
+			height: '100%', 
+			width: '100%' 
+		});
         $(".overlay-group").hide();
         // show div for data display
         $(".main").show();
