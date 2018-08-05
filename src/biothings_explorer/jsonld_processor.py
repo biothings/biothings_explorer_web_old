@@ -5,7 +5,6 @@ import requests
 import grequests
 from collections import defaultdict
 from subprocess import Popen, PIPE, STDOUT
-from joblib import Parallel, delayed
 import multiprocessing
 import time
 
@@ -408,35 +407,7 @@ def jsonld2nquads(jsonld_doc, mode='batch'):
                 results.append(None)
         return results
 '''
-def jsonld2nquads(jsonld_docs):
-    """
-    Given a JSON-LD annotated document,
-    Fetch it's corresponding NQUADs file from JSON-LD playground
-    'http://jsonld.biothings.io/?action=nquads'
 
-    TODO: Currently, PyLD hasn't been updated to match JSON-LD v 1.1
-    So we are using the JSON-LD playground API, which is built upon
-    JSON-LD ruby client for 1.1 version. When PyLD has been updated to
-    match 1.1, we should switch back to PyLD.
-
-    Params
-    ======
-    jsonld_doc: (dict)
-        JSON-LD annotated document
-    """
-    results = []
-    """
-    for _doc in jsonld_docs:
-        _response = process_jsonld(_doc)
-        if 'Parsed' in _response:
-            _nquad = re.sub('Parsed .*second.\n', '', _response)
-            results.append(t.parse_nquads(_nquad))
-        else:
-            results.append(None)
-    """
-    num_cores = multiprocessing.cpu_count()
-    results = Parallel(n_jobs=num_cores)(delayed(process_jsonld)(_doc) for _doc in jsonld_docs)
-    return results
 
 
 def fetchvalue(nquads, object_uri, predicate=None):
