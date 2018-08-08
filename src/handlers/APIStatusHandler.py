@@ -30,5 +30,4 @@ class DatabaseStatusHandler(BaseHandler):
                 for k, v in database_status['status'].items():
                     for _item in v:
                         reorganized_output.append([_item['source_name'], _item['source_version'], k])
-                print(reorganized_output)
                 self.write(json.dumps(reorganized_output))
