@@ -126,6 +126,9 @@ class IDConverter:
             return mygene_flatten
 
     def convert_gene_ids(self, input_value, input_type, target_type):
+        """
+        
+        """
         synonyms = self.find_gene_synonym(input_value, input_type)
         if synonyms:
             for _synonym in synonyms:
@@ -191,7 +194,7 @@ class IDConverter:
             mydisease_jsonld_doc = {}
             for k,v in _doc.items():
                 if k in MYDISEASE_QUERY_JSONLD:
-                    mydisease_jsonld_doc[MYDISEASE_QUERY_JSONLD[k]] = v
+                    mydisease_jsonld_doc[MYDISEASE_QUERY_JSONLD[k]] = v.split(':')[-1]
             mydisease_flatten.append(mydisease_jsonld_doc)
         return mydisease_flatten
 
