@@ -4,18 +4,17 @@
       <meta name = "viewport" content = "width = device-width, initial-scale = 1">      
       <link rel = "stylesheet"
          href = "https://fonts.googleapis.com/icon?family=Material+Icons">
-      <link rel = "stylesheet"
-         href = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
-      <script type = "text/javascript"
-         src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>
-      <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js">
-      </script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <!-- Compiled and minified CSS -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+
+      <!-- Compiled and minified JavaScript -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
+
       <!-- script for data table-->
       <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
       <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-      
-
+      <link href="./static/css/sources.css" rel="stylesheet" />
    </head>
    <body> 
       <!-- This section is for the header-->
@@ -33,11 +32,33 @@
             </nav>
          </div>
       </div>
-      <div>
-        <table id="example" class="display" width="100%"></table>
-      </div>
-      <div>
-        <table id="example1" class="display" width="100%"></table>
+      <div class="row">
+        <div class="col s12 m9 l10">
+          <div id="introduction" class="section scrollspy">
+            <h1> Introduction </h1>
+            <p> BioThings Explorer allows users to query a vast amount of biological and chemical databases in a central place by calling APIs which distribute these data on the fly. The tables below list all the APIs and databases which are currently integrated in BioThings Explorer. If you would like to add an additional API to BioThings Explorer, please visit <a href="https://smart-api.info/" target="_blank">Smart API</a> website to add the SmartAPI specification for your API(s).</p>
+          </div>
+
+          <div id="apisection" class="section scrollspy">
+            <h1> APIs Integrated </h1>
+            <p> The table below list all the biological APIs which are currently integrated for exploration in BioThings Explorer.</p>
+            <table id="apitable" class="display" width="100%"></table>
+          </div>
+
+          <div id="databasesection" class="section scrollspy">
+            <h1> Databases Integrated </h1>
+            <p> Some APIs might integrate more than one biological databases. The table below list all the biological databases which are currently integrated for exploration in BioThings Explorer. The first two columns of the table list the databse name and its version. The third column of the table list which API includes the database. </p>
+            <table id="databasetable" class="display" width="100%"></table>
+          </div>
+
+        </div>
+        <div class="col hide-on-small-only m3 l2">
+          <ul class="section table-of-contents">
+            <li><a href="#introduction">Introduction</a></li>
+            <li><a href="#apisection">APIs</a></li>
+            <li><a href="#databasesection">Databases</a></li>
+          </ul>
+        </div>
       </div>
       <script type="text/javascript" src="./static/js/sources.js"></script>
   </body>

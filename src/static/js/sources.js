@@ -20,7 +20,7 @@ function fetch_databasestatus(){
 
 $(document).ready(function(){
   fetch_apistatus().done(function(jsonResponse) {
-    $('#example').DataTable( {
+    $('#apitable').DataTable( {
         data: jsonResponse,
         columns: [
             { title: "API" },
@@ -29,7 +29,7 @@ $(document).ready(function(){
     });
   });
   fetch_databasestatus().done(function(jsonResponse) {
-    $('#example1').DataTable( {
+    $('#databasetable').DataTable( {
         data: jsonResponse,
         columns: [
             { title: "database name" },
@@ -38,4 +38,6 @@ $(document).ready(function(){
         ]
     });
   });
+  $('.scrollspy').scrollSpy();
+
 });
