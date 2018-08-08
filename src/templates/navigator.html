@@ -53,16 +53,31 @@
         <script src="http://d3js.org/d3.v3.min.js"></script>
     </head>
     <body>
+      <!-- This section is for the header-->
         <div>
+            <ul id="dropdown1" class="dropdown-content">
+              <li><a href="../metadata">Knowledge Map</a></li>
+              <li><a href="../crawler">Crawler</a></li>
+              <li><a href="../navigator">Navigator</a></li>
+            </ul>
+            <ul id="dropdown2" class="dropdown-content">
+              <li><a href="../tutorial">Tutorial</a></li>
+              <li><a href="../sources">Sources</a></li>
+              <li><a href="../uri">URI Registry</a></li>
+            </ul>
+            <ul id="dropdown3" class="dropdown-content">
+              <li><a href="../api">API</a></li>
+              <li><a href="https://pypi.org/project/biothings-explorer/">Python</a></li>
+            </ul>
             <nav>
-                <div class="nav-wrapper orange">
-                    <div class="col s4">
-                        <a href="#" data-target="slide-out" data-position="top" data-tooltip="Show SideNav Menu" id="menu" class="left"><i class="left material-icons">menu</i></a>
-                        <a href="/explorer" class="breadcrumb">BioThings Explorer</a>
+                <div class="nav-wrapper black">
+                    <div class="col s12">
+                        <a href=".." title="BioThings Explorer"><img style="border:0px;" width="256" src="http://biothings.io/static/img/biothings-explorer-256.png" alt="Logo 256"/></a>
+                        <!-- Dropdown Structure -->
                         <ul class="right hide-on-med-and-down">
-                            <li><a href="/tutorial" id="map">TUTORIAL</a></li>
-                            <li><a href="/explorer" id="explore">EXPLORE</a></li>
-                            <li><a href="/#" id="api">API</a></li>
+                            <li><a class="dropdown-trigger" href="#!" data-target="dropdown2">Docs<i class="material-icons right">arrow_drop_down</i></a></li>
+                            <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Tools<i class="material-icons right">arrow_drop_down</i></a></li>
+                            <li><a class="dropdown-trigger" href="#!" data-target="dropdown3">Developers<i class="material-icons right">arrow_drop_down</i></a></li>
                         </ul>
                     </div>
                 </div>

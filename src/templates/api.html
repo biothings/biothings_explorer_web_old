@@ -1,14 +1,24 @@
 <html>
    <head>
-      <title>BioThings Explorer</title>
-      <meta name = "viewport" content = "width = device-width, initial-scale = 1">      
-      <link rel = "stylesheet"
+      <meta property="og:locale" content="en_US">
+        <meta property="og:url" content="http://biothings.io/explorer/navigator">
+        <meta property="og:site_name" content="BioThings Navigator">
+        <meta property="og:title" content="BioThings Navigator | Exploring Biological Data Through Linked API Services">
+        <meta name="description" content="BioThings Explorer utilize JSON-LD and SmartAPI Specifications to link biological API for knowledge exploration. Users could get metadata information about APIs as well as fetching linked biological data through BioThings Explorer.">
+        <meta property="og:type" content="website">
+        <meta property="og:description" content="BioThings Explorer utilize JSON-LD and SmartAPI Specifications to link biological API for knowledge exploration. Users could get metadata information about APIs as well as fetching linked biological data through BioThings Explorer.">
+        <meta property="og:image" content="./static/img/navigator.png">
+        <meta property="og:image:type" content="image/png">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
+        <title>BioThings Navigator</title>
+        <meta name = "viewport" content = "width = device-width, initial-scale = 1">      
+        <link rel="shortcut icon" href="./static/img/navigator.png">      
+        <link rel = "stylesheet"
          href = "https://fonts.googleapis.com/icon?family=Material+Icons">
-      <link rel = "stylesheet"
-         href = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
-      <script type = "text/javascript"
-         src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>
-      <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.3/css/materialize.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.3/js/materialize.min.js"></script>
       </script>
       <style>
         #api_frame {
@@ -23,23 +33,43 @@
    </head>
    <body> 
       <!-- This section is for the header-->
-      <div class="row">
-         <div class="col s12" id="navbar">
+        <div>
+            <ul id="dropdown1" class="dropdown-content">
+              <li><a href="../metadata">Knowledge Map</a></li>
+              <li><a href="../crawler">Crawler</a></li>
+              <li><a href="../navigator">Navigator</a></li>
+            </ul>
+            <ul id="dropdown2" class="dropdown-content">
+              <li><a href="../tutorial">Tutorial</a></li>
+              <li><a href="../sources">Sources</a></li>
+              <li><a href="../uri">URI Registry</a></li>
+            </ul>
+            <ul id="dropdown3" class="dropdown-content">
+              <li><a href="../api">API</a></li>
+              <li><a href="https://pypi.org/project/biothings-explorer/">Python Client</a></li>
+            </ul>
             <nav>
-                <div class="nav-wrapper orange">
-                    <a href="/explorer" class="brand-logo">BioThings Explorer</a>
-                    <ul class="right hide-on-med-and-down">
-                    <li><a href="../tutorial" id="map">TUTORIAL</a></li>
-                    <li><a href="/explorer" id="explore">EXPLORE</a></li>
-                    <li><a href="#" id="api">API</a></li>
-                    </ul>
+                <div class="nav-wrapper black">
+                    <div class="col s12">
+                        <a href=".." title="BioThings Explorer"><img style="border:0px;" width="256" src="http://biothings.io/static/img/biothings-explorer-256.png" alt="Logo 256"/></a>
+                        <!-- Dropdown Structure -->
+                        <ul class="right hide-on-med-and-down">
+                            <li><a class="dropdown-trigger" href="#!" data-target="dropdown2">Docs<i class="material-icons right">arrow_drop_down</i></a></li>
+                            <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Tools<i class="material-icons right">arrow_drop_down</i></a></li>
+                            <li><a class="dropdown-trigger" href="#!" data-target="dropdown3">Developers<i class="material-icons right">arrow_drop_down</i></a></li>
+                        </ul>
+                    </div>
                 </div>
             </nav>
-         </div>
-      </div>
+        </div>
       <div class="row" id="api_frame">
         <iframe src="http://smart-api.info/ui/eacae69bdd90a638648fb613dc3f0dd5"><p>Your browser does not support iframes.</p></iframe>
       </div>
+      <script>
+          $(document).ready(function(){
+            $(".dropdown-trigger").dropdown();
+          });
+      </script>
   </body>
 </html>
 
