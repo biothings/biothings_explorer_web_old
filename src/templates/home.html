@@ -7,13 +7,13 @@
         <meta name="description" content="BioThings Explorer utilize JSON-LD and SmartAPI Specifications to link biological API for knowledge exploration. Users could get metadata information about APIs as well as fetching linked biological data through BioThings Explorer.">
         <meta property="og:type" content="website">
         <meta property="og:description" content="BioThings Explorer utilize JSON-LD and SmartAPI Specifications to link biological API for knowledge exploration. Users could get metadata information about APIs as well as fetching linked biological data through BioThings Explorer.">
-        <meta property="og:image" content="./static/img/linked_data.png">
+        <meta property="og:image" content="http://biothings.io/static/img/biothings-explorer-64.png">
         <meta property="og:image:type" content="image/png">
         <meta property="og:image:width" content="1200">
         <meta property="og:image:height" content="630">
         <title>BioThings Explorer</title>
         <meta name = "viewport" content = "width = device-width, initial-scale = 1">      
-        <link rel="shortcut icon" href="./static/img/linked_data.png">
+        <link rel="shortcut icon"  href="http://biothings.io/static/img/biothings-explorer-64.png" title="BioThings Explorer">
         <link rel = "stylesheet"
          href = "https://fonts.googleapis.com/icon?family=Material+Icons">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.3/css/materialize.min.css">
@@ -25,14 +25,19 @@
     <body>
       <!-- This section is for the header-->
         <div>
+            <ul id="dropdown1" class="dropdown-content">
+              <li><a href="metadata">Knowledge Map</a></li>
+              <li><a href="crawler">Crawler</a></li>
+              <li><a href="navigator">Navigator</a></li>
+            </ul>
             <nav>
                 <div class="nav-wrapper orange">
-                    <div class="col s4">
-                        <a href="#" id="menu" class="left"><i class="left material-icons">menu</i></a>
-                        <a href="#" class="breadcrumb">BioThings Explorer</a>
+                    <div class="col s12">
+                        <a href="#" title="BioThings Explorer"><img style="border:0px;" width="64" src="http://biothings.io/static/img/biothings-explorer-64.png" alt="Logo 64"/></a>
+                        <!-- Dropdown Structure -->
                         <ul class="right hide-on-med-and-down">
-                            <li><a href="tutorial" id="map">TUTORIAL</a></li>
-                            <li><a href="/explorer" id="explore">EXPLORE</a></li>
+                            <li><a href="tutorial" id="map">Docs</a></li>
+                            <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Tools<i class="material-icons right">arrow_drop_down</i></a></li>
                             <li><a href="./api" id="api">API</a></li>
                         </ul>
                     </div>
@@ -45,7 +50,7 @@
                 <p class="black-text center"> Exploring Biological Data Through Linked API Services </p>
             </div>
             <div class="col s12 l4 hide-on-small-only">
-                <img width="100%" src="./static/img/linked_data.png">
+                <img width="100%" src="./static/img/biothings-explorer-64.png">
             </div>
         </div>
         <div id="intro" class="grey lighten-5">
@@ -77,7 +82,7 @@
                     </div>
                     <div class="col l8 m8">
                         <h2 class="center"> BioThings Navigator</h2>
-                        <p class="blue-grey-text">BioThings Explorer is the "Google Map" for biologists. It utilizes <a href="http://smart-api.info" target="_blank">Smart-API Specifications</a> to build a network of APIs. And by traversing through the network, BioThings Explorer could help user identify potential paths connecting two biological entities through multiple API calls. In addition, BioThings Explorer could chain those API calls together and fetch relevant biological data through <a href="https://json-ld.org" target="_blank">JSON-LD</a> technology.</p>
+                        <p class="blue-grey-text">Don't want to waste your time finding the right APIs, reading through their tedious documentation and then fetching the results from these APIs? Here you go! BioThings Explorer provides a <b>central point to access all the data</b> provided from a variety of biological APIs on the fly.</p>
                         <a class="waves-effect waves-light btn red accent-2 try-it-out-button" id="try-navigator-button" href="navigator">Try it out</a>
                     </div>
                 </div>
@@ -88,7 +93,7 @@
                 <div class="row">
                     <div class="col l6 s12">
                         <h5 class="white-text">BioThings Explorer</h5>
-                        <p class="grey-text text-lighten-4">Utilizing JSON-LD and SmartAPI Specifications to link biological data for knowledge exploration.</p>
+                        <p class="grey-text text-lighten-4">Utilizing JSON-LD and SmartAPI Specifications to link biological APIs for knowledge exploration.</p>
                     </div>
                     <div class="col l4 offset-l2 s12">
                         <h5 class="white-text">Useful Links</h5>
@@ -108,5 +113,8 @@
                 </div>
             </div>
         </footer>
+        <script>
+            $(".dropdown-trigger").dropdown();
+        </script> 
     </body>
 </html>
