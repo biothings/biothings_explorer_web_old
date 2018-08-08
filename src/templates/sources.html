@@ -1,0 +1,45 @@
+<html>
+   <head>
+      <title>BioThings Explorer</title>
+      <meta name = "viewport" content = "width = device-width, initial-scale = 1">      
+      <link rel = "stylesheet"
+         href = "https://fonts.googleapis.com/icon?family=Material+Icons">
+      <link rel = "stylesheet"
+         href = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
+      <script type = "text/javascript"
+         src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>
+      <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js">
+      </script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <!-- script for data table-->
+      <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+      <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+      
+
+   </head>
+   <body> 
+      <!-- This section is for the header-->
+      <div class="row">
+         <div class="col s12" id="navbar">
+            <nav>
+                <div class="nav-wrapper orange">
+                    <a href="/explorer" class="brand-logo">BioThings Explorer</a>
+                    <ul class="right hide-on-med-and-down">
+                    <li><a href="../tutorial" id="map">TUTORIAL</a></li>
+                    <li><a href="/explorer" id="explore">EXPLORE</a></li>
+                    <li><a href="#" id="api">API</a></li>
+                    </ul>
+                </div>
+            </nav>
+         </div>
+      </div>
+      <div>
+        <table id="example" class="display" width="100%"></table>
+      </div>
+      <div>
+        <table id="example1" class="display" width="100%"></table>
+      </div>
+      <script type="text/javascript" src="./static/js/sources.js"></script>
+  </body>
+</html>
+
