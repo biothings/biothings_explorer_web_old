@@ -22,6 +22,9 @@ $(document).ready(function(){
   fetch_apistatus().done(function(jsonResponse) {
     $('#apitable').DataTable( {
         data: jsonResponse,
+        "bLengthChange": false,
+        "bFilter": true,
+        "bInfo": false,
         columns: [
             { title: "API" },
             { title: "Status" }
@@ -31,6 +34,9 @@ $(document).ready(function(){
   fetch_databasestatus().done(function(jsonResponse) {
     $('#databasetable').DataTable( {
         data: jsonResponse,
+        "bLengthChange": false,
+        "bFilter": true,
+        "bInfo": false,
         columns: [
             { title: "database name" },
             { title: "database version" },
