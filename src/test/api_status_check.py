@@ -25,7 +25,10 @@ from config import api_status_file
 
 def check_api_status(url):
     response = requests.get(url)
-    return response.ok
+    if response.ok:
+        return 'O.K.'
+    else:
+        return 'Failed!'
 
 if __name__ == "__main__":
     status_dict = {'status': {}, 'timestamp': datetime.datetime.now().strftime("%A, %d. %B %Y %I:%M%p")}
