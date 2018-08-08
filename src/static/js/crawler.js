@@ -291,6 +291,7 @@ function add_chip(search_item) {
 };
 
 $(document).ready(function(){
+    $(".dropdown-trigger").dropdown();
     populateBioEntity('#select-input');
     $('#start-crawl-button').click(function() {
         $("#navbar").css({'position': 'relative'});

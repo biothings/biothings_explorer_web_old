@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    $(".dropdown-trigger").dropdown();
     //this section deals with the side nav
     var elems = document.querySelectorAll('.sidenav');
     var instances = M.Sidenav.init(elems);

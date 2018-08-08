@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    $(".dropdown-trigger").dropdown();
     $("#path-plotly-div").hide();
 	$(".search-bar-center").hide();
     $(".search-bar-top").hide();
