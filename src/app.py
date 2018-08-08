@@ -56,6 +56,11 @@ class MetaDataWebHandler(tornado.web.RequestHandler):
     def get(self):
         self.render("metadata.html", messages=None)
 
+class SourcesWebHandler(tornado.web.RequestHandler):
+    @tornado.web.addslash
+    def get(self):
+        self.render("sources.html", messages=None)
+
 class NavigatorHandler(tornado.web.RequestHandler):
     @tornado.web.addslash
     def get(self):
@@ -79,7 +84,9 @@ class Application(tornado.web.Application):
             (r"/explorer/crawler/?", CrawlerHandler),
             (r"/explorer/crawler/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
             (r"/explorer/metadata/?", MetaDataWebHandler),
+            (r"/explorer/sources/?", SourcesWebHandler),
             (r"/explorer/metadata/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
+            (r"/explorer/sources/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
             (r"/explorer/navigator/?", NavigatorHandler),
             (r"/explorer/navigator/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
             (r"/explorer/path", ConnectingPathHandler),
