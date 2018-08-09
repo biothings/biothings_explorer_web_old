@@ -151,13 +151,14 @@ def exploreinput(input_type, input_value):
     """
     ###################################################################
     """
-    This part use asyncio libary to asynchronously extract
-    all the JSON outputs from individual API calls
+    This part find all synonyms of the input, and endpoints which can take them
     """
     logger.info('Crawler takes input %s:%s', input_type, input_value)
     paths = []
     endpoints_set = set()
+    # find synonyms
     synonyms = IDConverter().find_synonym(input_value, input_type)
+    # find endpoints which can take synonyms
     for _prefix, _value in synonyms[0].items():
         endpoints = find_endpoint(_prefix)
         # loop through each endpoint
@@ -171,6 +172,10 @@ def exploreinput(input_type, input_value):
                         paths.append([_endpoint, bt_explorer.registry.prefix2uri(_prefix), _item])
                 else:
                     paths.append([_endpoint, bt_explorer.registry.prefix2uri(_prefix), _value])
+    """
+    This part use asyncio libary to asynchronously extract
+    all the JSON outputs from individual API calls
+    """
     outputs = defaultdict(list)
     if paths:
         logger.info('Paths found for this input: %s', paths)
@@ -201,7 +206,7 @@ def exploreinput(input_type, input_value):
         endpoints = [_json['endpoint'] for _json in json_docs]
         # convert a list of jsonld documents to nquads documents
         # this is the slowest step in the process
-        nquads_list = jh.jsonld2nquads(jsonld_docs)
+        nquads_list = jh.jsonld2nquads(jsonld_docs, alwayslist=True)
         logger.info("Converting jsonld docs to nquads docs took: {:.2f} seconds".format(time.time() - start))
         start = time.time()
         for endpoint, nquads in list(zip(endpoints, nquads_list)):
@@ -212,6 +217,7 @@ def exploreinput(input_type, input_value):
                 for _assoc, _objects in _output.items():
                     for _object in _objects:
                         reorganized_data = {'api': bt_explorer.registry.endpoint_info[endpoint]['api'],
+                                            'endpoint': endpoint,
                                             'predicate': _assoc.replace('http://biothings.io/explorer/vocab/objects/', '')}
                         reorganized_data.update(oo.nquads2dict(_object))
                         object_id_prefix = reorganized_data['object']['id'].split(':')[0]
