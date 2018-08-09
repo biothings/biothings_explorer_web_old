@@ -80,7 +80,7 @@ class JSONLDHelper:
             logger.error(e, exc_info=True)
             return None
 
-    def jsonld2nquads(self, jsonld_docs):
+    def jsonld2nquads(self, jsonld_docs, alwayslist=False):
         """
         Given a JSON-LD annotated document,
         Fetch it's corresponding NQUADs file from JSON-LD playground
@@ -115,7 +115,7 @@ class JSONLDHelper:
                     logger.info('The first doc is %s', _doc)
                 logger.info("processing %s took: %s seconds", str(i), time.time() - start)
             """
-            if len(results) == 1:
+            if len(results) == 1 and alwayslist == False:
                 return results[0]
             else:
                 return results
@@ -127,7 +127,10 @@ class JSONLDHelper:
             results = Parallel(n_jobs=multiprocessing.cpu_count())(delayed(self.jsonld2nquads_helper)(_doc) for _doc in jsonld_docs)
             return results[0]
             """
-            return self.jsonld2nquads_helper(jsonld_docs)
+            if alwayslist == False:
+                return self.jsonld2nquads_helper(jsonld_docs)
+            else:
+                return [self.jsonld2nquads_helper(jsonld_docs)]
         # if the input is neither list of json_docs nor single json_doc
         # log error message and return None
         else:
@@ -274,7 +277,6 @@ class JSONLDHelper:
     def fetch_properties_by_association_in_nquads(self, nquads, association_list):
         results = {}
         for _association in association_list:
-            #logger.info('currently processing association: %s', _association)
             results[_association] = []
             object_values = self.fetch_object_value_by_predicate_value_in_nquads(nquads, _association)
             #logger.info('object_values: %s', object_values)
