@@ -88,7 +88,7 @@ class RegistryParser:
         bio-entity in its URI format
         """
         for k, v in self.bioentity_info.items():
-            if v['preferred_name'] == prefix:
+            if v['prefix'] == prefix:
                 return k
         # print error message if no URI was found
         if verbose:
@@ -108,7 +108,7 @@ class RegistryParser:
         bio-entity in its semantic type, e.g. GENE, VARIANT
         """
         for k, v in self.bioentity_info.items():
-            if v['preferred_name'] == prefix:
+            if v['prefix'] == prefix:
                 return self.bioentity_info[k]['semantic type']
         # print error message if no URI was found
         if verbose:
@@ -128,7 +128,7 @@ class RegistryParser:
         """
         for k, v in self.bioentity_info.items():
             if v['semantic type'] == semantic_type:
-                yield v['preferred_name']
+                yield v['prefix']
 
     def read_api_list_file(self):
         """
@@ -229,14 +229,14 @@ class RegistryParser:
         # add endpoint and input/output to the graph
         for _endpoint, _info in self.endpoint_info.items():
             for _input in _info['input']:
-                preferred_name = self.bioentity_info[_input]['preferred_name']
-                self.api_map.add_node(preferred_name, type='bioentity', color='yellow')
-                self.api_map.add_edge(preferred_name, _endpoint, label='has_input')
+                prefix = self.bioentity_info[_input]['prefix']
+                self.api_map.add_node(prefix, type='bioentity', color='yellow')
+                self.api_map.add_edge(prefix, _endpoint, label='has_input')
             for _output in _info['output']:
-                preferred_name = self.bioentity_info[_output]['preferred_name']
-                self.api_map.add_node(preferred_name, type='bioentity', color='yellow')
+                prefix = self.bioentity_info[_output]['prefix']
+                self.api_map.add_node(prefix, type='bioentity', color='yellow')
                 if _output in _info['relation']:
                     relations = _info['relation'][_output]
                     for _relation in relations:
-                        self.api_map.add_edge(_endpoint, preferred_name, label=_relation)
+                        self.api_map.add_edge(_endpoint, prefix, label=_relation)
         return self.api_map

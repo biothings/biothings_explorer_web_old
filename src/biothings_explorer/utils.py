@@ -60,11 +60,11 @@ def read_id_mapping_file():
     bioentity_info = {}
     # turn data frame into a dictionary and store in bioentity_info
     for index, row in data.iterrows():
-        bioentity_info[row['URI']] = {'description': row['Description'], 'preferred_name': row['Recommended name'], 'semantic type': row['Semantic Type']}
+        bioentity_info[row['URI']] = {'description': row['Description'], 'prefix': row['Recommended name'], 'semantic type': row['Semantic Type']}
     return bioentity_info
 
 registry = read_id_mapping_file()
-PREFIXES = [_item['preferred_name'].lower() for _item in registry.values()]
+PREFIXES = [_item['prefix'].lower() for _item in registry.values()]
 
 def int2str(d):
     """

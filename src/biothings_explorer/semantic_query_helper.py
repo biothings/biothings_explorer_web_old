@@ -30,7 +30,7 @@ class SemanticQueryHelper:
         uri_value = {input_type: input_value}
         api_call_params = self.ah.call_api(uri_value, endpoint_name)
         if not predicate:
-            predicate = self.nh.find_edge_label(endpoint_name, self.registry.bioentity_info[output_type]['preferred_name'])
+            predicate = self.nh.find_edge_label(endpoint_name, self.registry.bioentity_info[output_type]['prefix'])
             jsonld_context = self.registry.endpoint_info[endpoint_name]['jsonld_context']
             with open(jsonld_context) as f:
                 data = f.read()
@@ -58,7 +58,7 @@ class SemanticQueryHelper:
                 if outputs[i]:
                     for _output in outputs[i]:
                         input_value = processed_input[i]
-                        input_curie = self.registry.bioentity_info[input_type]['preferred_name'].upper() + ':' + input_value
+                        input_curie = self.registry.bioentity_info[input_type]['prefix'].upper() + ':' + input_value
                         final_results.append({'input': input_curie, 'context': context, 'output': _output, 'endpoint': endpoint_name, 'target': _output['object']['id'], 'predicate': predicate.split('/')[-1]})
         else:
             for _predicate in predicate:
@@ -66,7 +66,7 @@ class SemanticQueryHelper:
             for i in range(len(outputs)):
                 if outputs[i]:
                     input_value = processed_input[i]
-                    input_curie = self.registry.bioentity_info[input_type]['preferred_name'].upper() + ':' + input_value
+                    input_curie = self.registry.bioentity_info[input_type]['prefix'].upper() + ':' + input_value
                     final_results.append({'input': input_curie, 'output': (outputs[i]), 'endpoint': endpoint_name, 'target': outputs[i][0]['object']['id'], 'predicate': predicate})
         return final_results
 

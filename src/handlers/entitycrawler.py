@@ -106,7 +106,7 @@ def uri2curie(URI):
     _value = URI.split('/')[-1]
     _uri = URI[:len(URI)-len(_value)]
     if _uri in bt_explorer.registry.bioentity_info:
-        prefix = bt_explorer.registry.bioentity_info[_uri]['preferred_name']
+        prefix = bt_explorer.registry.bioentity_info[_uri]['prefix']
         return (prefix + ':' + _value)
     else:
         return _value

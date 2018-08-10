@@ -41,7 +41,7 @@ class BioThingsExplorer:
         """
         table = [['Preferred Name', 'URI', 'Description', 'Identifier pattern', 'Type']]
         for uri, info in self.api_handler.bioentity_info.items():
-            table.append([info['preferred_name'], uri, info['description'], info['identifier_pattern'], info['type']])
+            table.append([info['prefix'], uri, info['description'], info['identifier_pattern'], info['type']])
         return display(HTML(tabulate.tabulate(table, tablefmt='html')))
 
     def construct_api_road_map(self):
@@ -63,16 +63,16 @@ class BioThingsExplorer:
         # add endpoint and input/output to the graph
         for _endpoint, _info in self.registry.endpoint_info.items():
             for _input in _info['input']:
-                preferred_name = self.registry.bioentity_info[_input]['preferred_name']
-                self.api_map.add_node(preferred_name, type='bioentity', color='yellow')
-                self.api_map.add_edge(preferred_name, _endpoint, label='has_input')
+                prefix = self.registry.bioentity_info[_input]['prefix']
+                self.api_map.add_node(prefix, type='bioentity', color='yellow')
+                self.api_map.add_edge(prefix, _endpoint, label='has_input')
             for _output in _info['output']:
-                preferred_name = self.registry.bioentity_info[_output]['preferred_name']
-                self.api_map.add_node(preferred_name, type='bioentity', color='yellow')
+                prefix = self.registry.bioentity_info[_output]['prefix']
+                self.api_map.add_node(prefix, type='bioentity', color='yellow')
                 if _output in _info['relation']:
                     relations = _info['relation'][_output]
                     for _relation in relations:
-                        self.api_map.add_edge(_endpoint, preferred_name, label=_relation)
+                        self.api_map.add_edge(_endpoint, prefix, label=_relation)
         return self.api_map
 
     def path_conversion(self, pathList, relation_filter=None):

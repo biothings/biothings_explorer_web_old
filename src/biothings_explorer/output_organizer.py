@@ -23,7 +23,7 @@ class OutputOrganizor:
         _value = None
         for _uri in uris:
             if URI.startswith(_uri):
-                prefix = self.registry.bioentity_info[_uri]['preferred_name']
+                prefix = self.registry.bioentity_info[_uri]['prefix']
                 _value = URI[len(_uri):].replace('$$$$', ':')
                 return (prefix.upper() + ':' + _value)
         if not _value:
@@ -33,7 +33,7 @@ class OutputOrganizor:
         _value = URI.split('/')[-1]
         _uri = URI[:len(URI)-len(_value)]
         if _uri in self.registry.bioentity_info:
-            prefix = self.registry.bioentity_info[_uri]['preferred_name']
+            prefix = self.registry.bioentity_info[_uri]['prefix']
             return (prefix + ':' + _value)
         else:
             return _value

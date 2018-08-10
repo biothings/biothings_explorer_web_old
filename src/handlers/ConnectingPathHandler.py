@@ -189,13 +189,13 @@ class ConnectingPathHandler(BaseHandler):
         edges = []
         for _edge in bt_explorer.temp_G.edges():
             edges.append((_edge[0], _edge[1], find_edge_label(bt_explorer.temp_G, _edge[0], _edge[1])))
-        no_duplicate = [_item['preferred_name'] for _item in list(bt_explorer.registry.bioentity_info.values())] + list(bt_explorer.registry.endpoint_info.keys())
+        no_duplicate = [_item['prefix'] for _item in list(bt_explorer.registry.bioentity_info.values())] + list(bt_explorer.registry.endpoint_info.keys())
         plotly_results = networkx_to_plotly(edges, duplicates_not_allowed=no_duplicate)
         self.write(json.dumps({"plotly": plotly_results, "paths": paths}))
 
 class ApiMapHandler(BaseHandler):
     def get(self):
-        bio_entity_list = [_item['preferred_name'] for _item in list(bt_explorer.registry.bioentity_info.values())]
+        bio_entity_list = [_item['prefix'] for _item in list(bt_explorer.registry.bioentity_info.values())]
         api_list = bt_explorer.registry.api_info.keys()
         endpoint_list = bt_explorer.registry.endpoint_info.keys()
         cytoscape_results = networkx_to_cytoscape(bt_explorer.api_map.edges(), bio_entity_list, api_list, endpoint_list)
@@ -203,7 +203,7 @@ class ApiMapHandler(BaseHandler):
 
 class ApiMapHandlerSankey(BaseHandler):
     def get(self):
-        plotly_results = networkx_to_plotly(bt_explorer.api_map.edges(), [_item['preferred_name'] for _item in list(bt_explorer.registry.bioentity_info.values())])
+        plotly_results = networkx_to_plotly(bt_explorer.api_map.edges(), [_item['prefix'] for _item in list(bt_explorer.registry.bioentity_info.values())])
         self.write(json.dumps({"plotly": plotly_results}))
 
 class EndpointHandler(BaseHandler):
@@ -228,12 +228,12 @@ class MetaDataHandler(BaseHandler):
             # group all bioentity ids together based on their semantic type
             bioentity_dict = defaultdict(list)
             for _item in bt_explorer.registry.bioentity_info.values():
-                bioentity_dict[_item['semantic type']].append(_item['preferred_name'])
+                bioentity_dict[_item['semantic type']].append(_item['prefix'])
             for k,v in bioentity_dict.items():
                 bioentity_dict[k] = sorted(v)
             self.write(json_encode({'bioentity': bioentity_dict}))
         elif type == 'bioentity_input':
-            bio_entity_list = [_item['preferred_name'] for _item in list(bt_explorer.registry.bioentity_info.values())]
+            bio_entity_list = [_item['prefix'] for _item in list(bt_explorer.registry.bioentity_info.values())]
             inputs = [_edge[0] for _edge in bt_explorer.api_map.edges()]
             bioentity_inputs = [_entity for _entity in bio_entity_list if _entity in inputs]
             self.write(json.dumps({'input': bioentity_inputs}))
@@ -334,10 +334,10 @@ class KnowledgeMap(BaseHandler):
             relation = _endpoint_info['relation']
             inputs = _endpoint_info['input']
             for _input in inputs:
-                _input_curie = bioentity_info[_input]['preferred_name']
+                _input_curie = bioentity_info[_input]['prefix']
                 _input_type = bt_explorer.registry.bioentity_info[_input]['semantic type']
                 for _output, _relation in relation.items():
-                    _output_curie = bioentity_info[_output]['preferred_name']
+                    _output_curie = bioentity_info[_output]['prefix']
                     _output_type = bt_explorer.registry.bioentity_info[_output]['semantic type']
                     for _relate in _relation:
                         triples.append({'subject': {'prefix': _input_curie, 'semantic_type': _input_type}, 

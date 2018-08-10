@@ -136,10 +136,10 @@ class HandlerUtils:
             relation = _endpoint_info['relation']
             inputs = _endpoint_info['input']
             for _input in inputs:
-                _input_curie = self.bt_explorer.registry.bioentity_info[_input]['preferred_name']
+                _input_curie = self.bt_explorer.registry.bioentity_info[_input]['prefix']
                 _input_type = self.bt_explorer.registry.bioentity_info[_input]['semantic type']
                 for _output, _relation in relation.items():
-                    _output_curie = self.bt_explorer.registry.bioentity_info[_output]['preferred_name']
+                    _output_curie = self.bt_explorer.registry.bioentity_info[_output]['prefix']
                     _output_type = self.bt_explorer.registry.bioentity_info[_output]['semantic type']
                     for _relate in _relation:
                         triples.append({'subject': {'prefix': _input_curie, 'semantic_type': _input_type}, 

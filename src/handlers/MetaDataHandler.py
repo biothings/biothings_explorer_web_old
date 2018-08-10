@@ -177,14 +177,19 @@ class MetaDataHandler(BaseHandler):
             # group all bioentity ids together based on their semantic type
             bioentity_dict = defaultdict(list)
             for _item in HU.bt_explorer.registry.bioentity_info.values():
-                bioentity_dict[_item['semantic type']].append(_item['preferred_name'])
+                bioentity_dict[_item['semantic type']].append(_item['prefix'])
             for k, v in bioentity_dict.items():
                 bioentity_dict[k] = sorted(v)
             self.write(json_encode({'bioentity': bioentity_dict}))
         elif type == 'semantic_types':
             self.write(json_encode({'semantic_types': list(set([_item['semantic type'] for _item in HU.bt_explorer.registry.bioentity_info.values()]))}))
         elif type == 'bioentity_input':
-            bio_entity_list = [_item['preferred_name'] for _item in list(HU.bt_explorer.registry.bioentity_info.values())]
+            bio_entity_list = [_item['prefix'] for _item in list(HU.bt_explorer.registry.bioentity_info.values())]
+            inputs = [_edge[0] for _edge in HU.bt_explorer.api_map.edges()]
+            bioentity_inputs = [_entity for _entity in bio_entity_list if _entity in inputs]
+            self.write(json.dumps({'input': bioentity_inputs}))
+        elif type == 'crawler_input':
+            bio_entity_list = [_item['prefix'] for _item in list(HU.bt_explorer.registry.bioentity_info.values()) if _item['attribute type'] == 'ID']
             inputs = [_edge[0] for _edge in HU.bt_explorer.api_map.edges()]
             bioentity_inputs = [_entity for _entity in bio_entity_list if _entity in inputs]
             self.write(json.dumps({'input': bioentity_inputs}))
