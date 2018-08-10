@@ -64,7 +64,9 @@ class RegistryParser:
         data = readFile(self.id_mapping_path)
         # turn data frame into a dictionary and store in bioentity_info
         for index, row in data.iterrows():
-            self.bioentity_info[row['URI']] = {'description': row['Description'], 'preferred_name': row['Recommended name'], 'semantic type': row['Semantic Type']}
+            self.bioentity_info[row['URI']] = {'description': row['Description'], 'preferred_name': row['Recommended name'], 
+                                               'semantic type': row['Semantic Type'], 'pattern': row['Pattern'], 'prefix': row['Prefix'],
+                                               'example': row['Example'], 'attribute type': row['Attribute Type']}
         return self.bioentity_info
 
     def prefix2uri(self, prefix, verbose=False):
