@@ -9,7 +9,7 @@ class BioThingsURIHandler(BaseHandler):
     @tornado.web.addslash
     def get(self, prefix):
         registry = ApiCallHandler().registry
-        uri = 'http://biothings.io/explorer/vocab/terms/' + prefix
+        uri = 'http://biothings.io/explorer/vocab/terms/' + prefix.strip('/') + '/'
         if uri in registry.bioentity_info:
             self.write(json.dumps(registry.bioentity_info[uri]))
         else:
