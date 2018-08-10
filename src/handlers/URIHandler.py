@@ -6,6 +6,7 @@ from biothings_explorer.api_call_handler import ApiCallHandler
 from .basehandler import BaseHandler
 
 class BioThingsURIHandler(BaseHandler):
+    @tornado.web.addslash
     def get(self, prefix):
         registry = ApiCallHandler().registry
         uri = 'http://biothings.io/explorer/vocab/terms/' + prefix.strip('/') + '/'
