@@ -17,9 +17,13 @@ $(document).ready(function(){
         "bInfo": false,
         columns: [
             { title: "Prefix" },
+            { title: "Recommended Name"},
             { title: "URI" },
-            { title: "Description" },
-            { title: "Semantic Type" }
+            { title: "Pattern" },
+            { title: "Example" },
+            { title: "Semantic Type" },
+            { title: "Attribute Type" },
+            { title: "Description" }
         ]
     });
   });
