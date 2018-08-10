@@ -2,6 +2,7 @@ from urllib.parse import urljoin
 import networkx as nx
 import os.path
 from collections import defaultdict
+import math
 
 from .utils import readFile
 from .config import FILE_PATHS
@@ -67,6 +68,10 @@ class RegistryParser:
             self.bioentity_info[row['URI']] = {'description': row['Description'], 'preferred_name': row['Recommended name'], 
                                                'semantic type': row['Semantic Type'], 'pattern': row['Pattern'], 'prefix': row['Prefix'],
                                                'example': row['Example'], 'attribute type': row['Attribute Type']}
+        for k, v in self.bioentity_info.items():
+            for _k, _v in v.items():
+                if type(_v) != str and math.isnan(_v):
+                    v[_k] = None
         return self.bioentity_info
 
     def prefix2uri(self, prefix, verbose=False):
