@@ -101,20 +101,17 @@ class JSONLDHelper:
         if type(jsonld_docs) == list and type(jsonld_docs[0]) == dict:
             #results = Parallel(n_jobs=multiprocessing.cpu_count())(delayed(self.jsonld2nquads_helper)(_doc) for _doc in jsonld_docs)
             results = []
+            """
             # parallel code
             pool = multiprocessing.Pool(multiprocessing.cpu_count())
             results = pool.map(self.jsonld2nquads_helper, jsonld_docs)
             pool.close() 
-            pool.join()
             """
             # non parallel code
             for i, _doc in enumerate(jsonld_docs):
                 start = time.time()
                 results.append(self.jsonld2nquads_helper(_doc))
-                if i == 1:
-                    logger.info('The first doc is %s', _doc)
                 logger.info("processing %s took: %s seconds", str(i), time.time() - start)
-            """
             if len(results) == 1 and alwayslist == False:
                 return results[0]
             else:
