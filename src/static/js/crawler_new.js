@@ -107,7 +107,7 @@ function fill_data_for_single_semantic_type(semantic_type, dataset, column_names
 
 $(document).ready(function(){
     $(".dropdown-trigger").dropdown();
-    populateBioEntity('#select-input');
+    populateCrawlerInput('#select-input');
     $('#start-crawl-button').click(function() {
         $("#navbar").css({'position': 'relative'});
         $(".crawler_header").hide();
