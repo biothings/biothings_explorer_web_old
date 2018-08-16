@@ -69,7 +69,7 @@ function populateEndpoints(dropdown_id){
 };
 
 /**
- * Automatically add bioentity info to the options of select
+ * Automatically add semantic type info to the options of select
  * @param {String} dropdown_id
 */
 function populateSemanticType(dropdown_id){
@@ -78,6 +78,24 @@ function populateSemanticType(dropdown_id){
             return {"id": n, "text": n};
         });
         $(dropdown_id).select2({data: semantic_type_select2_data});
+    });
+};
+
+/** Automatically add crawler input to the options of select
+* @param {String} dropdown_id
+*/
+function populateCrawlerInput(dropdown_id){
+    getMetaData('crawler_input').done(function(jsonResponse){
+        var bioentity_select2_data = []
+        for (var semantic_type in jsonResponse.bioentity) {
+            var group = {'id': semantic_type, 'text': semantic_type, 'children': []};
+            var bioentity_id_list = jsonResponse.bioentity[semantic_type];
+            for (var bioentity_id in bioentity_id_list) {
+                group['children'].push({id: bioentity_id_list[bioentity_id], text: bioentity_id_list[bioentity_id]})
+            };
+            bioentity_select2_data.push(group);
+        };
+        $(dropdown_id).select2({data: bioentity_select2_data});
     });
 };
 
