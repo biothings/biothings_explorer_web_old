@@ -54,6 +54,7 @@ $(document).ready(function() {
         $("#main-menu").hide();
         $(".landing-page").hide();
         $(".page-footer").hide();
+        $(".query_example").hide();
         //recenter the search bar and show header
         $(".semantic-search-bar").show();
         $(".semantic-search-bar").addClass("search-bar-center");

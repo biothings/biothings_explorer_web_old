@@ -46,7 +46,39 @@ $(document).ready(function() {
         // hide the ploty graph display
         $("#path-plotly-div").hide();
     });
+
+    //the following section of code provides examples
+    // of how to connect from hgnc.symbol:CXCR4 to chembl.compound
+    $("#g2c_nav_example").click(function() {
+        $("#direct-input").val('hgnc.symbol'); // Select the option with a value of 'gene'
+        $('#direct-input').trigger('change'); 
+        $("#direct-output").val('chembl.compound'); // Select the option with a value of 'gene'
+        $('#direct-output').trigger('change');
+        $("#direct_input_value").val('CXCR4');
+    });
+
+    //the following section of code provides examples
+    // of how to connect from chembl.compound:CHEMBL744 to hgnc.symbol
+    $("#c2g_nav_example").click(function() {
+        $("#direct-input").val('chembl.compound'); // Select the option with a value of 'gene'
+        $('#direct-input').trigger('change'); 
+        $("#direct-output").val('hgnc.symbol'); // Select the option with a value of 'gene'
+        $('#direct-output').trigger('change');
+        $("#direct_input_value").val('CHEMBL744');
+    });
+
+    //the following section of code provides examples
+    // of how to connect from MONDO:0013632 to HP
+    $("#d2p_nav_example").click(function() {
+        $("#direct-input").val('mondo'); // Select the option with a value of 'gene'
+        $('#direct-input').trigger('change'); 
+        $("#direct-output").val('hp'); // Select the option with a value of 'gene'
+        $('#direct-output').trigger('change');
+        $("#direct_input_value").val('0013632');
+    });
+
     $(".search-button").click(function() {
+        $(".query_example").hide();
         $(".crawler-header").hide();
         $(".search-bar-center").addClass("search-bar-top");
         $(".search-bar-center").removeClass("search-bar-center");
