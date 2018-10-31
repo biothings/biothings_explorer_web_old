@@ -11,7 +11,7 @@ $(document).ready(function() {
 	$("#menu").click(function(){
 		instance.open();
 	});
-    populateSelectInSideBar()
+    populateSelectInSideBar();
     $(".try-explore-endpoint").click(function() {
         $(".search-bar").hide();
         $("#main-menu").hide();
@@ -62,12 +62,32 @@ $(document).ready(function() {
         // hide the ploty graph display
         $("#path-plotly-div").hide();
     });
+
+    //the following section of code provides examples
+    // of how to connect from gene to chemical
+    $("#g2c_example").click(function() {
+        $("#select-semantic-input").val('gene'); // Select the option with a value of 'gene'
+        $('#select-semantic-input').trigger('change'); 
+        $("#select-semantic-output").val('chemical'); // Select the option with a value of 'gene'
+        $('#select-semantic-output').trigger('change');
+    });
+
+    //the following section of code provides examples
+    // of how to connect from disease to gene
+    $("#d2g_example").click(function() {
+        $("#select-semantic-input").val('disease'); // Select the option with a value of 'gene'
+        $('#select-semantic-input').trigger('change'); 
+        $("#select-semantic-output").val('gene'); // Select the option with a value of 'gene'
+        $('#select-semantic-output').trigger('change');
+    });
+
     $(".search-button").click(function() {
         $(".crawler-header").hide();
         $(".search-bar-center").addClass("search-bar-top");
         $(".search-bar-center").removeClass("search-bar-center");
         
     });
+
     //when user select a bioentity/endpoint, display the sankey plot 
     //related to the user request
     displaySankeyBasedOnUserSelect();
