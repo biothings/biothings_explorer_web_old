@@ -54,7 +54,6 @@ $(document).ready(function() {
         $("#main-menu").hide();
         $(".landing-page").hide();
         $(".page-footer").hide();
-        $(".query_example").hide();
         //recenter the search bar and show header
         $(".semantic-search-bar").show();
         $(".semantic-search-bar").addClass("search-bar-center");
@@ -83,6 +82,7 @@ $(document).ready(function() {
     });
 
     $(".search-button").click(function() {
+        $(".query_example").hide();
         $(".crawler-header").hide();
         $(".search-bar-center").addClass("search-bar-top");
         $(".search-bar-center").removeClass("search-bar-center");
