@@ -56,3 +56,8 @@ h2 {
 	font-size: 1.8rem !important;
 	color: grey;
 }
+
+a:hover {
+    color: hotpink;
+    text-decoration: underline;
+}
