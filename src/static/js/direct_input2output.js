@@ -48,6 +48,7 @@ function DirectOutput2Graph(){
     		var edges = [];
     		results.forEach(function(_result) {
                 node_label = _result['output']['object']['id'];
+                console.log(node_label);
                 node_title = 'prefix: ' + _output;
                 if ('edge' in _result['output']) {
                     var edge_info = _result['output']['edge'];
@@ -56,7 +57,7 @@ function DirectOutput2Graph(){
                 }
                 edge_info['predicate'] = _result['predicate'];
                 nodes.push({'id': nodes_id, 'object_info': _result['output']['object'], 'title': node_title, 'font': {'color': 'blue'}, 'label': node_label.slice(node_label.split(':')[0].length + 1), 'group': 2});
-                edges.push({'from': 1, 'to': nodes_id, 'context': _result['context'], 'endpoint': _result['endpoint'], 'edge_info': edge_info, 'arrows': 'to', 'title': _result['predicate']})
+                edges.push({'from': 1, 'to': nodes_id, 'context': _result['context'], 'api': _result['api'], 'edge_info': edge_info, 'arrows': 'to', 'title': _result['predicate']})
                 nodes_id += 1;
     		});
             drawInputOutputGraph(new vis.DataSet(nodes), new vis.DataSet(edges));
@@ -121,7 +122,7 @@ function generateNodeTable(object_info) {
 
 function generateEdgeTable(endpoint_info, edge_info) {
     var table_html = '<table style="width:100%" class="centered striped responsive-table"><thead><tr><th style="width:30%">Name</th><th style="width:70%">Value</th></tr></thead><tbody>';
-    table_html += '<tr><td>Endpoint</td><td>' + endpoint_info + '</td></tr>';
+    table_html += '<tr><td>API</td><td>' + endpoint_info + '</td></tr>';
     for (var key in edge_info) {
         table_html += '<tr><td>' + key + '</td><td>' + createTableRow(edge_info[key]) + '</td></tr>';
     };
@@ -191,7 +192,7 @@ function drawInputOutputGraph(nodes, edges){
         var node_info = nodes.get(target_node_id)['object_info'];
         var node_message = generateNodeTable(node_info);
         var edge_info = edges.get(params.edges)[0]['edge_info'];
-        var endpoint_info = edges.get(params.edges)[0]['endpoint'];
+        var endpoint_info = edges.get(params.edges)[0]['api'];
         var edge_message = generateEdgeTable(endpoint_info, edge_info);
         var context_message = generateNodeTable(edges.get(params.edges)[0]['context'])
         $("#edge_info").html(edge_message);
