@@ -1,8 +1,5 @@
-import tabulate
 import networkx as nx
-from IPython.display import HTML, display
 import os, sys
-import logging
 
 from .api_call_handler import ApiCallHandler
 from .visjupyter_helper import find_edge_label, path2Graph, explore2Graph
@@ -42,7 +39,7 @@ class BioThingsExplorer:
         table = [['Preferred Name', 'URI', 'Description', 'Identifier pattern', 'Type']]
         for uri, info in self.api_handler.bioentity_info.items():
             table.append([info['prefix'], uri, info['description'], info['identifier_pattern'], info['type']])
-        return display(HTML(tabulate.tabulate(table, tablefmt='html')))
+        #return display(HTML(tabulate.tabulate(table, tablefmt='html')))
 
     def construct_api_road_map(self):
         """
