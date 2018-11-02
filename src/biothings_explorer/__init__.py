@@ -28,18 +28,22 @@ class BioThingsExplorer:
 
     def show_available_bioentities(self):
         """
-        This function displays available IDs in Jupyter Notebook in Tabel format
-        The columns of the table includes Preferred Name, URI, description, Identifier Pattern and Type
+        This function displays available IDs in Jupyter Notebook in
+        Tabel format
+        The columns of the table includes Preferred Name, URI,
+        description, Identifier Pattern and Type
         Each row represents one bioentity ID in the registry
 
         Return
         ======
         Table in Jupyter Notebook Cell
         """
-        table = [['Preferred Name', 'URI', 'Description', 'Identifier pattern', 'Type']]
+        table = [['Preferred Name', 'URI', 'Description',
+                  'Identifier pattern', 'Type']]
         for uri, info in self.api_handler.bioentity_info.items():
-            table.append([info['prefix'], uri, info['description'], info['identifier_pattern'], info['type']])
-        #return display(HTML(tabulate.tabulate(table, tablefmt='html')))
+            table.append([info['prefix'], uri, info['description'],
+                          info['identifier_pattern'], info['type']])
+#return display(HTML(tabulate.tabulate(table, tablefmt='html')))
 
     def construct_api_road_map(self):
         """
@@ -69,14 +73,17 @@ class BioThingsExplorer:
                 if _output in _info['relation']:
                     relations = _info['relation'][_output]
                     for _relation in relations:
-                        self.api_map.add_edge(_endpoint, prefix, label=_relation)
+                        self.api_map.add_edge(_endpoint, prefix,
+                                              label=_relation)
         return self.api_map
 
     def path_conversion(self, pathList, relation_filter=None):
         """
         converted path from list to dict
-        Example: [1, 2, 3, 4, 5] ==> [{'input': 1, 'endpoint': 2, 'output': 3, relation: '...'},
-                                      {'input': 3, 'endpoint': 4, 'output': 5, relation: '...'}]
+        Example: [1, 2, 3, 4, 5] ==> [{'input': 1, 'endpoint': 2,
+                                       'output': 3, relation: '...'},
+                                      {'input': 3, 'endpoint': 4,
+                                      'output': 5, relation: '...'}]
 
         Params
         ======
@@ -86,10 +93,12 @@ class BioThingsExplorer:
             user specified edge label
         """
         pathDict = []
-        for i in range(0, len(pathList)-1, 2):
-            list2dict = {'input': pathList[i], 'endpoint': pathList[i+1],
-                         'output': pathList[i+2]}
-            list2dict.update({'relation': find_edge_label(self.api_map, pathList[i+1], pathList[i+2], relation_filter)})
+        for i in range(0, len(pathList) - 1, 2):
+            list2dict = {'input': pathList[i], 'endpoint': pathList[i + 1],
+                         'output': pathList[i + 2]}
+            list2dict.update({'relation': find_edge_label(self.api_map,
+                              pathList[i + 1], pathList[i + 2],
+                relation_filter)})
             pathDict.append(list2dict)
         return pathDict
 
