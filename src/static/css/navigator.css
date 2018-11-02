@@ -61,3 +61,8 @@ a:hover {
     color: hotpink;
     text-decoration: underline;
 }
+
+#regex_check {
+	color: red;
+	font-family: "Ubuntu";
+}
