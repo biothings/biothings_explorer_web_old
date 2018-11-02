@@ -219,6 +219,17 @@ class JSONLDHelper:
                 self.jsonld_parser_helper(v, relation=relation)
         return relation
 
+    def extract_predicates_from_jsonld(self, _dict, predicates=set()):
+        """
+        Look for all unique values in "@id" field within JSON-LD context files
+        """
+        for k, v in _dict.items():
+            if isinstance(v, dict):
+                self.extract_predicates_from_jsonld(v, predicates=predicates)
+            elif k == "@id":
+                predicates.add(v)
+        return predicates
+
     def jsonld_relation_parser(self, jsonld_context):
         """
         Given a JSON-LD context file, reorganize the file
@@ -288,11 +299,12 @@ class JSONLDHelper:
                         logger.warn("Could not fetch any properties from the given association: {}".format(_object_value))
                 else:
                     results[_association].append({'http://biothings.io/explorer/vocab/attributes/id': [_object_value]})
+        print(results)
         return results
 
     def fetch_properties_by_association_and_prefix_in_nquads(self, nquads, association, prefix):
         association_results = self.fetch_properties_by_association_in_nquads(nquads, [association])
-        association_and_prefix_results = [_doc for _doc in association_results[association] if 'http://biothings.io/explorer/vocab/attributes/id' in _doc and _doc['http://biothings.io/explorer/vocab/attributes/id'][0].startswith(prefix)]
+        association_and_prefix_results = [_doc for _doc in association_results[association] if 'http://biothings.io/explorer/vocab/attributes/id' in _doc and _doc['http://biothings.io/explorer/vocab/attributes/id'][-1].startswith(prefix)]
         return association_and_prefix_results
 
     def locate_association_in_jsonld_context_file(self, jsonld_context, association):

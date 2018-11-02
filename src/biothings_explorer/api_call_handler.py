@@ -216,6 +216,8 @@ class ApiCallHandler:
         3) Preprocess the JSON doc from step 2
         4) Extract the output based on output_type and predicate
         """
+        # remove any input prefix
+        input_value = input_value.split(':')[-1]
         if _type == 'prefix':
             input_type = self.registry.prefix2uri(input_type)
             output_type = self.registry.prefix2uri(output_type)
@@ -271,4 +273,5 @@ class ApiCallHandler:
                     input_curie = self.registry.bioentity_info[input_type]['prefix'].upper() + ':' + input_value
                     final_results.append({'input': input_curie, 'output': (outputs[i]), 'api': self.registry.endpoint_info[endpoint_name]['api'], 'target': outputs[i][0]['object']['id'], 'predicate': predicate})
         print('Time used in organizing outputs: {:.2f} seconds'.format(time.time() - start))
+        print(final_results)
         return final_results

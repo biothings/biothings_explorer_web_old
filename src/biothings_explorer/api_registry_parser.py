@@ -28,6 +28,7 @@ class RegistryParser:
         self.api_info = {}
         self.endpoint_info = {}
         self.openapi_spec_path_list = []
+        self.predicates = set()
         self.jh = JSONLDHelper()
         self.api_map = nx.MultiDiGraph()
         if readmethod == 'http':
@@ -186,6 +187,7 @@ class RegistryParser:
                     jsonld_path = urljoin(self.registry_path, _info['get']['responses']['200']['x-JSONLDContext'])
                 elif self.readmethod == 'filepath':
                     jsonld_path = os.path.join(self.registry_path, _info['get']['responses']['200']['x-JSONLDContext'])
+                self.predicates = self.predicates | self.jh.extract_predicates_from_jsonld(readFile(jsonld_path))
                 if 'disease-ontology' in endpoint_name:
                     relation = {}
                     for _op in _output:
