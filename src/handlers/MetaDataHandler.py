@@ -189,10 +189,15 @@ class MetaDataHandler(BaseHandler):
             bioentity_inputs = [_entity for _entity in bio_entity_list if _entity in inputs]
             self.write(json.dumps({'input': bioentity_inputs}))
         elif type == 'crawler_input':
+            bioentity_dict = defaultdict(list)
             bio_entity_list = [_item['prefix'] for _item in list(HU.bt_explorer.registry.bioentity_info.values()) if _item['attribute type'] == 'ID']
             inputs = [_edge[0] for _edge in HU.bt_explorer.api_map.edges()]
             bioentity_inputs = [_entity for _entity in bio_entity_list if _entity in inputs]
-            self.write(json.dumps({'input': bioentity_inputs}))
+            for _input in bioentity_inputs:
+                bioentity_dict[HU.bt_explorer.registry.prefix2semantictype(_input)].append(_input)
+            for k, v in bioentity_dict.items():
+                bioentity_dict[k] = sorted(v)
+            self.write(json_encode({'bioentity': bioentity_dict}))
         else:
             self.set_status(400)
             self.write(json.dumps({"status": 400, 'error message': "This is not a valid request!"}))
