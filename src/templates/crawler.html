@@ -1,39 +1,72 @@
 <html>
    <head>
-      <title>BioThings Explorer</title>
-      <meta name = "viewport" content = "width = device-width, initial-scale = 1">      
-      <link rel = "stylesheet"
+      <meta property="og:locale" content="en_US">
+        <meta property="og:url" content="http://biothings.io/explorer/">
+        <meta property="og:site_name" content="BioThings Explorer">
+        <meta property="og:title" content="BioThings Explorer | Exploring Biological Data Through Linked API Services">
+        <meta name="description" content="BioThings Explorer utilize JSON-LD and SmartAPI Specifications to link biological API for knowledge exploration. Users could get metadata information about APIs as well as fetching linked biological data through BioThings Explorer.">
+        <meta property="og:type" content="website">
+        <meta property="og:description" content="BioThings Explorer utilize JSON-LD and SmartAPI Specifications to link biological API for knowledge exploration. Users could get metadata information about APIs as well as fetching linked biological data through BioThings Explorer.">
+        <meta property="og:image" content="./static/img/linked_data.png">
+        <meta property="og:image:type" content="image/png">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
+        <title>BioThings Explorer</title>
+        <meta name = "viewport" content = "width = device-width, initial-scale = 1">      
+        <link rel="shortcut icon" href="./static/img/linked_data.png">     
+        <link rel = "stylesheet"
          href = "https://fonts.googleapis.com/icon?family=Material+Icons">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.3/css/materialize.min.css">
       <link href="./static/css/crawler.css" rel="stylesheet" />
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.3/js/materialize.min.js"></script>
       <script type="text/javascript" src="./static/js/populateSelect.js"></script>
-      <script type="text/javascript" src="./static/js/jsonld.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
       <link href="./static/css/select2-materialize.css" rel="stylesheet" type="text/css" />
+      <!-- script for data table-->
+      <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+      <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+      <!-- script for zingchart used to create radar chart here-->
+      <script src= "https://cdn.zingchart.com/zingchart.min.js"></script>
+      <script> zingchart.MODULESDIR = "https://cdn.zingchart.com/modules/";
+      ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9","ee6b7db5b51705a13dc2339db3edaf6d"];</script>
    </head>
    <body> 
       <!-- This section is for the header-->
-      <div class="row">
-         <div class="col s12" id="navbar">
+        <div>
+            <ul id="dropdown1" class="dropdown-content">
+              <li><a href="../metadata">Knowledge Map</a></li>
+              <li><a href="../crawler">Crawler</a></li>
+              <li><a href="../navigator">Navigator</a></li>
+            </ul>
+            <ul id="dropdown2" class="dropdown-content">
+              <li><a href="../tutorial">Tutorial</a></li>
+              <li><a href="../sources">Sources</a></li>
+              <li><a href="../uri">URI Registry</a></li>
+            </ul>
+            <ul id="dropdown3" class="dropdown-content">
+              <li><a href="../api">API</a></li>
+              <li><a href="https://pypi.org/project/biothings-explorer/">Python</a></li>
+            </ul>
             <nav>
-                <div class="nav-wrapper orange">
-                    <a href="/explorer" class="brand-logo">BioThings Explorer</a>
-                    <ul class="right hide-on-med-and-down">
-                    <li><a href="/tutorial" id="map">TUTORIAL</a></li>
-                    <li><a href="/explorer" id="explore">EXPLORE</a></li>
-                    <li><a href="/#" id="api">API</a></li>
-                    </ul>
+                <div class="nav-wrapper black">
+                    <div class="col s12">
+                        <a href=".." title="BioThings Explorer"><img style="border:0px;" width="256" src="http://biothings.io/static/img/biothings-explorer-256.png" alt="Logo 256"/></a>
+                        <!-- Dropdown Structure -->
+                        <ul class="right hide-on-med-and-down">
+                            <li><a class="dropdown-trigger" href="#!" data-target="dropdown2">Docs<i class="material-icons right">arrow_drop_down</i></a></li>
+                            <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Tools<i class="material-icons right">arrow_drop_down</i></a></li>
+                            <li><a class="dropdown-trigger" href="#!" data-target="dropdown3">Developers<i class="material-icons right">arrow_drop_down</i></a></li>
+                        </ul>
+                    </div>
                 </div>
             </nav>
-         </div>
-      </div>
+        </div>
       <!-- This section is for the search bar-->
       <div class="row valign-wrapper search-bar-center">    
           <div class="col s12">
               <div class="row">
-                  <div class="col s12 crawler-header">
+                  <div class="col s12 crawler_header">
                     <h1 class="orange-text" style="font-family: Ubuntu; text-align: center;"> BioThings Crawler </h1>
                     <br>
                     <br>
@@ -49,8 +82,10 @@
                   <div class="col s1 crawler_input">
                       <a href="#data_explore_view"><button id="start-crawl-button" class="btn btn-default" type="button"><i class="medium material-icons">search</i></button></a>
                   </div>
-                  <div class="col s8 offset-s2">
-                      <p class="orange-text"> Example query: Choose prefix to be <strong>ncbigene</strong>, and type <strong>1017</strong> in the input bar. Then click on the search button</p>
+                  <div class="col s12 m8 offset-m1 query_example">
+                      <p class="orange-text"> Some useful examples to get you started!</p>
+                      <p> <a href="#" id="g_crawl_example"> Find all information related to <b>gene</b> ncibigene:1017</a></p>
+                      <p> <a href="#" id="c_crawl_example"> Find all information related to <b>chemical</b> CHEMBL.COMPOUND:CHEMBL744</a></p>
                   </div>
               </div>
           </div>
@@ -65,16 +100,15 @@
       </div>
       <!-- This section is for the data display-->
       <div class="row main" style="display: none">
-        <div class="filter col m4 s12">
-          <ul class="collapsible filter-collapsible">
+        <div class="col s12 data-display">
+          <ul class="collapsible data-display-list">
+            <li class="active">
+              <div class="collapsible-header"><i class="material-icons">filter_drama</i>Summary</div>
+              <div class="collapsible-body"><div id="radar_chart"></div></div>
+            </li>
           </ul>
-        </div>
-        <div class="col m7 s12 data-display">
-          <ul class="collection data-display-list">
-          </ul>
-          <h5 style="text-align: center; background-color: #f4f5f7; font-family: Ubuntu; cursor: pointer" id="show-more"> SHOW MORE RESULTS </h5>
         </div>
       </div>
-      <script type="text/javascript" src="./static/js/crawler.js"></script>
+      <script type="text/javascript" src="./static/js/crawler_new.js"></script>
   </body>
 </html>

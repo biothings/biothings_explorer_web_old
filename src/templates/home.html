@@ -1,0 +1,129 @@
+<html>
+   <head>
+        <meta property="og:locale" content="en_US">
+        <meta property="og:url" content="http://biothings.io/explorer/">
+        <meta property="og:site_name" content="BioThings Explorer">
+        <meta property="og:title" content="BioThings Explorer | Exploring Biological Data Through Linked API Services">
+        <meta name="description" content="BioThings Explorer utilize JSON-LD and SmartAPI Specifications to link biological API for knowledge exploration. Users could get metadata information about APIs as well as fetching linked biological data through BioThings Explorer.">
+        <meta property="og:type" content="website">
+        <meta property="og:description" content="BioThings Explorer utilize JSON-LD and SmartAPI Specifications to link biological API for knowledge exploration. Users could get metadata information about APIs as well as fetching linked biological data through BioThings Explorer.">
+        <meta property="og:image" content="http://biothings.io/static/img/biothings-explorer-64.png">
+        <meta property="og:image:type" content="image/png">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
+        <title>BioThings Explorer</title>
+        <meta name = "viewport" content = "width = device-width, initial-scale = 1">      
+        <link rel="shortcut icon"  href="http://biothings.io/static/img/biothings-explorer-64.png" title="BioThings Explorer">
+        <link rel = "stylesheet"
+         href = "https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.3/css/materialize.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.3/js/materialize.min.js"></script>
+        <link href="./static/css/select2-materialize.css" rel="stylesheet" type="text/css" />
+        <link href="./static/css/home.css" rel="stylesheet" />
+    </head>
+    <body>
+      <!-- This section is for the header-->
+        <div>
+            <ul id="dropdown1" class="dropdown-content">
+              <li><a href="metadata">Knowledge Map</a></li>
+              <li><a href="crawler">Crawler</a></li>
+              <li><a href="navigator">Navigator</a></li>
+            </ul>
+            <ul id="dropdown2" class="dropdown-content">
+              <li><a href="tutorial">Tutorial</a></li>
+              <li><a href="sources">Sources</a></li>
+              <li><a href="uri">URI Registry</a></li>
+            </ul>
+            <ul id="dropdown3" class="dropdown-content">
+              <li><a href="api">API</a></li>
+              <li><a href="https://pypi.org/project/biothings-explorer/">Python</a></li>
+            </ul>
+            <nav>
+                <div class="nav-wrapper black">
+                    <div class="col s12">
+                        <a href="#" title="BioThings Explorer"><img style="border:0px;" width="256" src="http://biothings.io/static/img/biothings-explorer-256.png" alt="Logo 256"/></a>
+                        <!-- Dropdown Structure -->
+                        <ul class="right hide-on-med-and-down">
+                            <li><a class="dropdown-trigger" href="#!" data-target="dropdown2">Docs<i class="material-icons right">arrow_drop_down</i></a></li>
+                            <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Tools<i class="material-icons right">arrow_drop_down</i></a></li>
+                            <li><a class="dropdown-trigger" href="#!" data-target="dropdown3">Developers<i class="material-icons right">arrow_drop_down</i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div class="row grey lighten-5 landing-page">
+            <div class="col s12 l8">
+                <h1 class="black-text center">BioThings Explorer</h1>
+                <p class="black-text center"> Exploring Biological Data Through Linked API Services </p>
+            </div>
+            <div class="col s12 l4 hide-on-small-only">
+                <img width="100%" src="./static/img/biothings-explorer.svg">
+            </div>
+        </div>
+        <div id="intro" class="grey lighten-5">
+            <div class="container">
+                <div class="row sub-intro">
+                    <div class="col l4 m4 right hide-on-small-only">
+                        <img width="100%" src="./static/img/metadat.png">
+                    </div>
+                    <div class="col l8 m8">
+                        <h2 class="center"> Knowledge Map Explorer</h2>
+                        <p class="blue-grey-text">The availability of scientific data through <a href="https://en.wikipedia.org/wiki/Representational_state_transfer" target="_blank">RESTful APIs</a> provides a rich source of information for scientists to support their research. However, the risk of this pervasive availability is that an individual researcher may fail to find relevant information that is outside the direct scope of interest. BioThings Explorer is a tool which can guide researchers <b>identify the right API(s) to use</b> among similar ones based on specific research tasks. </p>
+                        <a class="waves-effect waves-light btn light-blue lighten-3 try-it-out-button" id="try-crawler-button" href="metadata">Try it out</a>
+                    </div>
+                </br>
+                </div>
+                <div class="row sub-intro">
+                    <div class="col l4 m4 hide-on-small-only">
+                        <img width="100%" src="./static/img/crawler_green.png">
+                    </div>
+                    <div class="col l8 m8">
+                        <h2 class="center"> API Crawler</h2>
+                        <p class="blue-grey-text">As a biologist, you might ask for all the biological knowledge (e.g. protein, pathway, chemical, anatomy, etc.) relevant to your research interest (e.g. gene CXCR4). API Crawler the right place to go. It is essentially a linked-data service which can return connected biological data for a specific biological entity (e.g. Gene Symbol CXCR4). </p>
+                        <a class="waves-effect waves-light btn green right try-it-out-button" id="try-crawler-button" href="crawler"> Try it out</a>
+                    </div>
+                </div>
+                <div class="row sub-intro">
+                    <div class="col l4 m4 right hide-on-small-only">
+                        <img width="100%" src="./static/img/navigator.png">
+                    </div>
+                    <div class="col l8 m8">
+                        <h2 class="center"> BioThings Navigator</h2>
+                        <p class="blue-grey-text">Don't want to waste your time finding the right APIs, reading through their tedious documentation and then fetching the results from these APIs? Here you go! BioThings Explorer provides a <b>central point to access all the data</b> provided from a variety of biological APIs on the fly.</p>
+                        <a class="waves-effect waves-light btn red accent-2 try-it-out-button" id="try-navigator-button" href="navigator">Try it out</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="page-footer black">
+            <div class="container">
+                <div class="row">
+                    <div class="col l6 s12">
+                        <h5 class="white-text">BioThings Explorer</h5>
+                        <p class="grey-text text-lighten-4">Utilizing JSON-LD and SmartAPI Specifications to link biological APIs for knowledge exploration.</p>
+                    </div>
+                    <div class="col l4 offset-l2 s12">
+                        <h5 class="white-text">Useful Links</h5>
+                        <ul>
+                            <li><a class="grey-text text-lighten-3" href="http://biothings.io/#" target="_blank">BioThings API</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://smart-api.info/" target="_blank">SmartAPI Specification</a></li>
+                            <li><a class="grey-text text-lighten-3" href="https://json-ld.org/" target="_blank">JSON-LD</a></li>
+                            <li><a class="grey-text text-lighten-4" href="http://wulab.io/" target="_blank">The Wu Lab</a></li>
+                            <li><a class="grey-text text-lighten-4" href="http://sulab.org/" target="_blank">The Su Lab</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                <div class="container">
+                    Copyright © 2017-2018 The Su/Wu Lab.</p>
+                </div>
+            </div>
+        </footer>
+        <script>
+            $(".dropdown-trigger").dropdown();
+        </script> 
+    </body>
+</html>

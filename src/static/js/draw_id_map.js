@@ -1109,6 +1109,7 @@ function drawIdLevelMap(){
   	layout:{randomSeed:3}
   };
   var network_id = new vis.Network(container, data, options);
+  network_id.fit();
 };
 
 

@@ -1,0 +1,94 @@
+<html>
+   <head>
+        <meta property="og:locale" content="en_US">
+        <meta property="og:url" content="http://biothings.io/explorer/">
+        <meta property="og:site_name" content="BioThings Explorer">
+        <meta property="og:title" content="BioThings Explorer | Exploring Biological Data Through Linked API Services">
+        <meta name="description" content="BioThings Explorer utilize JSON-LD and SmartAPI Specifications to link biological API for knowledge exploration. Users could get metadata information about APIs as well as fetching linked biological data through BioThings Explorer.">
+        <meta property="og:type" content="website">
+        <meta property="og:description" content="BioThings Explorer utilize JSON-LD and SmartAPI Specifications to link biological API for knowledge exploration. Users could get metadata information about APIs as well as fetching linked biological data through BioThings Explorer.">
+        <meta property="og:image" content="http://biothings.io/static/img/biothings-explorer-64.png">
+        <meta property="og:image:type" content="image/png">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
+        <title>BioThings Explorer</title>
+        <meta name = "viewport" content = "width = device-width, initial-scale = 1">      
+        <link rel="shortcut icon"  href="http://biothings.io/static/img/biothings-explorer-64.png" title="BioThings Explorer">      
+      <link rel = "stylesheet"
+         href = "https://fonts.googleapis.com/icon?family=Material+Icons">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <!-- script for data table-->
+      <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+      <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+        <!-- Compiled and minified CSS -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+
+      <!-- Compiled and minified JavaScript -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
+
+      
+      <link href="./static/css/sources.css" rel="stylesheet" />
+   </head>
+   <body> 
+      <!-- This section is for the header-->
+        <div>
+            <ul id="dropdown1" class="dropdown-content">
+              <li><a href="../metadata">Knowledge Map</a></li>
+              <li><a href="../crawler">Crawler</a></li>
+              <li><a href="../navigator">Navigator</a></li>
+            </ul>
+            <ul id="dropdown2" class="dropdown-content">
+              <li><a href="../tutorial">Tutorial</a></li>
+              <li><a href="../sources">Sources</a></li>
+              <li><a href="../uri">URI Registry</a></li>
+            </ul>
+            <ul id="dropdown3" class="dropdown-content">
+              <li><a href="../api">API</a></li>
+              <li><a href="https://pypi.org/project/biothings-explorer/">Python</a></li>
+            </ul>
+            <nav>
+                <div class="nav-wrapper black">
+                    <div class="col s12">
+                        <a href=".." title="BioThings Explorer"><img style="border:0px;" width="256" src="http://biothings.io/static/img/biothings-explorer-256.png" alt="Logo 256"/></a>
+                        <!-- Dropdown Structure -->
+                        <ul class="right hide-on-med-and-down">
+                            <li><a class="dropdown-trigger" href="#!" data-target="dropdown2">Docs<i class="material-icons right">arrow_drop_down</i></a></li>
+                            <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Tools<i class="material-icons right">arrow_drop_down</i></a></li>
+                            <li><a class="dropdown-trigger" href="#!" data-target="dropdown3">Developers<i class="material-icons right">arrow_drop_down</i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+      <div class="row">
+        <div class="col s12 m9 l10">
+          <div id="introduction" class="section scrollspy">
+            <h1> Introduction </h1>
+            <p> BioThings Explorer allows users to query a vast amount of biological and chemical databases in a central place by calling APIs which distribute these data on the fly. The tables below list all the APIs and databases which are currently integrated in BioThings Explorer. If you would like to add an additional API to BioThings Explorer, please visit <a href="https://smart-api.info/" target="_blank">Smart API</a> website to add the SmartAPI specification for your API(s).</p>
+          </div>
+
+          <div id="apisection" class="section scrollspy">
+            <h1> APIs Integrated </h1>
+            <p> The table below list all the biological APIs which are currently integrated for exploration in BioThings Explorer.</p>
+            <table id="apitable" class="display" width="100%"></table>
+          </div>
+
+          <div id="databasesection" class="section scrollspy">
+            <h1> Databases Integrated </h1>
+            <p> Some APIs might integrate more than one biological databases. The table below list all the biological databases which are currently integrated for exploration in BioThings Explorer. The first two columns of the table list the databse name and its version. The third column of the table list which API includes the database. </p>
+            <table id="databasetable" class="display" width="100%"></table>
+          </div>
+
+        </div>
+        <div class="col hide-on-small-only m3 l2">
+          <ul class="section table-of-contents">
+            <li><a href="#introduction">Introduction</a></li>
+            <li><a href="#apisection">APIs</a></li>
+            <li><a href="#databasesection">Databases</a></li>
+          </ul>
+        </div>
+      </div>
+      <script type="text/javascript" src="./static/js/sources.js"></script>
+  </body>
+</html>
+

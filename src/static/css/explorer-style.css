@@ -1,0 +1,47 @@
+.collapsible-body p {
+	margin-top: 0.5%;
+	margin-left: 2%;
+	margin-right: 1%;
+	font-size: 0.8rem;
+	line-height: 20px !important;
+}
+
+.select-wrapper {
+    margin-left: 3% !important;
+    margin-right: 3% !important;
+    margin-bottom: 1%;
+}
+
+#DirectInput2OutputButton {
+	margin-top: 2% !important;
+}
+
+.direct_output_display {
+	max-height: 300px;
+}
+
+#cy {
+    border: 1px solid #ddd;
+    margin-left: 1%;
+    border-radius: 0.25em;
+    overflow: hidden !important;
+}
+
+h1 {
+    font-size: 1rem;
+}
+
+.help-text {
+	margin-top: 50px;
+	padding: 10%;
+	background-color: #bdc3c7;
+	font-family: "Roboto", sans-serif;
+}
+
+table {
+	table-layout: fixed;
+	width: 100%;
+}
+
+
+

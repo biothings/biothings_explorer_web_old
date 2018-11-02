@@ -1,19 +1,16 @@
-import tabulate
 import networkx as nx
-from IPython.display import HTML, display
 import os, sys
-import logging
 
 from .api_call_handler import ApiCallHandler
 from .visjupyter_helper import find_edge_label, path2Graph, explore2Graph
 from .utils import output2input
 
 # add path for the config folder
-sys.path.append('/Users/kevinxin/Documents/myvariant.info/json-ld/bt_explorer_web_development/config_folder/bt_explorer_2')
-from config import LOG_FOLDER
+#sys.path.append('/Users/kevinxin/Documents/myvariant.info/json-ld/bt_explorer_web_development/config_folder/bt_explorer_2')
+#from .config import LOG_FOLDER
 
 formatter = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-logging.basicConfig(level=logging.DEBUG, filename=os.path.join(LOG_FOLDER, 'debug.log'), format=formatter)
+#logging.basicConfig(level=logging.DEBUG, filename=os.path.join(LOG_FOLDER, 'debug.log'), format=formatter)
 
 class BioThingsExplorer:
     def __init__(self, loadroadmap=True):
@@ -31,18 +28,22 @@ class BioThingsExplorer:
 
     def show_available_bioentities(self):
         """
-        This function displays available IDs in Jupyter Notebook in Tabel format
-        The columns of the table includes Preferred Name, URI, description, Identifier Pattern and Type
+        This function displays available IDs in Jupyter Notebook in
+        Tabel format
+        The columns of the table includes Preferred Name, URI,
+        description, Identifier Pattern and Type
         Each row represents one bioentity ID in the registry
 
         Return
         ======
         Table in Jupyter Notebook Cell
         """
-        table = [['Preferred Name', 'URI', 'Description', 'Identifier pattern', 'Type']]
+        table = [['Preferred Name', 'URI', 'Description',
+                  'Identifier pattern', 'Type']]
         for uri, info in self.api_handler.bioentity_info.items():
-            table.append([info['preferred_name'], uri, info['description'], info['identifier_pattern'], info['type']])
-        return display(HTML(tabulate.tabulate(table, tablefmt='html')))
+            table.append([info['prefix'], uri, info['description'],
+                          info['identifier_pattern'], info['type']])
+#return display(HTML(tabulate.tabulate(table, tablefmt='html')))
 
     def construct_api_road_map(self):
         """
@@ -63,23 +64,26 @@ class BioThingsExplorer:
         # add endpoint and input/output to the graph
         for _endpoint, _info in self.registry.endpoint_info.items():
             for _input in _info['input']:
-                preferred_name = self.registry.bioentity_info[_input]['preferred_name']
-                self.api_map.add_node(preferred_name, type='bioentity', color='yellow')
-                self.api_map.add_edge(preferred_name, _endpoint, label='has_input')
+                prefix = self.registry.bioentity_info[_input]['prefix']
+                self.api_map.add_node(prefix, type='bioentity', color='yellow')
+                self.api_map.add_edge(prefix, _endpoint, label='has_input')
             for _output in _info['output']:
-                preferred_name = self.registry.bioentity_info[_output]['preferred_name']
-                self.api_map.add_node(preferred_name, type='bioentity', color='yellow')
+                prefix = self.registry.bioentity_info[_output]['prefix']
+                self.api_map.add_node(prefix, type='bioentity', color='yellow')
                 if _output in _info['relation']:
                     relations = _info['relation'][_output]
                     for _relation in relations:
-                        self.api_map.add_edge(_endpoint, preferred_name, label=_relation)
+                        self.api_map.add_edge(_endpoint, prefix,
+                                              label=_relation)
         return self.api_map
 
     def path_conversion(self, pathList, relation_filter=None):
         """
         converted path from list to dict
-        Example: [1, 2, 3, 4, 5] ==> [{'input': 1, 'endpoint': 2, 'output': 3, relation: '...'},
-                                      {'input': 3, 'endpoint': 4, 'output': 5, relation: '...'}]
+        Example: [1, 2, 3, 4, 5] ==> [{'input': 1, 'endpoint': 2,
+                                       'output': 3, relation: '...'},
+                                      {'input': 3, 'endpoint': 4,
+                                      'output': 5, relation: '...'}]
 
         Params
         ======
@@ -89,10 +93,12 @@ class BioThingsExplorer:
             user specified edge label
         """
         pathDict = []
-        for i in range(0, len(pathList)-1, 2):
-            list2dict = {'input': pathList[i], 'endpoint': pathList[i+1],
-                         'output': pathList[i+2]}
-            list2dict.update({'relation': find_edge_label(self.api_map, pathList[i+1], pathList[i+2], relation_filter)})
+        for i in range(0, len(pathList) - 1, 2):
+            list2dict = {'input': pathList[i], 'endpoint': pathList[i + 1],
+                         'output': pathList[i + 2]}
+            list2dict.update({'relation': find_edge_label(self.api_map,
+                              pathList[i + 1], pathList[i + 2],
+                relation_filter)})
             pathDict.append(list2dict)
         return pathDict
 
@@ -207,8 +213,10 @@ class BioThingsExplorer:
             print('Currently working on path {}. The path connects from {} to {} using {}!!'.format(i, _path['input'], _path['output'], _path['endpoint']))
             path_output = self.apiCallHandler.input2output(_path['input'], path_input, _path['endpoint'], _path['output'], _path['relation'])
             if path_output:
+                print('yes')
                 self.temp_results.update({i: path_output})
                 path_input = output2input(path_output)
+                print(path_input)
             else:
                 print('No results could be found for the given path!! The exploration ended!')
                 self.temp_G = explore2Graph(self.temp_results)

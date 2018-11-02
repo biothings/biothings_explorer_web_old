@@ -3,33 +3,8 @@ import yaml
 import pandas as pd
 import requests
 from pathlib import Path
+from .config import FILE_PATHS
 
-def int2str(d):
-    """
-    Iterrative function
-    Convert all integer values in the dictionary/JSON to string
-
-
-    Params
-    ======
-    d: (dict)
-        dictionary to perform int2str function
-    """
-    for k, v in d.items():
-        if isinstance(v, dict):
-            int2str(v)
-        elif isinstance(v, list):
-            new_list = []
-            for _v in v:
-                if isinstance(_v, dict):
-                    int2str(_v)
-                elif isinstance(_v, int):
-                    new_list.append(str(_v))
-            if new_list:
-                d.update({k: new_list})
-        else:
-            if type(v) == int:
-                d.update({k: str(v)})
 
 def readFile(file_path):
     """
@@ -74,6 +49,53 @@ def readFile(file_path):
     else:
         print("readFile function could not handle file format other than csv, yml or json!")
 
+
+def read_id_mapping_file():
+    """
+    read in the ID-MAPPING.csv file
+    and parse it into bioentity_info dictionary
+    The dictionary key is the URI, and it's value contains registry_identifier, etc.
+    """
+    data = readFile(FILE_PATHS['id_mapping']['file'])
+    bioentity_info = {}
+    # turn data frame into a dictionary and store in bioentity_info
+    for index, row in data.iterrows():
+        bioentity_info[row['URI']] = {'description': row['Description'], 'prefix': row['Recommended name'], 'semantic type': row['Semantic Type']}
+    return bioentity_info
+
+registry = read_id_mapping_file()
+PREFIXES = [_item['prefix'].lower() for _item in registry.values()]
+
+def int2str(d):
+    """
+    Iterrative function
+    Convert all integer values in the dictionary/JSON to string
+
+
+    Params
+    ======
+    d: (dict)
+        dictionary to perform int2str function
+    """
+    for k, v in d.items():
+        if isinstance(v, dict):
+            int2str(v)
+        elif isinstance(v, list):
+            new_list = []
+            for _v in v:
+                if isinstance(_v, dict):
+                    int2str(_v)
+                elif isinstance(_v, int):
+                    new_list.append(str(_v))
+                elif isinstance(_v, str):
+                    new_list.append(_v)
+            if new_list:
+                d.update({k: new_list})
+        else:
+            if type(v) == int:
+                d.update({k: str(v)})
+
+
 def str2list(_input):
     """
     This function takes an input, and determine its type
@@ -104,11 +126,7 @@ def output2input(_output):
     ======
     list of ids
     """
-    result = []
-    for _iopair in _output:
-        output_list = _iopair['output'][0]
-        result.extend([_o[0] for _o in output_list])
-    return result
+    return [_o['target'].split(':')[1] for _o in _output]
 
 def timing(f):
     def wrap(*args):
@@ -119,8 +137,40 @@ def timing(f):
         return ret
     return wrap
 
+
+def autolog(logger, message, logging_level):
+    """Automatically log the current function details.
+    """
+    import inspect
+    # Get the previous frame in the stack, otherwise it would
+    # be this function!!!
+    func = inspect.currentframe().f_back.f_code
+    # Dump the message + the name of this function to the log.
+    if logging_level == 'warn':
+        logger.warn("%s: %s in %s:%i" % (
+            message, 
+            func.co_name, 
+            func.co_filename, 
+            func.co_firstlineno
+        ))
+    elif logging_level == 'debug':
+        logger.debug("%s: %s in %s:%i" % (
+            message, 
+            func.co_name, 
+            func.co_filename, 
+            func.co_firstlineno
+        ))
+    elif logging_level == 'error':
+        logger.error("%s: %s in %s:%i" % (
+            message, 
+            func.co_name, 
+            func.co_filename, 
+            func.co_firstlineno
+        ))
+
+
 property_uri_2_prefix_dict = {'http://biothings.io/explorer/vocab/attributes/id': 'object.id',
-                              'http://biothings.io/explorer/vocab/attributes/id-secondary': 'object.id-secondary',
+                              'http://biothings.io/explorer/vocab/attributes/secondary-id': 'object.secondary-id',
                               'http://biothings.io/explorer/vocab/attributes/label': 'object.label',
                               'http://biothings.io/explorer/vocab/attributes/taxonomy': 'object.taxonomy',
                               'http://biothings.io/explorer/vocab/attributes/label': 'object.label',

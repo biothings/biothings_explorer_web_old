@@ -7,7 +7,7 @@
 function fetch_crawler_results(prefix, input_value){
     var promise = $.ajax({
         type:"GET",
-        url: "/explorer/api/v1/crawler",
+        url: "/explorer/api/v2/crawler",
         data: {input_type: prefix, input_value: input_value, 'summary': true},
         datatype: "json"
     });
@@ -59,14 +59,31 @@ function create_collapsible_for_semantic_type(semantic_type, summary) {
  * @return {String} html for new collection
 */
 function create_single_collection(data) {
-    var template = '<li class="collection-item avatar">'
-    template += '<span class="title">object.id: ' + data['object.id'] + '</span>';
+    var header_template = '<div class="collapsible-header">'
+    var body_template = '<div class="collapsible-body">'
+    var object_template = '<h3>Object Information</h3>'
+    var edge_template = '<h3>Edge Information</h3>'
+    var api_template = '<h3>API Information</h3>'
     for (var property in data) {
-        if (property != 'object.id') {
-            template += ('<p>' + property + ': ' + data[property]); 
+        if (property == 'object') {
+            header_template += data[property]['id'];
+            for (var _property in data[property]) {
+                object_template += ('<p>' + _property + ': ' + data[property][_property] + '</p>'); 
+            }
+        } else if (property == 'edge') {
+            for (var _property in data[property]) {
+                edge_template += ('<p>' + _property + ': ' + data[property][_property] + '</p>'); 
+            }
+        } else if (property == 'prefix') {
+            object_template += ('<p>' + property + ': ' + data[property] + '</p>');
+        } else if (property == 'predicate') {
+            edge_template += ('<p>' + property + ': ' + data[property] + '</p>');
+        }
+        else {
+            api_template += ('<p>' + property + ': ' + data[property] + '</p>');
         }
     };
-    template += '</li>'
+    var template = '<li>' + header_template + '</div>' + body_template + api_template + object_template + edge_template + '</div></li>'
     return template
 };
 
@@ -274,6 +291,7 @@ function add_chip(search_item) {
 };
 
 $(document).ready(function(){
+    $(".dropdown-trigger").dropdown();
     populateBioEntity('#select-input');
     $('#start-crawl-button').click(function() {
         $("#navbar").css({'position': 'relative'});
@@ -284,5 +302,6 @@ $(document).ready(function(){
         var prefix = $("#select-input").find("option:selected").attr('value');
         var input_value = $("#crawler-input-value").val();
         update_data_display(prefix, input_value);
+        $(".collapsible").collapsible();
     });
 });

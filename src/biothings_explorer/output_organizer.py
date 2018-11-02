@@ -19,13 +19,25 @@ class OutputOrganizor:
         ======
         CURIE
         """
+        uris = self.registry.bioentity_info.keys()
+        _value = None
+        for _uri in uris:
+            if URI.startswith(_uri):
+                prefix = self.registry.bioentity_info[_uri]['prefix']
+                _value = URI[len(_uri):].replace('$$$$', ':')
+                return (prefix.upper() + ':' + _value)
+        if not _value:
+            return URI.replace('$$$$', ':')
+        """
+        # deprecated because it can't handle cases where the value contains '/'
         _value = URI.split('/')[-1]
         _uri = URI[:len(URI)-len(_value)]
         if _uri in self.registry.bioentity_info:
-            prefix = self.registry.bioentity_info[_uri]['preferred_name']
+            prefix = self.registry.bioentity_info[_uri]['prefix']
             return (prefix + ':' + _value)
         else:
             return _value
+        """
 
     def uri2curie(self, URIs):
         """
@@ -56,7 +68,7 @@ class OutputOrganizor:
         ======
         value
         """
-        return URI.split('/')[-1]
+        return URI.split('/')[-1].replace('$$$$', ':')
     
     def uri2value(self, URIs):
         """

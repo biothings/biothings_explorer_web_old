@@ -1,6 +1,5 @@
 import pkg_resources
 import os.path
-import requests
 
 BUILDIN_CONTEXT_PATH = pkg_resources.resource_filename('biothings_explorer', 'openapi_specs')
 
@@ -23,32 +22,3 @@ FILE_PATHS = {
     }
 }
 
-MYGENE_URI2SCOPE = {
-    "uniprot": "uniprot.Swiss-Prot",
-    "hgnc.symbol": "symbol",
-    "hgnc": "hgnc",
-    "omim.gene": "MIM",
-    "ncbigene": "entrezgene",
-    "ensembl.gene": "ensembl.gene",
-    "ensembl.protein": "ensembl.protein",
-    "ensembl.transcript": "ensembl.transcript"
-}
-
-MYCHEM_URI2SCOPE = {
-    "inchikey": "pubchem.inchikey",
-    "rxcui": "aeolus.drug_rxcui",
-    "chebi": "chembl.chebi_par_id",
-    "chembl.compound": "chembl.molecule_chembl_id",
-    "drugbank": "drugbank.drugbank_id",
-    "iuphar.ligand": "drugbank.iuphar",
-    "kegg.drug": "drugbank.kegg_drug",
-    "kegg.compound": "drugbank.kegg_compound",
-    "pubchem.compound": "drugbank.pubchem_compound",
-    "unii": "unii.unii",
-    "inchi": "chebi.inchi",
-    "drugname": "drugbank.name"
-}
-
-MYGENE_QUERY_JSONLD = dict((y,x) for x,y in MYGENE_URI2SCOPE.items())
-
-MYCHEM_QUERY_JSONLD = dict((y,x) for x,y in MYCHEM_URI2SCOPE.items())

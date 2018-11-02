@@ -1,0 +1,317 @@
+<html>
+   <head>
+        <meta property="og:locale" content="en_US">
+        <meta property="og:url" content="http://biothings.io/explorer/navigator">
+        <meta property="og:site_name" content="BioThings Navigator">
+        <meta property="og:title" content="BioThings Navigator | Exploring Biological Data Through Linked API Services">
+        <meta name="description" content="BioThings Explorer utilize JSON-LD and SmartAPI Specifications to link biological API for knowledge exploration. Users could get metadata information about APIs as well as fetching linked biological data through BioThings Explorer.">
+        <meta property="og:type" content="website">
+        <meta property="og:description" content="BioThings Explorer utilize JSON-LD and SmartAPI Specifications to link biological API for knowledge exploration. Users could get metadata information about APIs as well as fetching linked biological data through BioThings Explorer.">
+        <meta property="og:image" content="./static/img/navigator.png">
+        <meta property="og:image:type" content="image/png">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
+        <title>BioThings Navigator</title>
+        <meta name = "viewport" content = "width = device-width, initial-scale = 1">      
+        <link rel="shortcut icon" href="./static/img/navigator.png">      
+        <link rel = "stylesheet"
+         href = "https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.3/css/materialize.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.3/js/materialize.min.js"></script>
+        <link href="./static/css/select2-materialize.css" rel="stylesheet" type="text/css" />
+        <link href="./static/css/navigator.css" rel="stylesheet" />
+        <link rel="stylesheet" href="./static/css/explorer-style.css" rel="stylesheet" type="text/css" />
+        <link href="./static/css/vis-network.min.css" rel="stylesheet" type="text/css">
+        <script type="text/javascript" src="./static/js/cytoscape.js"></script>
+        <script type="text/javascript" src="./static/js/vis.js"></script> 
+        <script type="text/javascript" src="./static/js/drawSankey.js"></script>
+        <script type="text/javascript" src="./static/js/find_path.js"></script>
+        <script type="text/javascript" src="./static/js/drawCytoscape.js"></script>
+        <script type="text/javascript" src="./static/js/create_api_map.js"></script>
+        <script type="text/javascript" src="./static/js/populateSelect.js"></script>
+        <script type="text/javascript" src="./static/js/data2Sankey.js"></script>
+        <script type="text/javascript" src="./static/js/customize_path.js"></script>
+        <script type="text/javascript" src="./static/js/data2Cytoscape.js"></script>
+        <script type="text/javascript" src="./static/js/utils.js"></script>
+        <script type="text/javascript" src="./static/js/draw_semantic_map.js"></script>
+        <script type="text/javascript" src="./static/js/draw_id_map.js"></script>
+        <script type="text/javascript" src="./static/js/draw_api_map.js"></script>
+        <script type="text/javascript" src="./static/js/draw_overall_map.js"></script>
+        <script type="text/javascript" src="./static/js/color_schema.js"></script>
+        <script type="text/javascript" src="./static/js/draw_hierarchical_path.js"></script>
+        <script type="text/javascript" src="./static/js/direct_input2output.js"></script>
+        <script type="text/javascript" src="./static/js/semantic_input2output.js"></script>
+        <script type="text/javascript" src="./static/js/graph_help.js"></script>
+        <script type = "text/javascript"
+         src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.3/js/materialize.min.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+        <link href="./static/css/select2-materialize.css" rel="stylesheet" type="text/css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+        <script src="http://d3js.org/d3.v3.min.js"></script>
+    </head>
+    <body>
+      <!-- This section is for the header-->
+        <div>
+            <ul id="dropdown1" class="dropdown-content">
+              <li><a href="../metadata">Knowledge Map</a></li>
+              <li><a href="../crawler">Crawler</a></li>
+              <li><a href="../navigator">Navigator</a></li>
+            </ul>
+            <ul id="dropdown2" class="dropdown-content">
+              <li><a href="../tutorial">Tutorial</a></li>
+              <li><a href="../sources">Sources</a></li>
+              <li><a href="../uri">URI Registry</a></li>
+            </ul>
+            <ul id="dropdown3" class="dropdown-content">
+              <li><a href="../api">API</a></li>
+              <li><a href="https://pypi.org/project/biothings-explorer/">Python</a></li>
+            </ul>
+            <nav>
+                <div class="nav-wrapper black">
+                    <div class="col s12">
+                        <a href=".." title="BioThings Explorer"><img style="border:0px;" width="256" src="http://biothings.io/static/img/biothings-explorer-256.png" alt="Logo 256"/></a>
+                        <!-- Dropdown Structure -->
+                        <ul class="right hide-on-med-and-down">
+                            <li><a class="dropdown-trigger" href="#!" data-target="dropdown2">Docs<i class="material-icons right">arrow_drop_down</i></a></li>
+                            <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Tools<i class="material-icons right">arrow_drop_down</i></a></li>
+                            <li><a class="dropdown-trigger" href="#!" data-target="dropdown3">Developers<i class="material-icons right">arrow_drop_down</i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div>
+            <ul id="slide-out" class="sidenav">
+                <li>
+                    <div class="user-view">
+                        <h2 class="center valign-wrapper"> BioThings Navigator</h2>
+                    </div>
+                </li>
+                <li>
+                    <a href="#" class="try-explore-single-edge"><i class = "material-icons orange-text text-darken-2">call_made</i>Single Edge Exploration</a>
+                </li>
+                <li>
+                    <a href="#" class="try-explore-semantic"><i class = "material-icons orange-text text-darken-2">call_merge</i>Semantic Exploration</a>
+                </li>
+                <li>
+                    <a href="#" class="try-explore-multi-edge"><i class = "material-icons orange-text text-darken-2">call_missed_outgoing</i>Multi-edge Exploration</a>
+                </li>
+            </ul>
+        </div>
+        <div class="row grey lighten-5 landing-page">
+            <div class="col s12 m6 offset-m3">
+                <h1 class="grey-text center-align">BioThings Navigator</h1>
+            </div>
+            <div class="col s12 m10 offset-m1">
+                <p class="grey-tex center-align">Service for Path Planning and API Call Chaining</p>
+            </div>
+        </div>
+
+        <div id="intro" class="row">
+            <div class="container">
+                <div class="col s12 m4 sub-intro">
+                    <div>
+                        <div class="center-align hide-on-small-only">
+                            <i class="large material-icons pink-text text-lighten-2">call_made</i>
+                        </div>
+                        <h2 class="center"> Single Edge Exploration</h2>
+                        <p class="blue-grey-text center">Fetching data by user specified input and output by calling one API only.</p>
+                        <div class="center-align">
+                            <a class="waves-effect waves-light btn pink lighten-3 try-it-out-button center try-explore-single-edge" href="#">Try it out</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12 m4 sub-intro">
+                    <div>
+                        <div class="center-align hide-on-small-only">
+                            <i class="large material-icons indigo-text text-lighten-2">call_merge</i>
+                        </div>
+                        <h2 class="center"> Semantic Exploration</h2>
+                        <p class="blue-grey-text center">Semantically merge the data from multiple API calls to align the results.</p>
+                        <div class="center-align">
+                            <a class="waves-effect waves-light btn indigo lighten-3 try-it-out-button center try-explore-semantic" href="#">Try it out</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12 m4 sub-intro">
+                    <div>
+                        <div class="center-align hide-on-small-only">
+                            <i class="large material-icons green-text text-lighten-2">call_missed_outgoing</i>
+                        </div>
+                        <h2 class="center"> Multi-edge Exploration</h2>
+                        <p class="blue-grey-text center">Calling multiple APIs to connect from the input to the output</p>
+                        <div class="center-align">
+                            <a class="waves-effect waves-light btn green lighten-3 try-it-out-button center try-explore-multi-edge" href="#">Try it out</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row valign-wrapper single-edge-search-bar search-bar-center search-bar">    
+            <div class="col s12">
+                <div class="row">
+                    <div class="col s12 search-bar-header">
+                        <h1 class="orange-text" style="font-family: Ubuntu; text-align: center;"> Single Edge Exploration </h1>
+                        <br>
+                        <br>
+                    </div>
+                    <div class="col s12 m2 offset-m2 select-wrapper">
+                        <label for="select-input">
+                            Input Bio-entity
+                            <select id="direct-input"></select>
+                        </label>
+                    </div>
+                    <div class="col s12 m2 offset-m1 select-wrapper">
+                        <label for="select-output">
+                            Output Bio-entity
+                            <select id="direct-output"></select>
+                        </label>
+                    </div>
+                    <div class="col s12 m3 crawler_input">
+                        <label for="crawler-input-value">
+                            Input Value
+                            <input id="direct_input_value" type="text" class="validate" placeholder="Type your input value here..."/>
+                        </label>
+                    </div>
+                    <div class="col s12 m2">
+                        <a class="waves-effect waves-light btn search-button" id="DirectInput2OutputButton" onclick="validateInput()">Explore</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s12 m8 offset" id="query_hint">
+                    </div>
+                    <div class="col s12 m8 offset" id="regex_check">
+                    </div>
+                    <div class="col s12 m8 offset query_example">
+                        <p class="orange-text"> Some useful examples to get you started!</p>
+                        <p> <a href="#" id="g2c_nav_example"> Find all <b>ChEMBL compounds</b> related to <b>gene</b> ncibigene:1017</a></p>
+                        <p> <a href="#" id="c2g_nav_example"> Find all <b>ncbigenes</b> related to <b>chemical</b> CHEMBL.COMPOUND:CHEMBL744</a></p>
+                        <p> <a href="#" id="d2p_nav_example"> Find all <b>phenotypes</b> related to <b>disease</b> MONDO:0013632</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row valign-wrapper semantic-search-bar search-bar-center search-bar">    
+            <div class="col s12">
+                <div class="row">
+                    <div class="col s12 search-bar-header">
+                        <h1 class="orange-text" style="font-family: Ubuntu; text-align: center;"> Semantic Based Exploration </h1>
+                        <br>
+                        <br>
+                    </div>
+                    <div class="col s12 m2 offset-m2 select-wrapper">
+                        <label for="select-input">
+                            Input Bio-entity
+                            <select id="semantic-input"></select>
+                        </label>
+                    </div>
+                    <div class="col s12 m2 offset-m1 select-wrapper">
+                        <label for="select-output">
+                            Output Bio-entity
+                            <select id="semantic-output"></select>
+                        </label>
+                    </div>
+                    <div class="col s12 m3 crawler_input">
+                        <label for="semantic-input-value">
+                            Input Value
+                            <input id="semantic_input_value" type="text" class="validate" placeholder="Type your input value here..."/>
+                        </label>
+                    </div>
+                    <div class="col s12 m2">
+                        <a class="waves-effect waves-light btn search-button" id="SemanticInput2OutputButton">Explore</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" id="main">
+            <div class="row direct_output_display">
+                <div class="col s12 progress">
+                    <div class="indeterminate valign-wrapper"></div>
+                </div>
+                <!--
+                <div class="row topcontrols">
+                    <div class="col s8">
+                        <h2> Results</h2>
+                    </div>
+                    <div class="col s4">
+                        <h2> Description </h2>
+                    </div>
+                </div>
+            -->
+                <div class="row mainview"> 
+                    <div class="row right-align intermediate-switch">
+                        <div class="col s7">
+                            <p> Display Intermediate Steps</p>
+                        </div>
+                        <div class="switch col s7">
+                            <label>
+                                Off
+                                <input id="intermediate" type="checkbox" checked="checked">
+                                <span class="lever"></span>
+                              On
+                            </label>
+                        </div>
+                    </div>
+
+                      <!-- Disabled Switch -->
+
+                    <div class="col s7" id="cy">
+                    </div>
+                    <div class="col s4" id="node_edge_description">
+                        <div>
+                            <ul class="tabs">
+                                <li class="tab col s4" id="node_tab"><a class="active" href="#node_info">Node</a></li>
+                                <li class="tab col s4" id="edge_tab"><a href="#edge_info" id="edge_tabs">Edge</a></li>
+                                <li class="tab col s4" id="context_tab"><a href="#context_info">Context</a></li>
+                            </ul>
+                        </div>
+                        <div id="node_info" class="col s12">
+                            <div id="graph-details-info">
+                                <p class="help-text">Click on one of the nodes or edges in the network to view more details...</p>
+                                <img src="./static/img/help-left-arrow.png" width="75">
+                            </div>
+                        </div>
+                        <div id="edge_info" class="col s12"></div>
+                        <div id="context_info" class="col s12"></div>
+                    </div>
+                </div>
+                <div id="error-message" class="col s12"></div>
+
+            </div>
+        </div>
+        <div class="fixed-action-btn">
+            <a class="btn-floating btn-large red tooltipped" id="DownloadCodeButton" data-position="left" data-tooltip="Download Python Code">
+                <i class="large material-icons">code</i>
+            </a>
+        </div>
+        <footer class="page-footer orange">
+            <div class="container">
+                <div class="row">
+                    <div class="col l6 s12">
+                        <h5 class="white-text">BioThings Explorer</h5>
+                        <p class="grey-text text-lighten-4">Utilizing JSON-LD and SmartAPI Specifications to link biological data for knowledge exploration.</p>
+                    </div>
+                    <div class="col l4 offset-l2 s12">
+                        <h5 class="white-text">Useful Links</h5>
+                        <ul>
+                            <li><a class="grey-text text-lighten-3" href="http://biothings.io/#" target="_blank">BioThings API</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://smart-api.info/" target="_blank">SmartAPI Specification</a></li>
+                            <li><a class="grey-text text-lighten-3" href="https://json-ld.org/" target="_blank">JSON-LD</a></li>
+                            <li><a class="grey-text text-lighten-4" href="http://wulab.io/" target="_blank">The Wu Lab</a></li>
+                            <li><a class="grey-text text-lighten-4" href="http://sulab.org/" target="_blank">The Su Lab</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                <div class="container">
+                    Copyright © 2017-2018 The Su/Wu Lab.</p>
+                </div>
+            </div>
+        </footer>
+        <script type="text/javascript" src="./static/js/explorer.js"></script>
+    </body>
+</html>

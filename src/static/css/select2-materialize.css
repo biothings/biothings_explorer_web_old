@@ -7,6 +7,8 @@
 }
 .select2 {
     width: calc(100% - 20px) !important;
+    margin-left: 2%;
+    margin-right: 2%;
 }
 
 .select2-container .select2-selection--single {

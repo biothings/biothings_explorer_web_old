@@ -2,6 +2,7 @@ from urllib.parse import urljoin
 import networkx as nx
 import os.path
 from collections import defaultdict
+import math
 
 from .utils import readFile
 from .config import FILE_PATHS
@@ -27,6 +28,7 @@ class RegistryParser:
         self.api_info = {}
         self.endpoint_info = {}
         self.openapi_spec_path_list = []
+        self.predicates = set()
         self.jh = JSONLDHelper()
         self.api_map = nx.MultiDiGraph()
         if readmethod == 'http':
@@ -64,7 +66,13 @@ class RegistryParser:
         data = readFile(self.id_mapping_path)
         # turn data frame into a dictionary and store in bioentity_info
         for index, row in data.iterrows():
-            self.bioentity_info[row['URI']] = {'description': row['Description'], 'preferred_name': row['Recommended name'], 'semantic type': row['Semantic Type']}
+            self.bioentity_info[row['URI']] = {'description': row['Description'], 'preferred_name': row['Recommended name'], 
+                                               'semantic type': row['Semantic Type'], 'pattern': row['Pattern'], 'prefix': row['Prefix'],
+                                               'example': row['Example'], 'attribute type': row['Attribute Type']}
+        for k, v in self.bioentity_info.items():
+            for _k, _v in v.items():
+                if type(_v) != str and math.isnan(_v):
+                    v[_k] = None
         return self.bioentity_info
 
     def prefix2uri(self, prefix, verbose=False):
@@ -81,7 +89,7 @@ class RegistryParser:
         bio-entity in its URI format
         """
         for k, v in self.bioentity_info.items():
-            if v['preferred_name'] == prefix:
+            if v['prefix'] == prefix:
                 return k
         # print error message if no URI was found
         if verbose:
@@ -101,7 +109,7 @@ class RegistryParser:
         bio-entity in its semantic type, e.g. GENE, VARIANT
         """
         for k, v in self.bioentity_info.items():
-            if v['preferred_name'] == prefix:
+            if v['prefix'] == prefix:
                 return self.bioentity_info[k]['semantic type']
         # print error message if no URI was found
         if verbose:
@@ -121,7 +129,7 @@ class RegistryParser:
         """
         for k, v in self.bioentity_info.items():
             if v['semantic type'] == semantic_type:
-                yield v['preferred_name']
+                yield v['prefix']
 
     def read_api_list_file(self):
         """
@@ -179,6 +187,7 @@ class RegistryParser:
                     jsonld_path = urljoin(self.registry_path, _info['get']['responses']['200']['x-JSONLDContext'])
                 elif self.readmethod == 'filepath':
                     jsonld_path = os.path.join(self.registry_path, _info['get']['responses']['200']['x-JSONLDContext'])
+                self.predicates = self.predicates | self.jh.extract_predicates_from_jsonld(readFile(jsonld_path))
                 if 'disease-ontology' in endpoint_name:
                     relation = {}
                     for _op in _output:
@@ -199,7 +208,7 @@ class RegistryParser:
             for _assoc in relation.values():
                 associations = associations | _assoc
             associations = [_assoc.replace("assoc:", "http://biothings.io/explorer/vocab/objects/") for _assoc in associations]
-            parsed_result['endpoints'][endpoint_name].update({'output': _output, 'relation': relation, 'associations': associations, 'input': _input, 'api': data['servers'][0]['url']})
+            parsed_result['endpoints'][endpoint_name].update({'output': _output, 'relation': relation, 'associations': associations, 'input': _input, 'api': data['info']['title'], 'server': data['servers'][0]['url']})
             parsed_result['api'][api_name]['endpoints'].append(data['servers'][0]['url'] + _name)
         return parsed_result
 
@@ -222,14 +231,14 @@ class RegistryParser:
         # add endpoint and input/output to the graph
         for _endpoint, _info in self.endpoint_info.items():
             for _input in _info['input']:
-                preferred_name = self.bioentity_info[_input]['preferred_name']
-                self.api_map.add_node(preferred_name, type='bioentity', color='yellow')
-                self.api_map.add_edge(preferred_name, _endpoint, label='has_input')
+                prefix = self.bioentity_info[_input]['prefix']
+                self.api_map.add_node(prefix, type='bioentity', color='yellow')
+                self.api_map.add_edge(prefix, _endpoint, label='has_input')
             for _output in _info['output']:
-                preferred_name = self.bioentity_info[_output]['preferred_name']
-                self.api_map.add_node(preferred_name, type='bioentity', color='yellow')
+                prefix = self.bioentity_info[_output]['prefix']
+                self.api_map.add_node(prefix, type='bioentity', color='yellow')
                 if _output in _info['relation']:
                     relations = _info['relation'][_output]
                     for _relation in relations:
-                        self.api_map.add_edge(_endpoint, preferred_name, label=_relation)
+                        self.api_map.add_edge(_endpoint, prefix, label=_relation)
         return self.api_map

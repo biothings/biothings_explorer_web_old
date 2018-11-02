@@ -5,3 +5,14 @@
 __pycache__
 
 *.pyc
+
+# Ignore log folder
+log/
+# Ignore config
+config.py
+
+src/jupyter_notebooks
+
+**/.DS_Store
+
+**/ENV

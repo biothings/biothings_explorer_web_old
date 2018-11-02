@@ -1,0 +1,12 @@
+h1 {
+	font-size: 2rem;
+    font-family: "Ubuntu";
+    font-weight: bold;
+    text-decoration-line: underline;
+}
+
+p {
+	font-family: "Ubuntu";
+	font-size: 1rem;
+	font-weight: lighter;
+}

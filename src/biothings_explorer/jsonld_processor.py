@@ -5,11 +5,24 @@ import requests
 import grequests
 from collections import defaultdict
 from subprocess import Popen, PIPE, STDOUT
-from joblib import Parallel, delayed
 import multiprocessing
-import logging
+import time
 
-logger = logging.getLogger(__name__)
+
+import inspect
+import logging
+import os,sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+from config import jsonld_log_file
+
+logger = logging.getLogger('jsonld')
+logger.setLevel(logging.DEBUG)
+logger_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger_handler = logging.FileHandler(jsonld_log_file)
+logger_handler.setLevel(logging.DEBUG)
+logger_handler.setFormatter(logger_formatter)
+logger.addHandler(logger_handler)
+logger.info('number of cpus is %s', multiprocessing.cpu_count())
 
 from .utils import readFile
 
@@ -17,6 +30,7 @@ class JSONLDHelper:
     def __init__(self):
         self.processor = jsonld.JsonLdProcessor()
         self.temp_attr_id = None
+        self.temp_properties = None
 
     def jsonld2nquads_helper(self, jsonld_doc):
         """
@@ -62,11 +76,11 @@ class JSONLDHelper:
             return self.processor.parse_nquads(nquads)
         except Exception as e:
             logger.error("Something Unexpected happend when JSON-LD Python client tries to parse the JSON-LD. \
-                         The first 100 chars of the JSON document is %s", json.dumps(jsonld_doc[:100]))
+                         The first 100 chars of the JSON document is %s", json.dumps(jsonld_doc)[:100])
             logger.error(e, exc_info=True)
             return None
 
-    def jsonld2nquads(self, jsonld_docs):
+    def jsonld2nquads(self, jsonld_docs, alwayslist=False):
         """
         Given a JSON-LD annotated document,
         Fetch it's corresponding NQUADs file from JSON-LD playground
@@ -87,9 +101,18 @@ class JSONLDHelper:
         if type(jsonld_docs) == list and type(jsonld_docs[0]) == dict:
             #results = Parallel(n_jobs=multiprocessing.cpu_count())(delayed(self.jsonld2nquads_helper)(_doc) for _doc in jsonld_docs)
             results = []
-            for _doc in jsonld_docs:
+            """
+            # parallel code
+            pool = multiprocessing.Pool(multiprocessing.cpu_count())
+            results = pool.map(self.jsonld2nquads_helper, jsonld_docs)
+            pool.close() 
+            """
+            # non parallel code
+            for i, _doc in enumerate(jsonld_docs):
+                start = time.time()
                 results.append(self.jsonld2nquads_helper(_doc))
-            if len(results) == 1:
+                logger.info("processing %s took: %s seconds", str(i), time.time() - start)
+            if len(results) == 1 and alwayslist == False:
                 return results[0]
             else:
                 return results
@@ -101,12 +124,15 @@ class JSONLDHelper:
             results = Parallel(n_jobs=multiprocessing.cpu_count())(delayed(self.jsonld2nquads_helper)(_doc) for _doc in jsonld_docs)
             return results[0]
             """
-            return self.jsonld2nquads_helper(jsonld_docs)
+            if alwayslist == False:
+                return self.jsonld2nquads_helper(jsonld_docs)
+            else:
+                return [self.jsonld2nquads_helper(jsonld_docs)]
         # if the input is neither list of json_docs nor single json_doc
         # log error message and return None
         else:
             logger.warning("The input of the jsonld2nquads function should be a list of JSON docs or a single JSON dictionary doc. \
-                           You input is %s. The first 100 chars of the input is %s", type(jsonld_docs), jsonld_doc[:100])
+                           You input is %s. The first 100 chars of the input is %s", type(jsonld_docs), json.dumps(jsonld_doc)[:100])
             return None
 
     def json2jsonld(self, json_docs, jsonld_context_path):
@@ -164,7 +190,7 @@ class JSONLDHelper:
                 if "@base" in v["@context"]:
                     self.temp_attr_id = v["@context"]["@base"]
                 else:
-                    print('@base should be included here! Something wrong with the JSON-LD context file!!')
+                    logger.info('@base should be included here! Something wrong with the JSON-LD context file!!')
             # otherwise, recall this function to look into the child level
             elif isinstance(v, dict):
                 self.find_object_properties_in_jsonld(v)
@@ -188,10 +214,21 @@ class JSONLDHelper:
                     if self.temp_attr_id:
                         relation[self.temp_attr_id].add(v["@id"])
                     else:
-                        print("attr:id is missing in the object properties!")
+                        logger.warn("attr:id is missing in the object properties!")
             elif isinstance(v, dict):
                 self.jsonld_parser_helper(v, relation=relation)
         return relation
+
+    def extract_predicates_from_jsonld(self, _dict, predicates=set()):
+        """
+        Look for all unique values in "@id" field within JSON-LD context files
+        """
+        for k, v in _dict.items():
+            if isinstance(v, dict):
+                self.extract_predicates_from_jsonld(v, predicates=predicates)
+            elif k == "@id":
+                predicates.add(v)
+        return predicates
 
     def jsonld_relation_parser(self, jsonld_context):
         """
@@ -217,12 +254,14 @@ class JSONLDHelper:
         find the corresponding object value(s)
         """
         object_values = []
-        if '@default' in nquads:
+        if nquads and '@default' in nquads:
             nquads = nquads['@default']
-        for _nquad in nquads:
-            if _nquad['predicate']['value'] == predicate_value:
-                object_values.append(_nquad['object']['value'])
-        return object_values
+            for _nquad in nquads:
+                if _nquad['predicate']['value'] == predicate_value:
+                    object_values.append(_nquad['object']['value'])
+            return object_values
+        else:
+            return object_values
 
     def fetch_object_and_predicate_value_by_subject_value_in_nquads(self, nquads, subject_value, results=None):
         """
@@ -248,21 +287,56 @@ class JSONLDHelper:
         for _association in association_list:
             results[_association] = []
             object_values = self.fetch_object_value_by_predicate_value_in_nquads(nquads, _association)
+            #logger.info('object_values: %s', object_values)
             for _object_value in object_values:
+                #logger.info('currently processing object_value: %s', _object_value)
                 if _object_value.startswith('_:'):
                     object_predicate_dict = self.fetch_object_and_predicate_value_by_subject_value_in_nquads(nquads, _object_value)
+                    #logger.info('current object_predicate_dict is %s', object_predicate_dict)
                     if object_predicate_dict:
                         results[_association].append(object_predicate_dict)
                     else:
-                        print("Could not fetch any properties from the given association: {}".format(_object_value))
+                        logger.warn("Could not fetch any properties from the given association: {}".format(_object_value))
                 else:
                     results[_association].append({'http://biothings.io/explorer/vocab/attributes/id': [_object_value]})
+        print(results)
         return results
 
     def fetch_properties_by_association_and_prefix_in_nquads(self, nquads, association, prefix):
         association_results = self.fetch_properties_by_association_in_nquads(nquads, [association])
-        association_and_prefix_results = [_doc for _doc in association_results[association] if _doc['http://biothings.io/explorer/vocab/attributes/id'][0].startswith(prefix)]
+        association_and_prefix_results = [_doc for _doc in association_results[association] if 'http://biothings.io/explorer/vocab/attributes/id' in _doc and _doc['http://biothings.io/explorer/vocab/attributes/id'][-1].startswith(prefix)]
         return association_and_prefix_results
+
+    def locate_association_in_jsonld_context_file(self, jsonld_context, association):
+        if "@context" in jsonld_context:
+            content = jsonld_context['@context']
+            for k, v in content.items():
+                if type(v) != dict:
+                    pass
+                elif "@id" in v and v["@id"] == association:
+                    self.temp_properties = v["@context"]
+                else:
+                    self.locate_association_in_jsonld_context_file(v, association)
+    
+    def organize_properties_in_jsonld_context_file(self, properties):
+        for k, v in properties.items():
+            if type(v) != dict:
+                pass
+            elif "@id" in v and (v["@id"].startswith("attr") or v["@id"].startswith("rel")):
+                _key = v["@id"]
+                _key = _key.replace('attr', 'object').replace('rel', 'edge')
+                self.organized_properties[_key] = v["@context"]["@base"]
+            elif k == "@base":
+                self.organized_properties["node:id"] = v
+            else:
+                self.organize_properties_in_jsonld_context_file(v)
+
+    def fetch_properties_for_association_in_jsonld_context_file(self, jsonld_context, association):
+        self.locate_association_in_jsonld_context_file(jsonld_context, association)
+        if self.temp_properties:
+            self.organized_properties = {}
+            self.organize_properties_in_jsonld_context_file(self.temp_properties)
+            return self.organized_properties
 
 t = jsonld.JsonLdProcessor()
 
@@ -344,35 +418,7 @@ def jsonld2nquads(jsonld_doc, mode='batch'):
                 results.append(None)
         return results
 '''
-def jsonld2nquads(jsonld_docs):
-    """
-    Given a JSON-LD annotated document,
-    Fetch it's corresponding NQUADs file from JSON-LD playground
-    'http://jsonld.biothings.io/?action=nquads'
 
-    TODO: Currently, PyLD hasn't been updated to match JSON-LD v 1.1
-    So we are using the JSON-LD playground API, which is built upon
-    JSON-LD ruby client for 1.1 version. When PyLD has been updated to
-    match 1.1, we should switch back to PyLD.
-
-    Params
-    ======
-    jsonld_doc: (dict)
-        JSON-LD annotated document
-    """
-    results = []
-    """
-    for _doc in jsonld_docs:
-        _response = process_jsonld(_doc)
-        if 'Parsed' in _response:
-            _nquad = re.sub('Parsed .*second.\n', '', _response)
-            results.append(t.parse_nquads(_nquad))
-        else:
-            results.append(None)
-    """
-    num_cores = multiprocessing.cpu_count()
-    results = Parallel(n_jobs=num_cores)(delayed(process_jsonld)(_doc) for _doc in jsonld_docs)
-    return results
 
 
 def fetchvalue(nquads, object_uri, predicate=None):
@@ -398,9 +444,9 @@ def fetchvalue(nquads, object_uri, predicate=None):
             elif not predicate and object_uri in _nquad['object']['value']:
                 results.append((_nquad['object']['value'].split(object_uri)[1], _nquad['predicate']['value'].split('/')[-1]))
     elif nquads:
-        print('This is a invalid nquads, missing "@default"!!!')
+        logger.warn('This is a invalid nquads, missing "@default"!!!')
     else:
-        print('The nquads is empty')
+        logger.warn('The nquads is empty')
     # if results is empty, it could be either nquads is empty or object_uri could not be found in nuqads
     if results:
         return list(set(results))

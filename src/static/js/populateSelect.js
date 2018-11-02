@@ -23,7 +23,7 @@ function addOptionFromMetaData(metadata, metadata_type, dropdown_id){
 function getMetaData(metadata_type){
   var promise = $.ajax({
     type:"GET",
-    url: "/explorer/api/v1/metadata/" + metadata_type,
+    url: "/explorer/api/v2/metadata/" + metadata_type,
     datatype: "json"
   });
   return promise;
@@ -65,6 +65,37 @@ function populateEndpoints(dropdown_id){
             return {"id": n, "text": n};
         });
         $(dropdown_id).select2({data: endpoint_select2_data});
+    });
+};
+
+/**
+ * Automatically add semantic type info to the options of select
+ * @param {String} dropdown_id
+*/
+function populateSemanticType(dropdown_id){
+    getMetaData('semantic_types').done(function(jsonResponse){
+        var semantic_type_select2_data = $.map(jsonResponse.semantic_types, function(n) {
+            return {"id": n, "text": n};
+        });
+        $(dropdown_id).select2({data: semantic_type_select2_data});
+    });
+};
+
+/** Automatically add crawler input to the options of select
+* @param {String} dropdown_id
+*/
+function populateCrawlerInput(dropdown_id){
+    getMetaData('crawler_input').done(function(jsonResponse){
+        var bioentity_select2_data = []
+        for (var semantic_type in jsonResponse.bioentity) {
+            var group = {'id': semantic_type, 'text': semantic_type, 'children': []};
+            var bioentity_id_list = jsonResponse.bioentity[semantic_type];
+            for (var bioentity_id in bioentity_id_list) {
+                group['children'].push({id: bioentity_id_list[bioentity_id], text: bioentity_id_list[bioentity_id]})
+            };
+            bioentity_select2_data.push(group);
+        };
+        $(dropdown_id).select2({data: bioentity_select2_data});
     });
 };
 
@@ -111,9 +142,15 @@ function populateSelectInSideBar() {
     populateEndpoints("#select-endpoint");
     populateBioEntity("#select-input");
     populateBioEntity("#select-output");
+    populateBioEntity("#direct-input");
+    populateBioEntity("#direct-output");
+    populateBioEntity("#semantic-input");
+    populateBioEntity("#semantic-output");
     populateBioEntity("#select-input1");
     populateBioEntity("#select-output1");
     populateInput("#customize1");
+    populateSemanticType("#select-semantic-input");
+    populateSemanticType("#select-semantic-output");
     $("#select-max-api").select2();
     //$("#customize2").material_select();
     //$("#customize3").material_select();

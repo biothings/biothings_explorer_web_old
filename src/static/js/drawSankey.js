@@ -4,6 +4,7 @@ function drawSankeyPlot(jsonResponse, type){
   $(".overview_map").hide();
   $("#cy").hide();
   if (type=='path'){
+      $("#error-message").empty();
       Plotly.purge('path-plotly');
       $("#explore-plotly-div").hide();
       $("#path-plotly-div").show();
@@ -16,6 +17,8 @@ function drawSankeyPlot(jsonResponse, type){
 
   var fig = jsonResponse;
   var data = {
+    width: 500,
+    height: 500,
     type: "sankey",
     domain: {
       x: [0,1],
@@ -39,7 +42,7 @@ function drawSankeyPlot(jsonResponse, type){
       target: fig.plotly.target,
       value: fig.plotly.value,
       label: fig.plotly.edge_labels,
-      color: "#ffffff"
+      color: "#e3e5e8"
     }
   };
 

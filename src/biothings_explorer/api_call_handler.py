@@ -130,7 +130,7 @@ class ApiCallHandler:
                                 if _template['template'] in endpoint_name:
                                     endpoint_name = endpoint_name.replace('{' + _para['name'] + '}', str(uri_value_dict[_input_type]))
                                 else:
-                                    endpoint_name = self.registry.endpoint_info[endpoint_name]['api'] + _template['template'].replace('{' + _para['name'] + '}', str(uri_value_dict[_input_type]))
+                                    endpoint_name = self.registry.endpoint_info[endpoint_name]['server'] + _template['template'].replace('{' + _para['name'] + '}', str(uri_value_dict[_input_type]))
             # handle cases for query
             else:
                 # check whether the parameter is required
@@ -193,14 +193,17 @@ class ApiCallHandler:
         # if output_type is entity, use JSON-LD to extract the output
         jsonld_context = self.registry.endpoint_info[endpoint_name]['jsonld_context']
         nquads = self.jh.json2nquads(json_doc, jsonld_context)
-        properties = self.jh.fetch_properties_by_association_and_prefix_in_nquads(nquads, predicate, output_uri)
-        properties = [self.oo.nquads2dict(_property) for _property in properties]
         results = []
-        for _property in properties:
-            if _property:
-                results.append((_property, self.registry.bioentity_info[output_uri]['preferred_name']))
-            else:
-                results.append(None)
+        if type(nquads) != list:
+            nquads = [nquads]
+        for _nquad in nquads:
+            _result = []
+            properties = self.jh.fetch_properties_by_association_and_prefix_in_nquads(_nquad, predicate, output_uri)
+            properties = [self.oo.nquads2dict(_property) for _property in properties]
+            for _property in properties:
+                if _property:
+                    _result.append(_property)
+            results.append(_result)
         return results
 
 
@@ -213,15 +216,25 @@ class ApiCallHandler:
         3) Preprocess the JSON doc from step 2
         4) Extract the output based on output_type and predicate
         """
+        # remove any input prefix
+        input_value = input_value.split(':')[-1]
         if _type == 'prefix':
             input_type = self.registry.prefix2uri(input_type)
             output_type = self.registry.prefix2uri(output_type)
+        print(endpoint_name)
         if not predicate:
-            predicate = self.nh.find_edge_label(endpoint_name, self.registry.bioentity_info[output_type]['preferred_name'])
+            predicate = self.nh.find_edge_label(endpoint_name, self.registry.bioentity_info[output_type]['prefix'])
+            jsonld_context = self.registry.endpoint_info[endpoint_name]['jsonld_context']
+            with open(jsonld_context) as f:
+                data = f.read()
+                jsonld = json.loads(data)
+            context = self.jh.fetch_properties_for_association_in_jsonld_context_file(jsonld, predicate)
             if type(predicate) != list:
                 predicate = predicate.replace('assoc:', 'http://biothings.io/explorer/vocab/objects/')
             else:
                 predicate = [_predicate.replace('assoc:', 'http://biothings.io/explorer/vocab/objects/') for _predicate in predicate]
+        else:
+            predicate = predicate.replace('assoc:', 'http://biothings.io/explorer/vocab/objects/')
         final_results = []
         # preprocess the input
         processed_input = self.preprocessing_input(input_value, endpoint_name)
@@ -233,6 +246,7 @@ class ApiCallHandler:
                 uri_value.update(additional_parameters)
             api_call_params.append(self.call_api(uri_value, endpoint_name))
         start = time.time()
+        print(api_call_params)
         rs = (grequests.get(u, params=v) for (u,v) in api_call_params)
         responses = grequests.map(rs)
         if responses and responses[0].status_code == 200:
@@ -246,12 +260,18 @@ class ApiCallHandler:
             outputs = self.extract_output(valid_responses, endpoint_name, output_type, predicate=predicate)
             for i in range(len(outputs)):
                 if outputs[i]:
-                    final_results.append({'input': (processed_input[0], self.registry.bioentity_info[input_type]['preferred_name']), 'output': (outputs[i]), 'endpoint': endpoint_name, 'target': outputs[i][0]['object']['id']})
+                    for _output in outputs[i]:
+                        input_value = processed_input[i]
+                        input_curie = self.registry.bioentity_info[input_type]['prefix'].upper() + ':' + input_value
+                        final_results.append({'input': input_curie, 'context': context, 'output': _output, 'api': self.registry.endpoint_info[endpoint_name]['api'], 'target': _output['object']['id'], 'predicate': predicate.split('/')[-1]})
         else:
             for _predicate in predicate:
                 outputs = self.extract_output(valid_responses, endpoint_name, output_type, predicate=_predicate)
             for i in range(len(outputs)):
                 if outputs[i]:
-                    final_results.append({'input': (processed_input[i], self.registry.bioentity_info[input_type]['preferred_name']), 'output': (outputs[i]), 'endpoint': endpoint_name, 'target': outputs[i][0]['object']['id']})
+                    input_value = processed_input[i]
+                    input_curie = self.registry.bioentity_info[input_type]['prefix'].upper() + ':' + input_value
+                    final_results.append({'input': input_curie, 'output': (outputs[i]), 'api': self.registry.endpoint_info[endpoint_name]['api'], 'target': outputs[i][0]['object']['id'], 'predicate': predicate})
         print('Time used in organizing outputs: {:.2f} seconds'.format(time.time() - start))
+        print(final_results)
         return final_results

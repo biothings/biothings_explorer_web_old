@@ -1,0 +1,35 @@
+.collapsible-body p {
+	margin-top: 0.5%;
+	margin-left: 2%;
+	margin-right: 1%;
+	font-size: 0.8rem;
+	line-height: 20px !important;
+};
+
+.select-wrapper {
+    margin-left: 3% !important;
+    margin-right: 3% !important;
+    margin-bottom: 1%;
+};
+
+#DirectInput2OutputButton {
+	margin-top: 2% !important;
+};
+
+.direct_output_display {
+	max-height: 300px;
+};
+
+#cy {
+    border: 1px solid blue;
+};
+
+h1 {
+    font-size: 1rem;
+};
+
+#error-message h2 {
+	font-family: "Ubuntu";
+	font-size: 1.8rem !important;
+	color: grey;
+}

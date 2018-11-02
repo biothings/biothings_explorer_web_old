@@ -13,13 +13,17 @@ from tornado.options import define, options
 import requests
 from raven import Client
 
-from handlers.ConnectingPathHandler import FindEdgeLabel, FindOutputHandler, MetaDataHandler, ConnectingPathHandler, EndpointHandler, ConnectingOutputHandler, ConnectingInputHandler, ApiMapHandler, ApiMapHandlerSankey, Input2EndpointHandler, KnowledgeMap, KnowledgeMapPath, Endpoint2OutputHandler
+from handlers.ConnectingPathHandler import FindEdgeLabel, FindOutputHandler, ConnectingPathHandler, ApiMapHandler, ApiMapHandlerSankey, KnowledgeMap, KnowledgeMapPath
 from handlers.entitycrawler import Crawler
 from handlers.basehandler import BaseHandler
 from handlers.DirectPathHandler import DirectPathHandler
 from handlers.DirectInput2OutputHandler import DirectInput2OutputHandler
 from handlers.FindSynonymHandler import SynonymHandler
 from handlers.SemanticQueryHandler import QuerySemanticsHandler
+from handlers.MetaDataHandler import ConnectingInputHandler, EndpointHandler, ConnectingOutputHandler, ConnectingSemanticTypesHandler, MetaDataHandler
+from handlers.APIStatusHandler import APIStatusHandler, DatabaseStatusHandler
+from handlers.URIHandler import BioThingsURIHandler
+from handlers.RegistryHandler import RegistryHandler
 
 client = Client('https://9dd387ee33954e9887ef4a6b55c7aa29:d98404d6199a4db1aa9b5a1e9fc3c975@sentry.io/294205')
 
@@ -27,7 +31,7 @@ client = Client('https://9dd387ee33954e9887ef4a6b55c7aa29:d98404d6199a4db1aa9b5a
 class MainHandler(tornado.web.RequestHandler):
     @tornado.web.addslash
     def get(self):
-        self.render("index.html", messages=None)
+        self.render("home.html", messages=None)
 
 class APIHandler(tornado.web.RequestHandler):
     @tornado.web.addslash
@@ -44,6 +48,31 @@ class CrawlerHandler(tornado.web.RequestHandler):
     def get(self):
         self.render("crawler.html", messages=None)
 
+class ExplorerHandler(tornado.web.RequestHandler):
+    @tornado.web.addslash
+    def get(self):
+        self.render("explorer.html", messages=None)
+
+class MetaDataWebHandler(tornado.web.RequestHandler):
+    @tornado.web.addslash
+    def get(self):
+        self.render("metadata.html", messages=None)
+
+class SourcesWebHandler(tornado.web.RequestHandler):
+    @tornado.web.addslash
+    def get(self):
+        self.render("sources.html", messages=None)
+
+class RegistryWebHandler(tornado.web.RequestHandler):
+    @tornado.web.addslash
+    def get(self):
+        self.render("registry.html", messages=None)
+
+class NavigatorHandler(tornado.web.RequestHandler):
+    @tornado.web.addslash
+    def get(self):
+        self.render("navigator.html", messages=None)
+
 class Application(tornado.web.Application):
     def __init__(self):
         settings = {
@@ -55,29 +84,46 @@ class Application(tornado.web.Application):
             (r"/explorer/?", MainHandler),
             (r"/explorer/tutorial/?", TutorialHandler),
             (r"/explorer/api/?", APIHandler),
+            (r"/explorer/explorer/?", ExplorerHandler),
+            (r"/explorer/explorer/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
             (r"/explorer/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
             (r"/explorer/tutorial/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
             (r"/explorer/crawler/?", CrawlerHandler),
             (r"/explorer/crawler/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
+            (r"/explorer/metadata/?", MetaDataWebHandler),
+            (r"/explorer/sources/?", SourcesWebHandler),
+            (r"/explorer/uri/?", RegistryWebHandler),
+            (r"/explorer/metadata/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
+            (r"/explorer/uri/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
+            (r"/explorer/sources/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
+            (r"/explorer/navigator/?", NavigatorHandler),
+            (r"/explorer/navigator/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
             (r"/explorer/path", ConnectingPathHandler),
-            (r"/explorer/input", ConnectingInputHandler),
             (r"/explorer/apimap", ApiMapHandler),
-            (r"/explorer/output", ConnectingOutputHandler),
-            (r"/explorer/endpoint", EndpointHandler),
             (r"/explorer/findoutput", FindOutputHandler),
             (r"/explorer/apimapsankey", ApiMapHandlerSankey),
-            (r"/explorer/input2endpoint", Input2EndpointHandler),
-            (r"/explorer/endpoint2output", Endpoint2OutputHandler),
+            #(r"/explorer/input2endpoint", Input2EndpointHandler),
+            #(r"/explorer/endpoint2output", Endpoint2OutputHandler),
             (r"/explorer/findedgelabel", FindEdgeLabel),
+            (r"/explorer/api/v2/input", ConnectingInputHandler),
+            (r"/explorer/api/v2/output", ConnectingOutputHandler),
+            (r"/explorer/api/v2/endpoint", EndpointHandler),
             (r"/explorer/api/v2/knowledgemap", KnowledgeMap),
+            (r"/explorer/api/v2/apigraph", KnowledgeMap),
             (r"/explorer/api/v1/path", KnowledgeMapPath),
             (r"/explorer/api/v2/metadata/([^/]+)", MetaDataHandler),
+            (r"/explorer/vocab/terms/([.*]+)", BioThingsURIHandler),
             (r"/explorer/api/v2/findpath", KnowledgeMapPath),
             (r"/explorer/api/v2/crawler", Crawler),
             (r"/explorer/api/v2/directoutput", DirectPathHandler),
             (r"/explorer/api/v2/findsynonym", SynonymHandler),
             (r"/explorer/api/v2/directinput2output", DirectInput2OutputHandler),
-            (r"/explorer/api/v2/semanticquery", QuerySemanticsHandler)
+            (r"/explorer/api/v2/findsingleedge", DirectInput2OutputHandler),
+            (r"/explorer/api/v2/semanticquery", QuerySemanticsHandler),
+            (r"/explorer/api/v2/connectsemantictype", ConnectingSemanticTypesHandler),
+            (r"/explorer/api/v2/apistatus", APIStatusHandler),
+            (r"/explorer/api/v2/databasestatus", DatabaseStatusHandler),
+            (r"/explorer/api/v2/registry", RegistryHandler)
         ]
 
         tornado.web.Application.__init__(self, handlers, **settings)

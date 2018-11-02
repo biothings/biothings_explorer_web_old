@@ -15,7 +15,7 @@ bt_explorer = BioThingsExplorer()
 
 color_dict = {'clinical trial': 'rgba(144, 144, 28, 0.4)', 'gene': 'rgba(55, 230, 84, 0.93)', 
               'chemical': 'rgba(230, 55, 218, 0.93)', 'protein': 'rgba(55, 227, 230, 0.6)', 
-              'variant': 'rgba(230, 174, 55, 0.83)', 'publication': 'rgba(86, 28, 144, 0.3)',
+              'variant': 'rgba(230, 174, 55, 0.83)', 'anatomy': 'rgba(86, 28, 144, 0.3)',
               'phenotype': 'rgba(28, 86, 144, 0.3)', 'pathway': 'rgba(230, 55, 116, 0.63)',
               'disease': 'rgba(166, 55, 230, 0.84)', 'transcript': 'rgba(100, 88, 77, 0.4)',
               'clinical significance': 'rgba(70, 33, 77, 0.4)', 'organism': 'rgba(10, 133, 177, 0.4)',
@@ -189,64 +189,13 @@ class ConnectingPathHandler(BaseHandler):
         edges = []
         for _edge in bt_explorer.temp_G.edges():
             edges.append((_edge[0], _edge[1], find_edge_label(bt_explorer.temp_G, _edge[0], _edge[1])))
-        no_duplicate = [_item['preferred_name'] for _item in list(bt_explorer.registry.bioentity_info.values())] + list(bt_explorer.registry.endpoint_info.keys())
+        no_duplicate = [_item['prefix'] for _item in list(bt_explorer.registry.bioentity_info.values())] + list(bt_explorer.registry.endpoint_info.keys())
         plotly_results = networkx_to_plotly(edges, duplicates_not_allowed=no_duplicate)
         self.write(json.dumps({"plotly": plotly_results, "paths": paths}))
 
-
-class ConnectingInputHandler(BaseHandler):
-    def get(self):
-        _input = self.get_argument('input')
-        print(_input)
-        edges = []
-        endpoints = bt_explorer.api_map.successors(_input)
-        if endpoints:
-            for _endpoint in endpoints:
-                edges.append((_input, _endpoint, find_edge_label(bt_explorer.api_map, _input, _endpoint)))
-                outputs = bt_explorer.api_map.successors(_endpoint)
-                if outputs:
-                    edges.extend([(_endpoint, _output, find_edge_label(bt_explorer.api_map, _endpoint, _output)) for _output in outputs])
-        plotly_results = networkx_to_plotly(edges, duplicates_not_allowed=bt_explorer.registry.endpoint_info.keys())
-        self.write(json.dumps({"plotly": plotly_results}))
-
-class Input2EndpointHandler(BaseHandler):
-    """
-    Return endpoints which accepts given input
-    """
-    def post(self):
-        _input = self.get_argument('input')
-        endpoints = list(bt_explorer.api_map.successors(_input))
-        self.write(json.dumps({"endpoints": endpoints, "input": _input}))
-
-class Endpoint2OutputHandler(BaseHandler):
-    """
-    Return
-    ======
-    Outputs which can be returned by the given endpoint
-    """
-    def post(self):
-        _endpoint = self.get_argument('endpoint')
-        outputs = list(bt_explorer.api_map.successors(_endpoint))
-        self.write(json.dumps({"endpoint": _endpoint, "output": outputs}))
-
-class ConnectingOutputHandler(BaseHandler):
-    def get(self):
-        _output = self.get_argument('output')
-        edges = []
-        endpoints = bt_explorer.api_map.predecessors(_output)
-        if endpoints:
-            for _endpoint in endpoints:
-                edges.append((_endpoint, _output, find_edge_label(bt_explorer.api_map, _endpoint, _output)))
-                inputs = bt_explorer.api_map.predecessors(_endpoint)
-                inputs = [_input for _input in inputs if bt_explorer.api_map.node[_input]['type'] == 'bioentity']
-                if inputs:
-                    edges.extend([(_input, _endpoint, find_edge_label(bt_explorer.api_map, _input, _endpoint)) for _input in inputs])
-        plotly_results = networkx_to_plotly(edges, duplicates_not_allowed=bt_explorer.registry.endpoint_info.keys())
-        self.write(json.dumps({"plotly": plotly_results}))
-
 class ApiMapHandler(BaseHandler):
     def get(self):
-        bio_entity_list = [_item['preferred_name'] for _item in list(bt_explorer.registry.bioentity_info.values())]
+        bio_entity_list = [_item['prefix'] for _item in list(bt_explorer.registry.bioentity_info.values())]
         api_list = bt_explorer.registry.api_info.keys()
         endpoint_list = bt_explorer.registry.endpoint_info.keys()
         cytoscape_results = networkx_to_cytoscape(bt_explorer.api_map.edges(), bio_entity_list, api_list, endpoint_list)
@@ -254,7 +203,7 @@ class ApiMapHandler(BaseHandler):
 
 class ApiMapHandlerSankey(BaseHandler):
     def get(self):
-        plotly_results = networkx_to_plotly(bt_explorer.api_map.edges(), [_item['preferred_name'] for _item in list(bt_explorer.registry.bioentity_info.values())])
+        plotly_results = networkx_to_plotly(bt_explorer.api_map.edges(), [_item['prefix'] for _item in list(bt_explorer.registry.bioentity_info.values())])
         self.write(json.dumps({"plotly": plotly_results}))
 
 class EndpointHandler(BaseHandler):
@@ -279,12 +228,12 @@ class MetaDataHandler(BaseHandler):
             # group all bioentity ids together based on their semantic type
             bioentity_dict = defaultdict(list)
             for _item in bt_explorer.registry.bioentity_info.values():
-                bioentity_dict[_item['semantic type']].append(_item['preferred_name'])
+                bioentity_dict[_item['semantic type']].append(_item['prefix'])
             for k,v in bioentity_dict.items():
                 bioentity_dict[k] = sorted(v)
             self.write(json_encode({'bioentity': bioentity_dict}))
         elif type == 'bioentity_input':
-            bio_entity_list = [_item['preferred_name'] for _item in list(bt_explorer.registry.bioentity_info.values())]
+            bio_entity_list = [_item['prefix'] for _item in list(bt_explorer.registry.bioentity_info.values())]
             inputs = [_edge[0] for _edge in bt_explorer.api_map.edges()]
             bioentity_inputs = [_entity for _entity in bio_entity_list if _entity in inputs]
             self.write(json.dumps({'input': bioentity_inputs}))
@@ -385,10 +334,10 @@ class KnowledgeMap(BaseHandler):
             relation = _endpoint_info['relation']
             inputs = _endpoint_info['input']
             for _input in inputs:
-                _input_curie = bioentity_info[_input]['preferred_name']
+                _input_curie = bioentity_info[_input]['prefix']
                 _input_type = bt_explorer.registry.bioentity_info[_input]['semantic type']
                 for _output, _relation in relation.items():
-                    _output_curie = bioentity_info[_output]['preferred_name']
+                    _output_curie = bioentity_info[_output]['prefix']
                     _output_type = bt_explorer.registry.bioentity_info[_output]['semantic type']
                     for _relate in _relation:
                         triples.append({'subject': {'prefix': _input_curie, 'semantic_type': _input_type}, 

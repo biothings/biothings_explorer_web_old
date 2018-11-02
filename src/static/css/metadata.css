@@ -1,0 +1,71 @@
+#metadata-header {
+	color: white !important;
+}
+
+.search-bar-center {
+    position: fixed;
+    height: 80vh;
+    width: 100vw;
+}
+
+.search-bar-top {
+	padding: 2%;
+	margin-top: 2%;
+	border-radius: 4px;
+	border: 1px solid red;
+}
+
+#slide-out h2 {
+	font-size: 1.6rem !important;
+	padding-bottom: 30%;
+	font-family: "Ubuntu";
+	color: white;
+}
+
+.user-view {
+	background-color: orange;
+}
+
+.nav-bar i {
+	display: inline !important;
+	margin-top: 10%;
+}
+
+.nav-bar a {
+	font-size: 20px;
+	font-family: "Ubuntu";
+}
+.landing-page {
+	width: 100vw;
+	height: 50vh;
+}
+.landing-page h1 {
+	font-family: "Ubuntu";
+	font-size: 3rem !important;
+	margin-top: 17%;
+}
+
+.landing-page p {
+	font-family: "Ubuntu";
+	font-size: 1.5rem !important;
+}
+
+.sub-intro-text {
+	height: 175px;
+}
+
+#error-message h2 {
+	font-family: "Ubuntu";
+	font-size: 1.8rem !important;
+	color: grey;
+}
+
+.sub-intro h2 {
+	font-family: "Ubuntu";
+	font-size: 1.2rem !important;
+}
+
+a:hover {
+    color: hotpink;
+    text-decoration: underline;
+}
