@@ -177,9 +177,15 @@
                         </label>
                     </div>
                     <div class="col s12 m2">
-                        <a class="waves-effect waves-light btn search-button" id="DirectInput2OutputButton">Explore1</a>
+                        <a class="waves-effect waves-light btn search-button" id="DirectInput2OutputButton" onclick="validateInput()">Explore</a>
                     </div>
-                    <div class="col s12 m8 offset-m1 query_example">
+                </div>
+                <div class="row">
+                    <div class="col s12 m8 offset" id="query_hint">
+                    </div>
+                    <div class="col s12 m8 offset" id="regex_check">
+                    </div>
+                    <div class="col s12 m8 offset query_example">
                         <p class="orange-text"> Some useful examples to get you started!</p>
                         <p> <a href="#" id="g2c_nav_example"> Find all <b>ChEMBL compounds</b> related to <b>gene</b> ncibigene:1017</a></p>
                         <p> <a href="#" id="c2g_nav_example"> Find all <b>ncbigenes</b> related to <b>chemical</b> CHEMBL.COMPOUND:CHEMBL744</a></p>
