@@ -1,3 +1,41 @@
+/**
+ * Get the 
+ * @return {Promise} info about prefix
+*/
+
+function retrievePrefixInfo(prefix){
+  var promise = $.ajax({
+    type:"GET",
+    url: "/explorer/api/v2/registry",
+    data: {'prefix': prefix},
+    datatype: "json"
+  });
+  return promise;
+};
+
+var prefix_info
+
+/**
+Validate the user input
+*/
+function validateInput() {
+    var _input_prefix = $("#direct-input").find("option:selected").attr('value');
+    retrievePrefixInfo(_input).done(function(jsonResonse){
+        prefix_info = jsonResonse;
+    });
+    var _input = $("#direct_input_value").val();
+    var pattern = prefix_info['pattern'];
+    console.log(_input);
+    console.log(pattern);
+    if (_input.match(pattern)) {
+        console.log('YES');
+    } else {
+        $("#regex_check").empty();
+        $("#regex_check").append('<p>You are inputing a wrong value. The value should follow the pattern ' + 
+                                 pattern + '. An example of this is ' + prefix_info['example'] + '.</p>');
+    }
+}
+
 $(document).ready(function() {
     $(".dropdown-trigger").dropdown();
     //this section deals with the side nav
@@ -47,11 +85,24 @@ $(document).ready(function() {
         $("#path-plotly-div").hide();
     });
 
+    $('#direct-input').on('select2:select', function (e) {
+        var _input = $("#direct-input").find("option:selected").attr('value');
+        retrievePrefixInfo(_input).done(function(jsonResonse){
+            var _info = jsonResonse;
+            prefix_info = jsonResonse;
+            $("#query_hint").empty();
+            $("#query_hint").append('<p>An example of ' + 
+                                    _info['prefix'] + ' is ' +
+                                    _info['example'] + '</p>')
+        });
+    });
+
     //the following section of code provides examples
     // of how to connect from hgnc.symbol:CXCR4 to chembl.compound
     $("#g2c_nav_example").click(function() {
         $("#direct-input").val('hgnc.symbol'); // Select the option with a value of 'gene'
-        $('#direct-input').trigger('change'); 
+        $('#direct-input').trigger('change');
+        $('select option[value="chebi"]').attr('disabled', 'disabled');        
         $("#direct-output").val('chembl.compound'); // Select the option with a value of 'gene'
         $('#direct-output').trigger('change');
         $("#direct_input_value").val('CXCR4');
@@ -78,6 +129,7 @@ $(document).ready(function() {
     });
 
     $(".search-button").click(function() {
+        $("#query_hint").empty();
         $(".query_example").hide();
         $(".crawler-header").hide();
         $(".search-bar-center").addClass("search-bar-top");
