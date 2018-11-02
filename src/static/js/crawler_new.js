@@ -108,7 +108,20 @@ function fill_data_for_single_semantic_type(semantic_type, dataset, column_names
 $(document).ready(function(){
     $(".dropdown-trigger").dropdown();
     populateCrawlerInput('#select-input');
+    //the following section of code provides examples
+    // of how to crawl from ncbigene:1017
+    $("#g_crawl_example").click(function() {
+        $("#select-input").val('ncbigene'); // Select the option with a value of 'gene'
+        $('#select-input').trigger('change'); 
+        $("#crawler-input-value").val('1017'); // Select the option with a value of 'gene'
+    });
+    $("#c_crawl_example").click(function() {
+        $("#select-input").val('chembl.compound'); // Select the option with a value of 'gene'
+        $('#select-input').trigger('change'); 
+        $("#crawler-input-value").val('CHEMBL744'); // Select the option with a value of 'gene'
+    });
     $('#start-crawl-button').click(function() {
+        $(".query_example").hide();
         $("#navbar").css({'position': 'relative'});
         $(".crawler_header").hide();
         $(".overlay-group").show();
