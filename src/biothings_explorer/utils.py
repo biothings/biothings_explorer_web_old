@@ -88,20 +88,12 @@ def int2str(d):
                 elif isinstance(_v, int):
                     new_list.append(str(_v))
                 elif isinstance(_v, str):
-                    if ':' not in _v:
-                        new_list.append(_v)
-                    elif ':' in _v and _v.split(':')[0].lower() in PREFIXES:
-                        new_list.append(_v)
-                    else:
-                        new_list.append(_v.replace(':', '$$$$'))
+                    new_list.append(_v)
             if new_list:
                 d.update({k: new_list})
         else:
             if type(v) == int:
                 d.update({k: str(v)})
-            elif type(v) == str:
-                if ':' in v and v.split(':')[0].lower() not in PREFIXES:
-                    d.update({k: v.replace(':', '$$$$')})
 
 
 def str2list(_input):
