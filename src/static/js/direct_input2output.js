@@ -48,7 +48,6 @@ function DirectOutput2Graph(){
     		var edges = [];
     		results.forEach(function(_result) {
                 node_label = _result['output']['object']['id'];
-                console.log(node_label);
                 node_title = 'prefix: ' + _output;
                 if ('edge' in _result['output']) {
                     var edge_info = _result['output']['edge'];
