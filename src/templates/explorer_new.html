@@ -27,6 +27,7 @@
         <script type="text/javascript" src="./static/js/drawSankey.js"></script>
         <script type="text/javascript" src="./static/js/direct_input_output_new.js"></script>
         <script type="text/javascript" src="./static/js/semantic_input2output_new.js"></script>
+        <script type="text/javascript" src="./static/js/crawler_new1.js"></script>
         <script type = "text/javascript"
          src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> 
@@ -37,6 +38,13 @@
         <script src="http://d3js.org/d3.v3.min.js"></script>
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
         <link href="./static/css/explorer_new.css" rel="stylesheet" />
+        <!-- script for data table-->
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+        <!-- script for zingchart used to create radar chart here-->
+        <script src= "https://cdn.zingchart.com/zingchart.min.js"></script>
+        <script> zingchart.MODULESDIR = "https://cdn.zingchart.com/modules/";
+        ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9","ee6b7db5b51705a13dc2339db3edaf6d"];</script>
     </head>
     <body>
       <!-- This section is for the header-->
@@ -105,7 +113,7 @@
                   Single Edge
                   <input type="checkbox" id="singleswitchmulti">
                   <span class="lever"></span>
-                  Multi Edge <i class="small material-icons white-text" id="singlevsmulti-switch-help">help</i>
+                  Multi Edge <i class="small material-icons white-text tooltipped" data-position="bottom" data-tooltip="Single Edge: retrieving data through one API call. <br> Multi Edge: retrieving data by chaining multiple API calls (currently not supported).">help</i>
                 </label>
               </div>
               <div class="checkboxitem">
@@ -120,7 +128,7 @@
                 <p>
                   <label>
                     <input type="checkbox" id="crawlercheckbox"/>
-                    <span>Crawler <i class="small material-icons white-text" id="crawler-help">help</i></span>
+                    <span>Crawler <i class="small material-icons white-text tooltipped" data-position="bottom" data-tooltip="Find related biological information for the input" id="crawler-help">help</i></span>
                   </label>
                 </p>
               </div>
@@ -128,7 +136,7 @@
                 <p>
                   <label>
                     <input type="checkbox" id="isIDSelected"/>
-                    <span>I have an ID <i class="small material-icons white-text" id="input-help">help</i></span>
+                    <span>I have an ID <i class="small material-icons white-text tooltipped" data-position="bottom" data-tooltip="ID/Accession number is required when you want to fetch data from API.<br> If an ID is not provided, we will only show you which API can potentially connect from you input to output." id="input-help">help</i></span>
                   </label>
                 </p>
               </div>
@@ -186,7 +194,7 @@
                 </div>
                 <div class="card-stacked">
                   <div class="card-content">
-                    <p>Suppose you are a clinician, and you would like to retrieve all <b>phenotypes</b> which are known to be related to the <b>disease</b> called <a href="https://en.wikipedia.org/wiki/Wolfram_syndrome", target="_blank">Wolfram syndrome 1</a> (MONDO:0009101).</p>
+                    <p>Suppose you are a clinician, and you would like to retrieve all <b>phenotypes</b> which are related to the <b>disease</b> <a href="https://en.wikipedia.org/wiki/Wolfram_syndrome", target="_blank">Wolfram syndrome 1</a> (MONDO:0009101).</p>
                   </div>
                   <div class="card-action">
                     <a href="#main" class="blue-text" id="example3-button">Try it out!</a>
@@ -285,6 +293,23 @@
             </a>
           </div>
         </section>
+        <section class="crawler" style="display:none">
+            <div class="overlay-group">
+                <div class="overlay"></div>
+                <div id="loading-img"></div>
+            </div>
+            <!-- This section is for the data display-->
+            <div class="row main" style="display: none">
+              <div class="col s12 m9 offset-m1 data-display">
+                <ul class="collapsible data-display-list">
+                  <li class="active">
+                    <div class="collapsible-header"><i class="material-icons">filter_drama</i>Summary</div>
+                    <div class="collapsible-body"><div id="radar_chart"></div></div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </section>
         <footer class="page-footer">
             <div class="container">
                 <div class="row">
