@@ -18,6 +18,17 @@ function displaySemanticType(_input, _output) {
 };
 
 /*
+Display crawler results
+*/
+function displayCrawlerResults(input_prefix, _input) {
+    $(".overlay-group").show();
+    $(".search-bar-center").removeClass("search-bar-center");
+    $(".search-history").show();
+    update_data_display(input_prefix, _input);
+    $(".collapsible").collapsible();
+}
+
+/*
 Display options based on semantic & ID switch
 */
 
@@ -32,11 +43,7 @@ function semanticIDSwitchHandler() {
             // checkbox row should be hidden when user select semantic type level search
             $(".checkboxrow").show();
         } else {
-            $("#direct-input").empty();
-            populateSemanticType("#direct-input");
-            $("#direct-output").empty();
-            populateSemanticType("#direct-output");
-            $(".checkboxrow").hide();
+            defaultsearchbarsetting();
         }
     });
 };
@@ -124,12 +131,16 @@ function defaultsearchbarsetting() {
     $("#direct-output").empty();
     populateSemanticType("#direct-output", "chemical");
     $(".checkboxrow").hide();
-    $("#singleswitchmulti").prop("checked", false);
-    $("#synonymcheckbox").prop("checked", false);
-    $("#isIDSelected").prop("checked", false);
+    $("#singleswitchmulti").prop("checked", false).removeAttr("disabled");
+    $("#synonymcheckbox").prop("checked", false).removeAttr("disabled");
+    $("#isIDSelected").prop("checked", false).removeAttr("disabled");
+    $("#crawlercheckbox").prop("checked", false);
     $(".userinputrow").toggle(false);
     $("#textarea1").val("");
     $(".input-field label").css("opacity", "1");
+    $(".select-wrapper-output").show();
+    $(".forwardicon").show();
+
 }
 
 /*
@@ -174,10 +185,10 @@ $(document).ready(function() {
             $("#isIDSelected").prop('checked', true).attr("disabled", true);
             $("#synonymcheckbox").prop('checked', true).attr("disabled", true);
             $("#singleswitchmulti").attr("disabled", true);
-            $("#semanticswitchid").attr("disabled", true);
             $("#textarea1").val("");
-            $("#textarea1").prop("placeholder", "Type your Input ID or name here");
+            $("#textarea1").prop("placeholder", "A valid ID must be provided to use crawler function. Please type your ID here!");
             $(".forwardicon").hide();
+            $(".input-field label").css("opacity", "0");
         } else {
             // when crawler is not selected, other options should be re-enabled
             $(".select-wrapper-output").show();
@@ -189,21 +200,49 @@ $(document).ready(function() {
             $("#semanticswitchid").removeAttr("disabled");
             $("#textarea1").val("");
             $("#textarea1").prop("placeholder", "Type your Input ID or name here");
+            $(".input-field label").css("opacity", "1");
         }
     });
 
 
     //handle graph display after user submit query
     $("#explorebutton").click(function() {
+        // hide example section temporarily
         $(".example").hide();
+        $(".metadata").hide();
+        $(".crawler").hide();
+        $(".navigation").hide();
+        // First handle cases for semantic type metadata exploration
+        if ($("#semanticswitchid").is(":checked") == false) {
+            $(".metadata").show();
+            var _input = $("#direct-input").find("option:selected").attr('value');
+            var _output = $("#direct-output").find("option:selected").attr('value');
+            displaySemanticType(_input, _output);
+        } else {
+            if ($("#crawlercheckbox").is(":checked")) {
+                $(".crawler").show();
+                var _input = $("#direct-input").find("option:selected").attr('value');
+                var _value = $("#textarea1").val();
+                displayCrawlerResults(_input, _value);
+            } else if ($("#singleswitchmulti").prop('checked', false) && $("#synonymcheckbox").prop('checked', false) && $("#isIDSelected").prop('checked', true)) {
+                $(".navigation").show();
+                var _input = $("#direct-input").find("option:selected").attr('value');
+                var _output = $("#direct-output").find("option:selected").attr('value');
+                var _value = $("#textarea1").val();
+                DirectOutput2Graph(_input, _output, _value);
+            }
+        }
+        
+        
         //$(".metadata").show();
-        $(".navigation").show();
-        var _input = $("#direct-input").find("option:selected").attr('value');
-        console.log(_input);
+        //$(".navigation").show();
+        
+        
         var _output = $("#direct-output").find("option:selected").attr('value');
-        var _value = $("#textarea1").val();
+        
         //displaySemanticType(_input, _output);
-        DirectOutput2Graph(_input, _output, _value);
+        //DirectOutput2Graph(_input, _output, _value);
         //SemanticOutput2Graph(_input, _output, _value);
+        
     })
 });
