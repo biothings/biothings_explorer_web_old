@@ -8,7 +8,7 @@
 function findStartEndConnection(_start, _end, _max_api=3){
   var promise = $.ajax({
     type:"GET",
-    url: "/explorer/path",
+    url: "/explorer/api/v2/findpath",
     data: {start: _start, end: _end, "max_api": _max_api},
     datatype: "json"
   });
