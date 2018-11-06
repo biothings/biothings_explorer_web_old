@@ -60,7 +60,7 @@ function example1handler() {
         $("#synonymcheckbox").prop("checked", false);
         $("#isIDSelected").prop("checked", true);
         $(".userinputrow").toggle(true);
-        $("#textarea1").prop("placeholder", "");
+        $(".input-field label").css("opacity", "0");
         $("#textarea1").val("CXCR4");
         $(".example").hide();
         //$(".metadata").show();
@@ -87,8 +87,7 @@ function example3handler() {
         $("#synonymcheckbox").prop("checked", false);
         $("#isIDSelected").prop("checked", true);
         $(".userinputrow").toggle(true);
-        $("#textarea1").val("");
-        $("#textarea1").prop("placeholder", "");
+        $(".input-field label").css("opacity", "0");
         $("#textarea1").val("MONDO:0009101");
         $(".example").hide();
         //$(".metadata").show();
@@ -130,6 +129,7 @@ function defaultsearchbarsetting() {
     $("#isIDSelected").prop("checked", false);
     $(".userinputrow").toggle(false);
     $("#textarea1").val("");
+    $(".input-field label").css("opacity", "1");
 }
 
 /*
