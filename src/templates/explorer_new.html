@@ -80,6 +80,9 @@
                 ID & Accession Numbers <i class="small material-icons white-text" id="semanticvsid-switch-help">help</i>
               </label>
             </div>
+            <div class="backicon">
+              <i class="large material-icons white-text tooltipped" data-position="bottom" data-tooltip="Back to examples" id="showexamplebutton">arrow_back</i>
+            </div>
             <div class="selectrow">
                 <div class="select-wrapper">
                     <select id="direct-input"></select>
@@ -87,7 +90,7 @@
                 <div class="forwardicon">
                   <i class="material-icons large white-text">forward</i>
                 </div>
-                <div class="select-wrapper">
+                <div class="select-wrapper select-wrapper-output">
                     <select id="direct-output"></select>
                 </div>
                 <div class="submitbutton">
@@ -108,7 +111,7 @@
               <div class="checkboxitem">
                 <p>
                   <label>
-                    <input type="checkbox" />
+                    <input type="checkbox" id="synonymcheckbox">
                     <span>Include Synonyms <i class="small material-icons white-text tooltipped" data-position="bottom" data-tooltip="Include synonyms of the input and output, <br>e.g. when searching for ncbigene:1017, will automatically <br>include its synonyms such as hgnc.symbol:CDK7, etc." id="synonym-help">help</i></span>
                   </label>
                 </p>
@@ -116,7 +119,7 @@
               <div class="checkboxitem">
                 <p>
                   <label>
-                    <input type="checkbox" />
+                    <input type="checkbox" id="crawlercheckbox"/>
                     <span>Crawler <i class="small material-icons white-text" id="crawler-help">help</i></span>
                   </label>
                 </p>
@@ -154,7 +157,7 @@
                     <p>Suppose I have a gene symbol in mind, e.g. <i>CXCR4</i>, I want to find all <b>drugs/chemicals</b> which are known to target this <b>gene or its gene product</b></p>
                   </div>
                   <div class="card-action">
-                    <a href="#" class="blue-text">Try it out!</a>
+                    <a href="#main" class="blue-text" id="example1-button">Try it out!</a>
                   </div>
                 </div>
               </div>
@@ -170,7 +173,7 @@
                     <p>My research focus is on gene <i>CDK7</i>, and I want to know everything related to this <b>gene</b>, e.g. phenotypes, dieseases, chemicals, literatures, variants, etc.</p>
                   </div>
                   <div class="card-action">
-                    <a href="#" class="blue-text">Try it out!</a>
+                    <a href="#main" class="blue-text">Try it out!</a>
                   </div>
                 </div>
               </div>
@@ -186,7 +189,7 @@
                     <p>Suppose you are a clinician, and you would like to retrieve all <b>phenotypes</b> which are known to be related to the <b>disease</b> called <a href="https://en.wikipedia.org/wiki/Wolfram_syndrome", target="_blank">Wolfram syndrome 1</a> (MONDO:0009101).</p>
                   </div>
                   <div class="card-action">
-                    <a href="#" class="blue-text">Try it out!</a>
+                    <a href="#main" class="blue-text" id="example3-button">Try it out!</a>
                   </div>
                 </div>
               </div>
@@ -202,7 +205,7 @@
                     <p>Suppose you are a developer, and you would like to find all available <b><a href="https://en.wikipedia.org/wiki/Application_programming_interface", target="_blank">API</b></a> resources which can take a <a href="https://www.ncbi.nlm.nih.gov/gene">ncbigene</a> ID as input, and returns a <a href="http://disease-ontology.org/", target="_blank"> Disease Ontology</a> ID  as output.</p>
                   </div>
                   <div class="card-action">
-                    <a href="#" class="blue-text">Try it out!</a>
+                    <a href="#main" class="blue-text" id="example4-button">Try it out!</a>
                   </div>
                 </div>
               </div>

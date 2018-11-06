@@ -29,6 +29,16 @@ label {
     font-size: 1.2rem;
 }
 
+.backicon {
+    padding-top: 30px;
+    grid-column: 12/13;
+    grid-row: 1;
+}
+
+.backicon i {
+    position: relative;
+    cursor: grab;
+}
 /* CSS for the select2 options */
 
 .selectrow {
@@ -36,8 +46,8 @@ label {
     grid-row: 2;
 }
 
-.select-wrapper, .forwardicon, .submitbutton {
-    display: inline-block !important;
+.select-wrapper, .forwardicon, .submitbutton, .backicon {
+    display: inline-block;
 }
 
 .submitbutton {
