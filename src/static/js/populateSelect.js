@@ -72,12 +72,17 @@ function populateEndpoints(dropdown_id){
  * Automatically add semantic type info to the options of select
  * @param {String} dropdown_id
 */
-function populateSemanticType(dropdown_id){
+function populateSemanticType(dropdown_id, default_value=null){
     getMetaData('semantic_types').done(function(jsonResponse){
         var semantic_type_select2_data = $.map(jsonResponse.semantic_types, function(n) {
             return {"id": n, "text": n};
         });
         $(dropdown_id).select2({data: semantic_type_select2_data});
+        //set the default value of the select
+        if (default_value) {
+            $(dropdown_id).val(default_value);
+            $(dropdown_id).trigger('change'); 
+        }
     });
 };
 
@@ -103,7 +108,7 @@ function populateCrawlerInput(dropdown_id){
  * Automatically add bioentity info to the options of select
  * @param {String} dropdown_id
 */
-function populateBioEntity(dropdown_id){
+function populateBioEntity(dropdown_id, default_value=null){
     getMetaData('bioentities').done(function(jsonResponse){
         var bioentity_select2_data = []
         for (var semantic_type in jsonResponse.bioentity) {
@@ -115,6 +120,11 @@ function populateBioEntity(dropdown_id){
             bioentity_select2_data.push(group);
         };
         $(dropdown_id).select2({data: bioentity_select2_data});
+        //set the default value of the select
+        if (default_value) {
+            $(dropdown_id).val(default_value); 
+            $(dropdown_id).trigger('change'); 
+        }
     });
 };
 
