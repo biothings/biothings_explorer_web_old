@@ -13,13 +13,20 @@ from biothings_explorer import BioThingsExplorer
 
 bt_explorer = BioThingsExplorer()
 
-color_dict = {'clinical trial': 'rgba(144, 144, 28, 0.4)', 'gene': 'rgba(55, 230, 84, 0.93)', 
-              'chemical': 'rgba(230, 55, 218, 0.93)', 'protein': 'rgba(55, 227, 230, 0.6)', 
-              'variant': 'rgba(230, 174, 55, 0.83)', 'anatomy': 'rgba(86, 28, 144, 0.3)',
-              'phenotype': 'rgba(28, 86, 144, 0.3)', 'pathway': 'rgba(230, 55, 116, 0.63)',
-              'disease': 'rgba(166, 55, 230, 0.84)', 'transcript': 'rgba(100, 88, 77, 0.4)',
-              'clinical significance': 'rgba(70, 33, 77, 0.4)', 'organism': 'rgba(10, 133, 177, 0.4)',
-              'structure': 'rgba(8, 233, 7, 0.4)', 'ontology': 'rgba(99,123,4,0.4'}
+color_dict = {
+              'gene': 'rgba(55, 230, 84, 0.93)',
+              'chemical': 'rgba(230, 55, 218, 0.93)', 
+              'protein': 'rgba(55, 227, 230, 0.6)',
+              'variant': 'rgba(230, 174, 55, 0.83)', 
+              'anatomy': 'rgba(86, 28, 144, 0.3)',
+              'phenotype': 'rgba(28, 86, 144, 0.3)', 
+              'pathway': 'rgba(230, 55, 116, 0.63)',
+              'disease': 'rgba(166, 55, 230, 0.84)', 
+              'transcript': 'rgba(100, 88, 77, 0.4)',
+              'organism': 'rgba(10, 133, 177, 0.4)',
+              'structure': 'rgba(8, 233, 7, 0.4)', 
+              'ontology': 'rgba(99,123,4,0.4)',
+              'bioassay': "rgba(100, 100, 100, 0.3)"}
 
 def label2color(label):
     uri = bt_explorer.registry.prefix2uri(label)
@@ -191,7 +198,12 @@ class ConnectingPathHandler(BaseHandler):
             edges.append((_edge[0], _edge[1], find_edge_label(bt_explorer.temp_G, _edge[0], _edge[1])))
         no_duplicate = [_item['prefix'] for _item in list(bt_explorer.registry.bioentity_info.values())] + list(bt_explorer.registry.endpoint_info.keys())
         plotly_results = networkx_to_plotly(edges, duplicates_not_allowed=no_duplicate)
-        self.write(json.dumps({"plotly": plotly_results, "paths": paths}))
+        if paths:
+            self.write(json.dumps({"plotly": plotly_results, "paths": paths}))
+        else:
+            self.set_status(400)
+            self.write(json.dumps({"status": 400, 'error message': "No path could be found connecting from '" + start + "' to '" + end + " using " + max_api + " api!\n Please try other input and output or try multi edge!"}))
+            self.finish()
 
 class ApiMapHandler(BaseHandler):
     def get(self):
