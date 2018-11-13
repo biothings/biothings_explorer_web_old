@@ -1,7 +1,6 @@
 
 function drawSankeyPlot(jsonResponse, type){
   // hide all non sankey plots in the main div
-  $(".overview_map").hide();
   $("#cy").hide();
   if (type=='path'){
       $("#error-message").empty();
@@ -17,8 +16,6 @@ function drawSankeyPlot(jsonResponse, type){
 
   var fig = jsonResponse;
   var data = {
-    width: 500,
-    height: 500,
     type: "sankey",
     domain: {
       x: [0,1],
@@ -49,17 +46,14 @@ function drawSankeyPlot(jsonResponse, type){
   var data = [data];
 
   var layout = {
-    autosize: false,
-    width: 1200,
-    height: 772,
     font: {
       size: 10
     },
     paper_bgcolor: 'rgba(0,0,0,0)'
   };
   if (type=='path'){
-    Plotly.plot('path-plotly', data, layout);
+    Plotly.plot('path-plotly', data, layout, {responsive: true});
   } else if (type=="explore"){
-    Plotly.plot('explore-plotly', data, layout);
+    Plotly.plot('explore-plotly', data, layout, {responsive: true});
   };
 };
