@@ -1,7 +1,6 @@
 
 function drawSankeyPlot(jsonResponse, type){
   // hide all non sankey plots in the main div
-  $("#cy").hide();
   if (type=='path'){
       $("#error-message").empty();
       Plotly.purge('path-plotly');
@@ -46,6 +45,7 @@ function drawSankeyPlot(jsonResponse, type){
   var data = [data];
 
   var layout = {
+    title: jsonResponse.title,
     font: {
       size: 10
     },
