@@ -110,7 +110,7 @@ class ConnectingSemanticTypesHandler(BaseHandler):
         input_semantic_type = self.get_query_argument('input')
         output_semantic_type = self.get_query_argument('output')
         output_format = self.get_query_argument('format', None)
-        title = "Path Connecting From " + input_semantic_type.upper() + " To " + output_semantic_type.upper()
+        title = "Paths Connecting From " + input_semantic_type.upper() + " To " + output_semantic_type.upper()
         temp_output = KNOWLEDGE_MAP
         if input_semantic_type in [_association['subject']['semantic_type'] for _association in KNOWLEDGE_MAP]:
             temp_output = [_association for _association in temp_output if _association['subject']['semantic_type'] == input_semantic_type]
