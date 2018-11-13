@@ -110,6 +110,7 @@ class ConnectingSemanticTypesHandler(BaseHandler):
         input_semantic_type = self.get_query_argument('input')
         output_semantic_type = self.get_query_argument('output')
         output_format = self.get_query_argument('format', None)
+        title = "Path Connecting From " + input_semantic_type.upper() + " To " + output_semantic_type.upper()
         temp_output = KNOWLEDGE_MAP
         if input_semantic_type in [_association['subject']['semantic_type'] for _association in KNOWLEDGE_MAP]:
             temp_output = [_association for _association in temp_output if _association['subject']['semantic_type'] == input_semantic_type]
@@ -132,7 +133,9 @@ class ConnectingSemanticTypesHandler(BaseHandler):
                 edges.append((_pair['endpoint'], _pair['object']['prefix'], _pair['predicate']))
             if output_format == 'plotly':
                 plotly_results = HU.networkx_to_plotly(edges, duplicates_not_allowed=HU.bt_explorer.registry.endpoint_info.keys())
-                self.write(json.dumps({"plotly": plotly_results}))
+                self.write(json.dumps({"plotly": plotly_results,
+                                       'associations': temp_output,
+                                       'title': title}))
             else:
                 self.write(json.dumps({"associations": temp_output}))
         else:
