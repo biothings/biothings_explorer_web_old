@@ -49,63 +49,95 @@
     <body>
       <!-- This section is for the header-->
         <head>
-            <ul id="dropdown1" class="dropdown-content">
-              <li><a href="metadata">Knowledge Map</a></li>
-              <li><a href="crawler">Crawler</a></li>
-              <li><a href="navigator">Navigator</a></li>
-            </ul>
-            <ul id="dropdown2" class="dropdown-content">
-              <li><a href="tutorial">Tutorial</a></li>
-              <li><a href="sources">Sources</a></li>
-              <li><a href="uri">URI Registry</a></li>
-            </ul>
-            <ul id="dropdown3" class="dropdown-content">
-              <li><a href="api">API</a></li>
-              <li><a href="https://pypi.org/project/biothings-explorer/">Python</a></li>
-            </ul>
-            <nav>
-                <div class="nav-wrapper black">
-                    <div class="col s12">
-                        <a href="#" title="BioThings Explorer"><img style="border:0px;" width="256" src="http://biothings.io/static/img/biothings-explorer-256.png" alt="Logo 256"/></a>
-                        <!-- Dropdown Structure -->
-                        <ul class="right hide-on-med-and-down">
-                            <li><a class="dropdown-trigger" href="#!" data-target="dropdown2">Docs<i class="material-icons right">arrow_drop_down</i></a></li>
-                            <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Tools<i class="material-icons right">arrow_drop_down</i></a></li>
-                            <li><a class="dropdown-trigger" href="#!" data-target="dropdown3">Developers<i class="material-icons right">arrow_drop_down</i></a></li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
+          <div>
+              <ul id="dropdown1" class="dropdown-content">
+                <li><a href="metadata">Knowledge Map</a></li>
+                <li><a href="crawler">Crawler</a></li>
+                <li><a href="navigator">Navigator</a></li>
+              </ul>
+              <ul id="dropdown2" class="dropdown-content">
+                <li><a href="tutorial">Tutorial</a></li>
+                <li><a href="sources">Sources</a></li>
+                <li><a href="uri">URI Registry</a></li>
+              </ul>
+              <ul id="dropdown3" class="dropdown-content">
+                <li><a href="api">API</a></li>
+                <li><a href="https://pypi.org/project/biothings-explorer/">Python</a></li>
+              </ul>
+              <nav>
+                  <div class="nav-wrapper black">
+                      <div class="col s12">
+                          <a href="#" title="BioThings Explorer"><img style="border:0px;" width="256" src="http://biothings.io/static/img/biothings-explorer-256.png" alt="Logo 256"/></a>
+                          <!-- Dropdown Structure -->
+                          <ul class="right hide-on-med-and-down">
+                              <li><a class="dropdown-trigger" href="#!" data-target="dropdown2">Docs<i class="material-icons right">arrow_drop_down</i></a></li>
+                              <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Tools<i class="material-icons right">arrow_drop_down</i></a></li>
+                              <li><a class="dropdown-trigger" href="#!" data-target="dropdown3">Developers<i class="material-icons right">arrow_drop_down</i></a></li>
+                          </ul>
+                      </div>
+                  </div>
+              </nav>
+          </div>
         </head>
         <section class="form-section">
           <div class="searchbar">
-            <!-- Switch -->
-            <div class="switch top-switch">
-              <label >
-                Semantic Type
-                <input type="checkbox" id="semanticswitchid">
-                <span class="lever"></span>
-                ID & Accession Numbers <i class="small material-icons white-text" id="semanticvsid-switch-help">help</i>
-              </label>
-            </div>
-            <div class="backicon">
-              <i class="large material-icons white-text tooltipped" data-position="bottom" data-tooltip="Back to examples" id="showexamplebutton">arrow_back</i>
-            </div>
-            <div class="selectrow">
-                <div class="select-wrapper">
-                    <select id="direct-input"></select>
-                </div>
-                <div class="forwardicon">
-                  <i class="material-icons large white-text">forward</i>
-                </div>
-                <div class="select-wrapper select-wrapper-output">
-                    <select id="direct-output"></select>
-                </div>
-                <div class="submitbutton">
-                  <button class="btn waves-effect waves-light blue lighten-1" type="submit" name="action" id="explorebutton">Submit
-                  <i class="material-icons right">send</i>
-                  </button>
-                </div>
+              <div class="select-wrapper div-num-api">
+                  <select id="select-num-api">
+                    <option value="1">1 API Call</option>
+                    <option value="2">2 API Calls</option>
+                    <option value="3">3 API Calls</option>
+                  </select>
+              </div>
+              <div class="div-has-id">
+                <p>
+                  <label>
+                    <input type="checkbox" id="hasidswitch"/>
+                    <span>I have an ID</span>
+                  </label>
+                </p>
+              </div>
+              <div class="input-logo">
+                <p> INPUT </p>
+              </div>
+              <div class="select-wrapper div-input-semantic input">
+                <label for="select-input-semantic">
+                    Input Semantic Type
+                  <select id="select-input-semantic"></select>
+                </label>
+              </div>
+              <div class="select-wrapper div-input-id input">
+                <label for="select-input-id">
+                    Input ID
+                  <select id="select-input-id"></select>
+                </label>
+              </div>
+              <div class="div-input-value">
+                <textarea id="textarea1" class="materialize-textarea"></textarea>
+                <label for="textarea1">Please specify your input ID here.</label>
+              </div>
+              <div class="output-logo">
+                <p> OUTPUT </p>
+              </div>
+              <div class="select-wrapper div-output-semantic output">
+                <label for="select-output-semantic">
+                    Output Semantic Type
+                  <select id="select-output-semantic"></select>
+                </label>
+              </div>
+              <div class="select-wrapper div-output-id output">
+                <label for="select-output-id">
+                    Output ID
+                  <select id="select-output-id"></select>
+                </label>
+              </div>
+              <div class="forward-icon">
+                <i class="material-icons large white-text">import_export</i>
+              </div>
+              <div class="submit-button">
+                <button class="btn waves-effect waves-light #ff4081" type="submit" name="action" id="explorebutton">Submit
+                <i class="material-icons right">send</i>
+                </button>
+              </div>
             </div>
             <div class="checkboxrow" style="display:none">
               <div class="switch checkboxitem">
@@ -155,13 +187,13 @@
               <h2>Some examples to help you get started!</h2>
             </div>
             <div class="example1">
-              <h3 class="header">Gene -> Chemical</h3>
               <div class="card horizontal">
                 <div class="card-image">
                   <img src="./static/img/drugs.jpeg">
                 </div>
                 <div class="card-stacked">
                   <div class="card-content">
+                    <h3>Gene -> Chemical</h3>
                     <p>Suppose I have a gene symbol in mind, e.g. <i>CXCR4</i>, I want to find all <b>drugs/chemicals</b> which are known to target this <b>gene or its gene product</b></p>
                   </div>
                   <div class="card-action">
@@ -171,29 +203,29 @@
               </div>
             </div>
             <div class="example2">
-              <h3 class="header">Crawling Gene Related Information</h3>
               <div class="card horizontal">
                 <div class="card-image">
                   <img src="./static/img/gene.jpg">
                 </div>
                 <div class="card-stacked">
                   <div class="card-content">
+                    <h3>Crawling Gene Related Information</h3>
                     <p>My research focus is on gene <i>CDK7</i>, and I want to know everything related to this <b>gene</b>, e.g. phenotypes, dieseases, chemicals, literatures, variants, etc.</p>
                   </div>
                   <div class="card-action">
-                    <a href="#main" class="blue-text">Try it out!</a>
+                    <a href="#main" class="blue-text" id="example2-button">Try it out!</a>
                   </div>
                 </div>
               </div>
             </div>
             <div class="example3">
-              <h3 class="header">Disease -> Phenotype</h3>
               <div class="card horizontal">
                 <div class="card-image">
                   <img src="./static/img/disease.jpeg">
                 </div>
                 <div class="card-stacked">
                   <div class="card-content">
+                    <h3>Disease -> Phenotype</h3>
                     <p>Suppose you are a clinician, and you would like to retrieve all <b>phenotypes</b> which are related to the <b>disease</b> <a href="https://en.wikipedia.org/wiki/Wolfram_syndrome", target="_blank">Wolfram syndrome 1</a> (MONDO:0009101).</p>
                   </div>
                   <div class="card-action">
@@ -203,13 +235,13 @@
               </div>
             </div>
             <div class="example4">
-              <h3 class="header">Finding APIs</h3>
               <div class="card horizontal">
                 <div class="card-image">
                   <img src="./static/img/developer.png">
                 </div>
                 <div class="card-stacked">
                   <div class="card-content">
+                    <h3>Finding APIs</h3>
                     <p>Suppose you are a developer, and you would like to find all available <b><a href="https://en.wikipedia.org/wiki/Application_programming_interface", target="_blank">API</b></a> resources which can take a <a href="https://www.ncbi.nlm.nih.gov/gene">ncbigene</a> ID as input, and returns a <a href="http://disease-ontology.org/", target="_blank"> Disease Ontology</a> ID  as output.</p>
                   </div>
                   <div class="card-action">
@@ -222,16 +254,41 @@
         </section>
         <section class="metadata" style="display:none">
           <!-- Sankey Plot div -->
-          <div id="path-plotly-div" class="row">
-              <div id="path-plotly" class="col s12"></div>
-              <div id="error-message" class="col s12" style="display:none"></div>
-          </div>
-          <div class="fixed-action-btn">
-              <a class="btn-floating btn-large red tooltipped" id="DownloadCodeButton" data-position="left" data-tooltip="Download Python Code">
-                  <i class="large material-icons">code</i>
-              </a>
-          </div>
+            <div id="plotly-filter">
+              <div class="filter-input">
+                <p> Inputs </p>
+                <div class="filters">
+                </div>
+                <hr>
+              </div>
+              <div class="filter-output">
+                <p> Outputs </p>
+                <div class="filters">
+                </div>
+                <hr>
+              </div>
+              <div class="filter-api">
+                <p> APIs </p>
+                <div class="filters">
+                </div>
+                <hr>
+              </div>
+              <div class="filter-predicate">
+                <p> Predicates </p>
+                <div class="filters">
+                </div>
+              </div>
+            </div>
+            <div id="path-plotly"></div>
+
         </section>
+        <section class="error" style="display:none">
+        </section>
+        <div class="fixed-action-btn" style="display:none">
+            <a class="btn-floating btn-large red tooltipped" id="DownloadCodeButton" data-position="left" data-tooltip="Download Python Code">
+                <i class="large material-icons">code</i>
+            </a>
+        </div>
         <section class="navigation" style="display:none">
           <div class="row" id="main">
             <div class="row direct_output_display">
@@ -247,19 +304,6 @@
                   </div>
                 </div>
                 <div class="row mainview"> 
-                    <div class="row right-align intermediate-switch">
-                        <div class="col s7">
-                            <p> Display Intermediate Steps</p>
-                        </div>
-                        <div class="switch col s7">
-                            <label>
-                                Off
-                                <input id="intermediate" type="checkbox" checked="checked">
-                                <span class="lever"></span>
-                              On
-                            </label>
-                        </div>
-                    </div>
 
                       <!-- Disabled Switch -->
 
@@ -294,10 +338,19 @@
           </div>
         </section>
         <section class="crawler" style="display:none">
-            <div class="overlay-group">
-                <div class="overlay"></div>
-                <div id="loading-img"></div>
+            <div class="preloader-wrapper big active">
+              <div class="spinner-layer spinner-blue">
+                <div class="circle-clipper left">
+                  <div class="circle"></div>
+              </div>
+              <div class="gap-patch">
+                <div class="circle"></div>
+              </div>
+              <div class="circle-clipper right">
+                <div class="circle"></div>
+              </div>
             </div>
+          </div>
             <!-- This section is for the data display-->
             <div class="row main" style="display: none">
               <div class="col s12 m9 offset-m1 data-display">
