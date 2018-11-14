@@ -234,7 +234,58 @@ function back2examplehandler() {
     })
 };
 
+/*
+Display hint to users based on select
+*/
+function displayHint() {
+    $(".search-item").change(function() {
+        console.log('search bar changed!');
+        $(".hint").empty();
+        var input_semantic_type = $("#select-input-semantic").find("option:selected").attr('value');
+        var output_semantic_type = $("#select-output-semantic").find("option:selected").attr('value');
+        var input_id_type = $("#select-input-id").find("option:selected").attr('value');
+        var output_id_type = $("#select-output-id").find("option:selected").attr('value');
+        var input_value = $("#textarea1").val();
+        var max_api = $("#select-num-api").find("option:selected").attr("value");
+        console.log(input_semantic_type, output_semantic_type, input_id_type, output_id_type, input_value, max_api);
+        if (input_value) {
+            if (input_id_type == "all") {
+                if (output_id_type == "all") {
+                    
+                } else {
+                    console.log('alltoid');
+                    
+                }
+            } else {
+                if (output_id_type == "all") {
+                    return "id2semantic"
+                } else {
+                    $(".navigation").show();
+                    DirectOutput2Graph(input_id_type, output_id_type, input_value);
+                }
+            }
+        } else {
+            if (input_id_type == "all") {
+                if (output_id_type == "all") {
+                    var hint_text = "<p>Hint: You are searching for the wrong path!</p>"
+                    $(".hint").append(hint_text);
+                } else {
+                    var hint_text = "<p>Hint: You are now searching for paths (chained by at most " + max_api + " APIs) connecting from All available" + input_semantic_type + ' IDs to ' + output_id_type + '!</p>';
+                    $(".hint").append(hint_text);
+                }
+            } else {
+                if (output_id_type == "all") {
+                    var hint_text = "<p>Hint: You are now searching for paths (chained by at most " + max_api + " APIs) connecting from " + input_id_type + ' to All available ' + output_semantic_type + ' IDs!</p>';
+                    $(".hint").append(hint_text);
+                } else {
+                    var hint_text = "<p>Hint: You are now searching for paths (chained by at most " + max_api + " APIs) connecting from " + input_id_type + ' to ' + output_id_type + '!</p>';
+                    $(".hint").append(hint_text);
+                }
+            }
 
+        }
+    })
+}
 
 
 
@@ -274,6 +325,7 @@ $(document).ready(function() {
         var _output_semantic = $("#select-output-semantic").find("option:selected").attr('value');
         populateBioEntity("#select-output-id", null, _output_semantic);
     });
+    displayHint();
     example1handler();
     example3handler();
     example4handler();

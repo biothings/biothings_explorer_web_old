@@ -187,7 +187,12 @@ textarea.materialize-textarea:focus {
     color: white;
 }
 
-
+.hint {
+  grid-area: hint;
+  text-align:center;
+  font-size:1.1rem;
+  color: #f9843b;
+}
 
 .searchbar {
   margin-top: 2%;
@@ -201,8 +206,8 @@ textarea.materialize-textarea:focus {
   position: relative;
   margin-bottom: 30px;
   grid-template-columns: repeat(2, 1fr);
-  grid-template-areas: ". ." "num-api has-id" "input-semantic input-semantic" "input-id input-id" ". ." "output-semantic output-semantic" "output-id output-id" ". .";
-  grid-auto-rows: 5px 30px 55px 55px 30px 55px 55px 30px;
+  grid-template-areas: ". ." "num-api has-id" "input-semantic input-semantic" "input-id input-id" ". ." "output-semantic output-semantic" "output-id output-id" "hint hint" ". .";
+  grid-auto-rows: 5px 30px 55px 55px 30px 55px 55px 40px 30px;
 }
 
 .searchbar-withid {
@@ -217,8 +222,8 @@ textarea.materialize-textarea:focus {
   position: relative;
   margin-bottom: 30px;
   grid-template-columns: repeat(2, 1fr);
-  grid-template-areas: ". ." "num-api has-id" "input-semantic input-semantic" "input-id input-id" "input-value input-value" ". ." "output-semantic output-semantic" "output-id output-id" ". .";
-  grid-auto-rows: 5px 30px 55px 55px 65px 30px 55px 55px 30px;
+  grid-template-areas: ". ." "num-api has-id" "input-semantic input-semantic" "input-id input-id" "input-value input-value" ". ." "output-semantic output-semantic" "output-id output-id" "hint hint" ". .";
+  grid-auto-rows: 5px 30px 55px 55px 65px 30px 55px 55px 40px 30px;
 }
 
 
@@ -226,13 +231,13 @@ textarea.materialize-textarea:focus {
 @media only screen and (min-width: 500px) {
   .searchbar {
     grid-template-columns: repeat(6, 1fr);
-    grid-template-areas: ". . . . . ." ". num-api has-id . . ." "input-logo input-semantic input-semantic input-id input-id ."  ". . . . . . " "output-logo output-semantic output-semantic output-id output-id ." ". . . . . .";
-    grid-auto-rows: 5px 30px 55px 30px 55px 30px;
+    grid-template-areas: ". . . . . ." ". num-api has-id . . ." "input-logo input-semantic input-semantic input-id input-id ."  ". . . . . . " "output-logo output-semantic output-semantic output-id output-id ." ". hint hint hint hint ." ". . . . . .";
+    grid-auto-rows: 5px 30px 55px 30px 55px 40px 30px;
   }
 
   .searchbar-withid {
-    grid-template-areas: ". . . . . ." ". num-api has-id . . ." "input-logo input-semantic input-semantic input-id input-id input-value"  ". . . . . . " "output-logo output-semantic output-semantic output-id output-id ." ". . . . . .";
-    grid-auto-rows: 5px 30px 55px 30px 55px 30px;
+    grid-template-areas: ". . . . . ." ". num-api has-id . . ." "input-logo input-semantic input-semantic input-id input-id input-value"  ". . . . . . " "output-logo output-semantic output-semantic output-id output-id ." ". hint hint hint hint ." ". . . . . .";
+    grid-auto-rows: 5px 30px 55px 30px 55px 40px 30px;
   }
 
   textarea.materialize-textarea {

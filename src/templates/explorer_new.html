@@ -81,7 +81,7 @@
         </head>
         <section class="form-section">
           <div class="searchbar">
-              <div class="select-wrapper div-num-api">
+              <div class="select-wrapper div-num-api search-item">
                   <select id="select-num-api">
                     <option value="1">1 API Call</option>
                     <option value="2">2 API Calls</option>
@@ -102,17 +102,17 @@
               <div class="select-wrapper div-input-semantic input">
                 <label for="select-input-semantic">
                     Input Semantic Type
-                  <select id="select-input-semantic"></select>
+                  <select id="select-input-semantic" class="search-item"></select>
                 </label>
               </div>
               <div class="select-wrapper div-input-id input">
                 <label for="select-input-id">
                     Input ID
-                  <select id="select-input-id"></select>
+                  <select id="select-input-id" class="search-item"></select>
                 </label>
               </div>
               <div class="div-input-value">
-                <textarea id="textarea1" class="materialize-textarea"></textarea>
+                <textarea id="textarea1" class="materialize-textarea search-item"></textarea>
                 <label for="textarea1">Please specify your input ID here.</label>
               </div>
               <div class="output-logo">
@@ -121,17 +121,19 @@
               <div class="select-wrapper div-output-semantic output">
                 <label for="select-output-semantic">
                     Output Semantic Type
-                  <select id="select-output-semantic"></select>
+                  <select id="select-output-semantic" class="search-item"></select>
                 </label>
               </div>
               <div class="select-wrapper div-output-id output">
                 <label for="select-output-id">
                     Output ID
-                  <select id="select-output-id"></select>
+                  <select id="select-output-id" class="search-item"></select>
                 </label>
               </div>
               <div class="forward-icon">
                 <i class="material-icons large white-text">import_export</i>
+              </div>
+              <div class="hint">
               </div>
               <div class="submit-button">
                 <button class="btn waves-effect waves-light #ff4081" type="submit" name="action" id="explorebutton">Submit
@@ -139,47 +141,6 @@
                 </button>
               </div>
             </div>
-            <div class="checkboxrow" style="display:none">
-              <div class="switch checkboxitem">
-                <label >
-                  Single Edge
-                  <input type="checkbox" id="singleswitchmulti">
-                  <span class="lever"></span>
-                  Multi Edge <i class="small material-icons white-text tooltipped" data-position="bottom" data-tooltip="Single Edge: retrieving data through one API call. <br> Multi Edge: retrieving data by chaining multiple API calls (currently not supported).">help</i>
-                </label>
-              </div>
-              <div class="checkboxitem">
-                <p>
-                  <label>
-                    <input type="checkbox" id="synonymcheckbox">
-                    <span>Include Synonyms <i class="small material-icons white-text tooltipped" data-position="bottom" data-tooltip="Include synonyms of the input and output, <br>e.g. when searching for ncbigene:1017, will automatically <br>include its synonyms such as hgnc.symbol:CDK7, etc." id="synonym-help">help</i></span>
-                  </label>
-                </p>
-              </div>
-              <div class="checkboxitem">
-                <p>
-                  <label>
-                    <input type="checkbox" id="crawlercheckbox"/>
-                    <span>Crawler <i class="small material-icons white-text tooltipped" data-position="bottom" data-tooltip="Find related biological information for the input" id="crawler-help">help</i></span>
-                  </label>
-                </p>
-              </div>
-              <div class="checkboxitem">
-                <p>
-                  <label>
-                    <input type="checkbox" id="isIDSelected"/>
-                    <span>I have an ID <i class="small material-icons white-text tooltipped" data-position="bottom" data-tooltip="ID/Accession number is required when you want to fetch data from API.<br> If an ID is not provided, we will only show you which API can potentially connect from you input to output." id="input-help">help</i></span>
-                  </label>
-                </p>
-              </div>
-            </div>
-            <div class="userinputrow" style="display:none">
-              <div class="input-field">
-                <textarea id="textarea1" class="materialize-textarea"></textarea>
-                <label for="textarea1">Type your input ID or name here</label>
-              </div>
-            </div>
-          </div>
         </section>
         <section class="example-section">
           <div class="example">
