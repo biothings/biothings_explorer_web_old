@@ -110,6 +110,10 @@ class ConnectingSemanticTypesHandler(BaseHandler):
         input_semantic_type = self.get_query_argument('input')
         output_semantic_type = self.get_query_argument('output')
         output_format = self.get_query_argument('format', None)
+        input_ids = []
+        output_ids = []
+        apis = []
+        predicates = []
         title = "Paths Connecting From " + input_semantic_type.upper() + " To " + output_semantic_type.upper()
         temp_output = KNOWLEDGE_MAP
         if input_semantic_type in [_association['subject']['semantic_type'] for _association in KNOWLEDGE_MAP]:
@@ -129,12 +133,20 @@ class ConnectingSemanticTypesHandler(BaseHandler):
         if temp_output:
             edges = []
             for _pair in temp_output:
+                input_ids.append(_pair['subject']['prefix'])
+                output_ids.append(_pair['object']['prefix'])
+                apis.append(_pair['endpoint'])
+                predicates.append(_pair['predicate'])
                 edges.append((_pair['subject']['prefix'], _pair['endpoint'], 'has_input'))
                 edges.append((_pair['endpoint'], _pair['object']['prefix'], _pair['predicate']))
             if output_format == 'plotly':
                 plotly_results = HU.networkx_to_plotly(edges, duplicates_not_allowed=HU.bt_explorer.registry.endpoint_info.keys())
                 self.write(json.dumps({"plotly": plotly_results,
                                        'associations': temp_output,
+                                       'api': apis,
+                                       'inputs': input_ids,
+                                       'outputs': output_ids,
+                                       'predicates': list(set(predicates)),
                                        'title': title}))
             else:
                 self.write(json.dumps({"associations": temp_output}))
