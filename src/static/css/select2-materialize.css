@@ -5,11 +5,6 @@
     position: relative;
     vertical-align: middle
 }
-.select2 {
-    width: calc(100% - 20px) !important;
-    margin-left: 2%;
-    margin-right: 2%;
-}
 
 .select2-container .select2-selection--single {
     box-sizing: border-box;
@@ -17,6 +12,7 @@
     display: block;
     height: 28px;
     user-select: none;
+    border-radius: 10px;
     -webkit-user-select: none
 }
 
