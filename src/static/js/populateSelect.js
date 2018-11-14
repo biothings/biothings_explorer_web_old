@@ -72,17 +72,19 @@ function populateEndpoints(dropdown_id){
  * Automatically add semantic type info to the options of select
  * @param {String} dropdown_id
 */
-function populateSemanticType(dropdown_id, default_value=null){
+function populateSemanticType(dropdown_id, default_value=null, include_all=false){
     getMetaData('semantic_types').done(function(jsonResponse){
         var semantic_type_select2_data = $.map(jsonResponse.semantic_types, function(n) {
-            return {"id": n, "text": n};
+            if (default_value == n) {
+                return {"id": n, "text": n, "selected": true}
+            } else {
+                return {"id": n, "text": n};
+            }
         });
-        $(dropdown_id).select2({data: semantic_type_select2_data});
-        //set the default value of the select
-        if (default_value) {
-            $(dropdown_id).val(default_value);
-            $(dropdown_id).trigger('change'); 
+        if (include_all) {
+            semantic_type_select2_data.unshift({"id": "all", "text": "All Semantic Types"})
         }
+        $(dropdown_id).select2({data: semantic_type_select2_data});
     });
 };
 
@@ -121,10 +123,11 @@ function populateCrawlerInput(dropdown_id){
  * Automatically add bioentity info to the options of select
  * @param {String} dropdown_id
 */
-function populateBioEntity(dropdown_id, default_value=null, semantic_type1=null, placeholder_value=null){
+function populateBioEntity(dropdown_id, default_value=null, semantic_type1=null){
+    // empty  all current options in select
+    $(dropdown_id).empty();
     getMetaData('bioentities').done(function(jsonResponse){
         var bioentity_select2_data = []
-        console.log(placeholder_value);
         if (semantic_type1 == null) {
             for (var semantic_type in jsonResponse.bioentity) {
                 var group = {'id': semantic_type, 'text': semantic_type, 'children': []};
@@ -142,19 +145,15 @@ function populateBioEntity(dropdown_id, default_value=null, semantic_type1=null,
             var bioentity_id_list = jsonResponse.bioentity[semantic_type1];
             for (var bioentity_id in bioentity_id_list) {
                 if (bioentity_id_list[bioentity_id] == default_value) {
-                    bioentity_select2_data.push({id: bioentity_id_list[bioentity_id], text: bioentity_id_list[bioentity_id]})
+                    bioentity_select2_data.push({id: bioentity_id_list[bioentity_id], text: bioentity_id_list[bioentity_id], selected: true})
                 } else {
                     bioentity_select2_data.push({id: bioentity_id_list[bioentity_id], text: bioentity_id_list[bioentity_id]})
                 }
             };
+            bioentity_select2_data.push({id: 'all', text: 'All ' + semantic_type1.toUpperCase() + ' IDs', selected: true});
         };
-        bioentity_select2_data.push({id: null, text: 'All Gene IDs', selected: true});
+        
         $(dropdown_id).select2({data: bioentity_select2_data});
-        $(dropdown_id).append('<option></option>');
-        $(dropdown_id).select2({
-            placeholder: "Select a state",
-            allowClear: true
-        });
         //set the default value of the select
         /*
         if (default_value) {

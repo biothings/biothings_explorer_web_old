@@ -46,10 +46,13 @@ function count_entry_for_each_semantic_type(data) {
  * Given prefix and input_value, display the results
 */
 function update_data_display(prefix, input_value) {
+    $(".data-display-list").empty();
+    $(".preloader-wrapper").show();
     fetch_crawler_results(prefix, input_value).done(function(jsonResponse) {
+        $(".preloader-wrapper").hide();
+        $(".data-display-list").append('<li class="active"><div class="collapsible-header"><i class="material-icons">filter_drama</i>Summary</div><div class="collapsible-body"><div id="radar_chart"></div></div></li>');
         var counter = count_entry_for_each_semantic_type(jsonResponse['linkedData']);
         // remove loading status
-        console.log(counter);
         var myConfig = {
             "type": "radar",
             "series": [{
@@ -65,7 +68,6 @@ function update_data_display(prefix, input_value) {
             height: '100%', 
             width: '100%' 
         });
-        $(".overlay-group").hide();
         // show div for data display
         $(".main").show();
         for (var semantic_type in jsonResponse['linkedData']) {
