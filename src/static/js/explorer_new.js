@@ -1,13 +1,57 @@
 /*
+Add Checkbox
+*/
+function addCheckBox(_val) {
+    var template = '<p><label><input type="checkbox" /><span>{value}</span></label></p>'
+    return template.replace('{value}', _val)
+}
+
+/*
 Display Sankey Plot for paths connecting two semantic types
 */
 function displaySemanticType(_input, _output) {
     findPathBetweenTwoSemanticTypes(_input, _output).done(function(jsonResponse){
         $("#error-message").hide();
         drawSankeyPlot(jsonResponse, type='path');
+        input_ids = jsonResponse['inputs'];
+        output_ids = jsonResponse['outputs'];
+        apis = jsonResponse['api'];
+        predicates = jsonResponse['predicates']
+        for (var bioentity_id in input_ids) {
+            $(".filter-input .filters").append(addCheckBox(input_ids[bioentity_id]));
+        };
+        for (var bioentity_id in output_ids) {
+            $(".filter-output .filters").append(addCheckBox(output_ids[bioentity_id]));
+        };
+        for (var api_id in apis) {
+            $(".filter-api .filters").append(addCheckBox(apis[api_id]));
+        };
+        for (var predicate_id in predicates) {
+            $(".filter-predicate .filters").append(addCheckBox(predicates[predicate_id]));
+        };
         $("#DownloadCodeButton").show();
         $("#DownloadCodeButton").click(function() {
             download_file('bt_explorer_code_semantic_connect.py', construct_semantic_connect_text(_input, _output), 'text/plain');
+        });
+    }).fail(function (err) {
+        $("#error-message").show();
+        $("#DownloadCodeButton").hide();
+        Plotly.purge('path-plotly');
+        $("#error-message").html('<h2 class="center">' + err.responseJSON['error message'].replace('\n', '<br />') + '</h2>')
+    });
+};
+
+/**
+ * Display Sankey Plot for the Paths Connecting Input and Output
+ * @return {Sankey Plot}
+*/
+function displayIDTypePath(_input, _output, max_api) {
+    findStartEndConnection(_input, _output, max_api).done(function(jsonResponse){
+        $("#error-message").hide();
+        drawSankeyPlot(jsonResponse, type="path");
+        $("#DownloadCodeButton").show();
+        $("#DownloadCodeButton").click(function() {
+            download_file('bt_explorer_code_id_connect.py', construct_id_connect_text(_input, _output, max_api), 'text/plain');
         });
     }).fail(function (err) {
         $("#error-message").show();
@@ -55,6 +99,7 @@ Example 1 event handler
 function example1handler() {
     $("#example1-button").click(function() {
         //$("#semanticswitchid").trigger("click");
+        $("#cy").show();
         $("#semanticswitchid").prop("checked", true);
         semanticIDSwitchHandler();
         var _input = $("#direct-input").find("option:selected").attr('value');
@@ -77,11 +122,39 @@ function example1handler() {
 };
 
 /*
+Example 2 event handler
+*/
+function example2handler() {
+    $("#example2-button").click(function() {
+        //$("#semanticswitchid").trigger("click");
+        $("#semanticswitchid").prop("checked", true);
+        var _input = $("#direct-input").find("option:selected").attr('value');
+        $("#direct-input").empty();
+        populateBioEntity("#direct-input", "hgnc.symbol");
+        $("#crawlercheckbox").prop("checked", true);
+        $(".select-wrapper-output").hide();
+        $(".forwardicon").hide();
+        $(".checkboxrow").show();
+        $("#singleswitchmulti").prop("checked", false).attr("disabled", true);
+        $("#synonymcheckbox").prop("checked", true).attr("disabled", true);
+        $("#isIDSelected").prop("checked", true).attr("disabled", true);
+        $(".userinputrow").toggle(true);
+        $(".input-field label").css("opacity", "0");
+        $("#textarea1").val("CDK7");
+        $(".example").hide();
+        //$(".metadata").show();
+        $(".crawler").show();
+        displayCrawlerResults("hgnc.symbol", "CDK7");
+    });
+};
+
+/*
 Example 3 event handler
 */
 function example3handler() {
     $("#example3-button").click(function() {
         //$("#semanticswitchid").trigger("click");
+        $("#cy").show();
         $("#semanticswitchid").prop("checked", true);
         semanticIDSwitchHandler();
         var _input = $("#direct-input").find("option:selected").attr('value');
@@ -152,6 +225,7 @@ function back2examplehandler() {
         $(".metadata").hide();
         $(".navigation").hide();
         $(".example").show();
+        $(".crawler").hide();
     })
 };
 
@@ -161,13 +235,32 @@ function back2examplehandler() {
 
 
 $(document).ready(function() {
+    //$('select').formSelect();
     $('.tooltipped').tooltip();
     //populate the select bar
-    populateSemanticType("#direct-output", "gene");
-    populateSemanticType("#direct-input", "chemical");
+    populateSemanticType("#select-input-semantic", "gene");
+    populateSemanticType("#select-output-semantic", "chemical");
+    populateBioEntity("#select-input-id", null, "gene", "select a gene");
+    populateBioEntity("#select-output-id", "chembl.compound");
+    $("#select-num-api").select2();
+    $("#hasidswitch").change(function() {
+        if ($("#hasidswitch").is(":checked")) {
+            // change the forward icon position
+            $(".forward-icon").addClass("forward-icon-withid");
+            // show the text input area
+            $(".div-input-value").show();
+            // restructure the search bar grid
+            $(".searchbar").addClass("searchbar-withid");
+        } else {
+            $(".div-input-value").hide();
+            $(".searchbar").removeClass("searchbar-withid");
+            $(".forward-icon").removeClass("forward-icon-withid");
+        }
+    });
     example1handler();
     example3handler();
     example4handler();
+    example2handler();
     back2examplehandler();
     // when user switch between semantic type and ID, repopulate the "select" options
     semanticIDSwitchHandler();
@@ -207,16 +300,18 @@ $(document).ready(function() {
 
     //handle graph display after user submit query
     $("#explorebutton").click(function() {
+        $(".dropdown-trigger").dropdown();
         // hide example section temporarily
         $(".example").hide();
+        // hide all graph display sections temporarily
         $(".metadata").hide();
         $(".crawler").hide();
         $(".navigation").hide();
         // First handle cases for semantic type metadata exploration
         if ($("#semanticswitchid").is(":checked") == false) {
             $(".metadata").show();
-            var _input = $("#direct-input").find("option:selected").attr('value');
-            var _output = $("#direct-output").find("option:selected").attr('value');
+            var _input = $("#select-input-semantic").find("option:selected").attr('value');
+            var _output = $("#select-output-semantic").find("option:selected").attr('value');
             displaySemanticType(_input, _output);
         } else {
             if ($("#crawlercheckbox").is(":checked")) {
@@ -224,25 +319,26 @@ $(document).ready(function() {
                 var _input = $("#direct-input").find("option:selected").attr('value');
                 var _value = $("#textarea1").val();
                 displayCrawlerResults(_input, _value);
-            } else if ($("#singleswitchmulti").prop('checked', false) && $("#synonymcheckbox").prop('checked', false) && $("#isIDSelected").prop('checked', true)) {
-                $(".navigation").show();
+            // handle cases for metadata search
+            } else if ($("#isIDSelected").is(":checked") == false) {
+                $(".metadata").show();
                 var _input = $("#direct-input").find("option:selected").attr('value');
                 var _output = $("#direct-output").find("option:selected").attr('value');
-                var _value = $("#textarea1").val();
-                DirectOutput2Graph(_input, _output, _value);
+                if ($("#singleswitchmulti").is(":checked") == false) { 
+                    displayIDTypePath(_input, _output, 1);
+                } else {
+                    displayIDTypePath(_input, _output, 3);
+                }
+            } else if ($("#isIDSelected").is(":checked")) {
+                if ($("#singleswitchmulti").is(":checked") == false && $("#synonymcheckbox").is(':checked') == false) {
+                    $(".navigation").show();
+                    $("#cy").show();
+                    var _input = $("#direct-input").find("option:selected").attr('value');
+                    var _output = $("#direct-output").find("option:selected").attr('value');
+                    var _value = $("#textarea1").val();
+                    DirectOutput2Graph(_input, _output, _value);
+                }
             }
         }
-        
-        
-        //$(".metadata").show();
-        //$(".navigation").show();
-        
-        
-        var _output = $("#direct-output").find("option:selected").attr('value');
-        
-        //displaySemanticType(_input, _output);
-        //DirectOutput2Graph(_input, _output, _value);
-        //SemanticOutput2Graph(_input, _output, _value);
-        
-    })
+    });
 });
