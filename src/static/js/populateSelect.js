@@ -86,6 +86,19 @@ function populateSemanticType(dropdown_id, default_value=null){
     });
 };
 
+
+/**
+ * Automatically add semantic type info to the options of select
+ * @param {String} dropdown_id
+*/
+function populateNumAPI(dropdown_id, default_value=null){
+    $(dropdown_id).select2({data: [{"id": 1, "text": 1}, {"id": 2, "text": 2}, {"id": 3, "text": 3}]});
+    //set the default value of the select
+    if (default_value) {
+        $(dropdown_id).val(default_value);
+        $(dropdown_id).trigger('change'); 
+    }
+};
 /** Automatically add crawler input to the options of select
 * @param {String} dropdown_id
 */
@@ -108,23 +121,47 @@ function populateCrawlerInput(dropdown_id){
  * Automatically add bioentity info to the options of select
  * @param {String} dropdown_id
 */
-function populateBioEntity(dropdown_id, default_value=null){
+function populateBioEntity(dropdown_id, default_value=null, semantic_type1=null, placeholder_value=null){
     getMetaData('bioentities').done(function(jsonResponse){
         var bioentity_select2_data = []
-        for (var semantic_type in jsonResponse.bioentity) {
-            var group = {'id': semantic_type, 'text': semantic_type, 'children': []};
-            var bioentity_id_list = jsonResponse.bioentity[semantic_type];
-            for (var bioentity_id in bioentity_id_list) {
-                group['children'].push({id: bioentity_id_list[bioentity_id], text: bioentity_id_list[bioentity_id]})
+        console.log(placeholder_value);
+        if (semantic_type1 == null) {
+            for (var semantic_type in jsonResponse.bioentity) {
+                var group = {'id': semantic_type, 'text': semantic_type, 'children': []};
+                var bioentity_id_list = jsonResponse.bioentity[semantic_type];
+                for (var bioentity_id in bioentity_id_list) {
+                    if (bioentity_id_list[bioentity_id] == default_value) {
+                        group['children'].push({id: bioentity_id_list[bioentity_id], text: bioentity_id_list[bioentity_id], selected: true})
+                    } else {
+                        group['children'].push({id: bioentity_id_list[bioentity_id], text: bioentity_id_list[bioentity_id]})
+                    }
+                };
+                bioentity_select2_data.push(group);
             };
-            bioentity_select2_data.push(group);
+        } else {
+            var bioentity_id_list = jsonResponse.bioentity[semantic_type1];
+            for (var bioentity_id in bioentity_id_list) {
+                if (bioentity_id_list[bioentity_id] == default_value) {
+                    bioentity_select2_data.push({id: bioentity_id_list[bioentity_id], text: bioentity_id_list[bioentity_id]})
+                } else {
+                    bioentity_select2_data.push({id: bioentity_id_list[bioentity_id], text: bioentity_id_list[bioentity_id]})
+                }
+            };
         };
+        bioentity_select2_data.push({id: null, text: 'All Gene IDs', selected: true});
         $(dropdown_id).select2({data: bioentity_select2_data});
+        $(dropdown_id).append('<option></option>');
+        $(dropdown_id).select2({
+            placeholder: "Select a state",
+            allowClear: true
+        });
         //set the default value of the select
+        /*
         if (default_value) {
             $(dropdown_id).val(default_value); 
             $(dropdown_id).trigger('change'); 
         }
+        */
     });
 };
 
