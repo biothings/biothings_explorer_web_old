@@ -284,57 +284,30 @@
         </section>
         <section class="error" style="display:none">
         </section>
-        <div class="fixed-action-btn" style="display:none">
+        <div class="fixed-action-btn download" style="display:none">
             <a class="btn-floating btn-large red tooltipped" id="DownloadCodeButton" data-position="left" data-tooltip="Download Python Code">
                 <i class="large material-icons">code</i>
             </a>
         </div>
         <section class="navigation" style="display:none">
-          <div class="row" id="main">
-            <div class="row direct_output_display">
-                <div class="preloader-wrapper big active">
-                  <div class="spinner-layer spinner-blue">
-                    <div class="circle-clipper left">
-                      <div class="circle"></div>
-                    </div><div class="gap-patch">
-                      <div class="circle"></div>
-                    </div><div class="circle-clipper right">
-                      <div class="circle"></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="row mainview"> 
-
-                      <!-- Disabled Switch -->
-
-                    <div class="col s7" id="cy">
-                    </div>
-                    <div class="col s4" id="node_edge_description">
-                        <div>
-                            <ul class="tabs">
-                                <li class="tab col s4" id="node_tab"><a class="active" href="#node_info">Node</a></li>
-                                <li class="tab col s4" id="edge_tab"><a href="#edge_info" id="edge_tabs">Edge</a></li>
-                                <li class="tab col s4" id="context_tab"><a href="#context_info">Context</a></li>
-                            </ul>
-                        </div>
-                        <div id="node_info" class="col s12">
-                            <div id="graph-details-info">
-                                <p class="help-text">Click on one of the nodes or edges in the network to view more details...</p>
-                                <img src="./static/img/help-left-arrow.png" width="75">
-                            </div>
-                        </div>
-                        <div id="edge_info" class="col s12"></div>
-                        <div id="context_info" class="col s12"></div>
-                    </div>
-                </div>
-                <div id="error-message-navigate" class="col s12" style="display:none"></div>
-
-              </div>
+          <div id="cy">
           </div>
-          <div class="fixed-action-btn">
-            <a class="btn-floating btn-large red tooltipped" id="DownloadCodeButton" data-position="left" data-tooltip="Download Python Code">
-                <i class="large material-icons">code</i>
-            </a>
+          <div id="node_edge_description">
+              <div>
+                  <ul class="tabs">
+                      <li class="tab col s4" id="node_tab"><a class="active" href="#node_info">Node</a></li>
+                      <li class="tab col s4" id="edge_tab"><a href="#edge_info" id="edge_tabs">Edge</a></li>
+                      <li class="tab col s4" id="context_tab"><a href="#context_info">Context</a></li>
+                  </ul>
+              </div>
+              <div id="node_info" class="col s12">
+                  <div id="graph-details-info">
+                      <p class="help-text">Click on one of the nodes or edges in the network to view more details...</p>
+                      <img src="./static/img/help-left-arrow.png" width="75">
+                  </div>
+              </div>
+              <div id="edge_info" class="col s12"></div>
+              <div id="context_info" class="col s12"></div>
           </div>
         </section>
         <section class="crawler" style="display:none">
