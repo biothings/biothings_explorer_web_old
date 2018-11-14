@@ -14,11 +14,8 @@ function retrieveDirectOutput(input_prefix, input_value, output_prefix){
 };
 
 function DirectOutput2Graph(_input, _output, _value){
-    $("#error-message-navigate").hide();
-    $("#main").show();
+    $(".error").hide();
     $(".preloader-wrapper").show();
-    $(".direct_output_display").show();
-    $(".mainview").hide();
     $(".tabs").tabs();
     var instance = M.Tabs.getInstance($(".tabs"));
     var helper_text = '<div id="graph-details-info"><p class="help-text">Click on one of the nodes or edges in the network to view more details...</p><img src="./static/img/help-left-arrow.png" width="75"></div>'
@@ -28,12 +25,9 @@ function DirectOutput2Graph(_input, _output, _value){
     $("#node_info").html(helper_text);
     $("#edge_info").html(helper_text);
     $("#context_info").html(helper_text);
-    $("#error-message").empty();
     instance.select('node_info');
     retrieveDirectOutput(_input, _value, _output).done(function(jsonResonse){
         $(".preloader-wrapper").hide();
-        $(".mainview").show();
-
         var results = jsonResonse.data;
         var node_title = 'prefix: ' + _input;
         var nodes = [{'id': 1, 'label': _value, 'title': node_title, 'font': {'color': 'red'}, 'group': 1}];
@@ -53,16 +47,16 @@ function DirectOutput2Graph(_input, _output, _value){
             nodes_id += 1;
         });
         drawInputOutputGraph(new vis.DataSet(nodes), new vis.DataSet(edges));
-        $("#DownloadCodeButton").show();
+        $(".download").show();
         $("#DownloadCodeButton").click(function() {
             download_file('bt_explorer_code_directinput2output.py', construct_directinput2output_text(_input, _value, _output), 'text/plain');
         });
     }).fail(function (err) {
         $("#DownloadCodeButton").hide();
-        $(".progress").hide();
-        $(".mainview").hide();
-        $("#error-message-navigater").show();
-        $("#error-message-navigate").html('<h2 class="center">' + err.responseJSON['error message'].replace('\n', '<br />') + '</h2>')
+        $(".navigation").hide();
+        $(".error").show();
+        $(".error").empty();
+        $(".error").html('<h2 class="center">' + err.responseJSON['error message'].replace('\n', '<br />') + '</h2>')
     });
 }
 

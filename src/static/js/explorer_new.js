@@ -12,6 +12,7 @@ Display Sankey Plot for paths connecting two semantic types
 function displaySemanticType(_input, _output) {
     findPathBetweenTwoSemanticTypes(_input, _output).done(function(jsonResponse){
         $("#error-message").hide();
+        $(".download").show();
         drawSankeyPlot(jsonResponse, type='path');
         input_ids = jsonResponse['inputs'];
         output_ids = jsonResponse['outputs'];
@@ -37,7 +38,7 @@ function displaySemanticType(_input, _output) {
         $(".metadata").hide();
         $(".error").show();
         $(".error").empty();
-        $("#DownloadCodeButton").hide();
+        $(".download").hide();
         Plotly.purge('path-plotly');
         $(".error").html('<h2 class="center">' + err.responseJSON['error message'].replace('\n', '<br />') + '</h2>')
     });
@@ -51,11 +52,12 @@ function displayIDTypePath(_input, _output, max_api) {
     findStartEndConnection(_input, _output, max_api).done(function(jsonResponse){
         $("#error-message").hide();
         drawSankeyPlot(jsonResponse, type="path");
-        $("#DownloadCodeButton").show();
+        $(".download").show();
         $("#DownloadCodeButton").click(function() {
             download_file('bt_explorer_code_id_connect.py', construct_id_connect_text(_input, _output, max_api), 'text/plain');
         });
     }).fail(function (err) {
+        $(".download").hide();
         $(".metadata").hide();
         $(".error").show();
         $(".error").empty();
@@ -340,7 +342,8 @@ $(document).ready(function() {
                 if (output_id_type == "all") {
                     return "id2semantic"
                 } else {
-                    return "id2id"
+                    $(".navigation").show();
+                    DirectOutput2Graph(input_id_type, output_id_type, input_value);
                 }
             }
         } else {
