@@ -1,6 +1,17 @@
 /*
 Add Checkbox
 */
+
+function myFunction() {
+    var x = document.getElementById("myTopnav");
+    if (x.className === "topnav") {
+        x.className += " responsive";
+    } else {
+        x.className = "topnav";
+    }
+}
+
+
 function addCheckBox(_val) {
     var template = '<p><label><input type="checkbox" /><span>{value}</span></label></p>'
     return template.replace('{value}', _val)
@@ -10,14 +21,18 @@ function addCheckBox(_val) {
 Display Sankey Plot for paths connecting two semantic types
 */
 function displaySemanticType(_input, _output) {
+    $(".back_to_example").show();
+    $(".preloader").show();
     findPathBetweenTwoSemanticTypes(_input, _output).done(function(jsonResponse){
-        $("#error-message").hide();
+        $(".preloader").hide()
+        $(".error").hide();
         $(".download").show();
+        $(".metadata").show();
         drawSankeyPlot(jsonResponse, type='path');
         input_ids = jsonResponse['inputs'];
         output_ids = jsonResponse['outputs'];
         apis = jsonResponse['api'];
-        predicates = jsonResponse['predicates']
+        predicates = jsonResponse['predicates'];
         for (var bioentity_id in input_ids) {
             $(".filter-input .filters").append(addCheckBox(input_ids[bioentity_id]));
         };
@@ -39,6 +54,7 @@ function displaySemanticType(_input, _output) {
         $(".error").show();
         $(".error").empty();
         $(".download").hide();
+        $(".preloader").hide();
         Plotly.purge('path-plotly');
         $(".error").html('<h2 class="center">' + err.responseJSON['error message'].replace('\n', '<br />') + '</h2>')
     });
@@ -49,9 +65,49 @@ function displaySemanticType(_input, _output) {
  * @return {Sankey Plot}
 */
 function displayIDTypePath(_input, _output, max_api) {
+    $(".back_to_example").show();
     findStartEndConnection(_input, _output, max_api).done(function(jsonResponse){
         $("#error-message").hide();
         drawSankeyPlot(jsonResponse, type="path");
+        $(".download").show();
+        $("#DownloadCodeButton").click(function() {
+            download_file('bt_explorer_code_id_connect.py', construct_id_connect_text(_input, _output, max_api), 'text/plain');
+        });
+    }).fail(function (err) {
+        $(".download").hide();
+        $(".metadata").hide();
+        $(".error").show();
+        $(".error").empty();
+        Plotly.purge('path-plotly');
+        $(".error").html('<h2 class="center">' + err.responseJSON['error message'].replace('\n', '<br />') + '</h2>')
+    });
+};
+
+/**
+ * Display Sankey Plot for the Paths Connecting Input and Output
+ * @return {Sankey Plot}
+*/
+function displaySemantic2IDTypePath(_input, _output, max_api) {
+    findSemantic2IDConnection(_input, _output, max_api).done(function(jsonResponse){
+        $("#error-message").hide();
+        drawSankeyPlot(jsonResponse, type="path");
+        input_ids = jsonResponse['inputs'];
+        output_ids = jsonResponse['outputs'];
+        apis = jsonResponse['apis'];
+        nodes = jsonResponse['nodes'];
+        predicates = jsonResponse['predicates'];
+        for (var bioentity_id in input_ids) {
+            $(".filter-input .filters").append(addCheckBox(input_ids[bioentity_id]));
+        };
+        for (var predicate_id in predicates) {
+            $(".filter-predicate .filters").append(addCheckBox(predicates[predicate_id]));
+        };
+        for (var api_id in apis) {
+            $(".filter-api .filters").append(addCheckBox(apis[api_id]));
+        };
+        for (var bioentity_id in nodes) {
+            $(".filter-output .filters").append(addCheckBox(nodes[bioentity_id]));
+        };
         $(".download").show();
         $("#DownloadCodeButton").click(function() {
             download_file('bt_explorer_code_id_connect.py', construct_id_connect_text(_input, _output, max_api), 'text/plain');
@@ -70,9 +126,6 @@ function displayIDTypePath(_input, _output, max_api) {
 Display crawler results
 */
 function displayCrawlerResults(input_prefix, _input) {
-    $(".overlay-group").show();
-    $(".search-bar-center").removeClass("search-bar-center");
-    $(".search-history").show();
     update_data_display(input_prefix, _input);
     $(".collapsible").collapsible();
 }
@@ -97,31 +150,40 @@ function semanticIDSwitchHandler() {
     });
 };
 
-
+function setSelectedOption(input_semantic_type, output_semantic_type, input_id_type, output_id_type, max_api, input_value) {
+    $("#select-input-semantic").val(input_semantic_type).trigger('change');
+    setTimeout(function() {
+        $("#select-input-id").val(input_id_type).trigger("change");
+    }, 100);
+    $("#select-output-semantic").val(output_semantic_type).trigger('change');
+    $("#select-num-api").val(max_api).trigger('change');
+    setTimeout(function() {
+        $("#select-output-id").val(output_id_type).trigger('change');
+    }, 200);
+    console.log(input_semantic_type, output_semantic_type, input_id_type, output_id_type);
+    if (input_value) {
+        $("#hasidswitch").prop('checked', true);
+        $("#textarea1").val(input_value);
+        $(".forward-icon").addClass("forward-icon-withid");
+        // show the text input area
+        $(".div-input-value").show();
+        // restructure the search bar grid
+        $(".searchbar").addClass("searchbar-withid");
+    } else {
+        $(".hint").empty();
+        $("#textarea1").val("");
+        $(".div-input-value").hide();
+        $(".searchbar").removeClass("searchbar-withid");
+        $(".forward-icon").removeClass("forward-icon-withid");
+    }
+};
 /*
 Example 1 event handler
 */
 function example1handler() {
     $("#example1-button").click(function() {
-        //$("#semanticswitchid").trigger("click");
-        $("#cy").show();
-        $("#semanticswitchid").prop("checked", true);
-        semanticIDSwitchHandler();
-        var _input = $("#direct-input").find("option:selected").attr('value');
-        $("#direct-input").empty();
-        populateBioEntity("#direct-input", "hgnc.symbol");
-        $("#direct-output").empty();
-        populateBioEntity("#direct-output", "chembl.compound");
-        $(".checkboxrow").show();
-        $("#singleswitchmulti").prop("checked", false);
-        $("#synonymcheckbox").prop("checked", false);
-        $("#isIDSelected").prop("checked", true);
-        $(".userinputrow").toggle(true);
-        $(".input-field label").css("opacity", "0");
-        $("#textarea1").val("CXCR4");
+        setSelectedOption('gene', 'chemical', 'hgnc.symbol', 'chembl.compound', '1', 'CXCR4');
         $(".example").hide();
-        //$(".metadata").show();
-        $(".navigation").show();
         DirectOutput2Graph('hgnc.symbol', 'chembl.compound', 'CXCR4');
     });
 };
@@ -131,24 +193,8 @@ Example 2 event handler
 */
 function example2handler() {
     $("#example2-button").click(function() {
-        //$("#semanticswitchid").trigger("click");
-        $("#semanticswitchid").prop("checked", true);
-        var _input = $("#direct-input").find("option:selected").attr('value');
-        $("#direct-input").empty();
-        populateBioEntity("#direct-input", "hgnc.symbol");
-        $("#crawlercheckbox").prop("checked", true);
-        $(".select-wrapper-output").hide();
-        $(".forwardicon").hide();
-        $(".checkboxrow").show();
-        $("#singleswitchmulti").prop("checked", false).attr("disabled", true);
-        $("#synonymcheckbox").prop("checked", true).attr("disabled", true);
-        $("#isIDSelected").prop("checked", true).attr("disabled", true);
-        $(".userinputrow").toggle(true);
-        $(".input-field label").css("opacity", "0");
-        $("#textarea1").val("CDK7");
+        setSelectedOption('gene', 'all', 'hgnc.symbol', 'all', '1', 'CDK7');
         $(".example").hide();
-        //$(".metadata").show();
-        $(".crawler").show();
         displayCrawlerResults("hgnc.symbol", "CDK7");
     });
 };
@@ -158,25 +204,8 @@ Example 3 event handler
 */
 function example3handler() {
     $("#example3-button").click(function() {
-        //$("#semanticswitchid").trigger("click");
-        $("#cy").show();
-        $("#semanticswitchid").prop("checked", true);
-        semanticIDSwitchHandler();
-        var _input = $("#direct-input").find("option:selected").attr('value');
-        $("#direct-input").empty();
-        populateBioEntity("#direct-input", "mondo");
-        $("#direct-output").empty();
-        populateBioEntity("#direct-output", "hp");
-        $(".checkboxrow").show();
-        $("#singleswitchmulti").prop("checked", false);
-        $("#synonymcheckbox").prop("checked", false);
-        $("#isIDSelected").prop("checked", true);
-        $(".userinputrow").toggle(true);
-        $(".input-field label").css("opacity", "0");
-        $("#textarea1").val("MONDO:0009101");
+        setSelectedOption('disease', 'phenotype', 'mondo', 'hp', '1', 'MONDO:0009101');
         $(".example").hide();
-        //$(".metadata").show();
-        $(".navigation").show();
         DirectOutput2Graph('mondo', 'hp', 'MONDO:0009101');
     });
 };
@@ -187,59 +216,85 @@ Example 4 event handler
 */
 function example4handler() {
     $("#example4-button").click(function() {
-        //$("#semanticswitchid").trigger("click");
-        $("#semanticswitchid").prop("checked", false);
-        semanticIDSwitchHandler();
-        var _input = $("#direct-input").find("option:selected").attr('value');
-        defaultsearchbarsetting();
+        setSelectedOption("gene", "chemical", "all", "all", "1", null);
         $(".example").hide();
-        //$(".metadata").show();
-        $(".metadata").show();
         displaySemanticType("gene", "chemical");
     });
 };
 
-/*
-Back to Default Search Bar setting
-*/
-function defaultsearchbarsetting() {
-    $("#semanticswitchid").prop("checked", false);
-    $("#direct-input").empty();
-    populateSemanticType("#direct-input", "gene");
-    $("#direct-output").empty();
-    populateSemanticType("#direct-output", "chemical");
-    $(".checkboxrow").hide();
-    $("#singleswitchmulti").prop("checked", false).removeAttr("disabled");
-    $("#synonymcheckbox").prop("checked", false).removeAttr("disabled");
-    $("#isIDSelected").prop("checked", false).removeAttr("disabled");
-    $("#crawlercheckbox").prop("checked", false);
-    $(".userinputrow").toggle(false);
-    $("#textarea1").val("");
-    $(".input-field label").css("opacity", "1");
-    $(".select-wrapper-output").show();
-    $(".forwardicon").show();
-
-}
 
 /*
 Back to Example Handler
 */
 function back2examplehandler() {
-    $("#showexamplebutton").click(function() {
-        defaultsearchbarsetting();
+    $(".back_symbol").click(function() {
+        $(".back_to_example").hide();
         $(".metadata").hide();
         $(".navigation").hide();
         $(".example").show();
         $(".crawler").hide();
+        $(".error").hide();
     })
 };
 
 /*
+Handle when user clicked on one of the log record 
+*/
+function logHandler() {
+    $(".log-record").click(function() {
+        $(".dropdown-trigger").dropdown();
+        // hide example section temporarily
+        $(".example").hide();
+        // hide all graph display sections temporarily
+        $(".metadata").hide();
+        $(".crawler").hide();
+        $(".navigation").hide();
+        $(".error").hide();
+        var input_semantic_type = $(this).attr('input_semantic_type');
+        var output_semantic_type = $(this).attr('output_semantic_type');
+        var input_id_type = $(this).attr('input_id_type');
+        var output_id_type = $(this).attr('output_id_type');
+        var input_value = $(this).attr('input_value');
+        var max_api = $(this).attr('max_api');
+        if (input_value) {
+            if (input_id_type == "all") {
+                if (output_id_type == "all") {
+                    return "semantic2semantic"
+                } else {
+                    return "semantic2id"
+                }
+            } else {
+                if (output_id_type == "all") {
+                    return "id2semantic"
+                } else {
+                    DirectOutput2Graph(input_id_type, output_id_type, input_value);
+                }
+            }
+        } else {
+            if (input_id_type == "all") {
+                if (output_id_type == "all") {
+                    displaySemanticType(input_semantic_type, output_semantic_type);
+                } else {
+
+                }
+            } else {
+                if (output_id_type == "all") {
+
+                } else {
+                    $(".metadata").show();
+                    displayIDTypePath(input_id_type, output_id_type, max_api);
+                }
+            }
+
+        }
+
+    })
+}
+/*
 Display hint to users based on select
 */
-function displayHint() {
+function displayHint(hint_text) {
     $(".search-item").change(function() {
-        console.log('search bar changed!');
         $(".hint").empty();
         var input_semantic_type = $("#select-input-semantic").find("option:selected").attr('value');
         var output_semantic_type = $("#select-output-semantic").find("option:selected").attr('value');
@@ -247,44 +302,119 @@ function displayHint() {
         var output_id_type = $("#select-output-id").find("option:selected").attr('value');
         var input_value = $("#textarea1").val();
         var max_api = $("#select-num-api").find("option:selected").attr("value");
-        console.log(input_semantic_type, output_semantic_type, input_id_type, output_id_type, input_value, max_api);
         if (input_value) {
             if (input_id_type == "all") {
-                if (output_id_type == "all") {
-                    
+                var hint_text = "<span>Warning: You must select an Input ID type!</span>";
+                $(".hint").append(hint_text);
+                $(".hint").css('color', 'red');
+                $(".hint").css('font-size', '1.6rem');
+            } else {
+                $(".hint").css('color', '#f9843b');
+                $(".hint").css('font-size', '1.1rem');
+                if (output_semantic_type == "all") {
+                    var hint_text = "<span>Hint: You are now searching for all information related to " + input_id_type + ":" + input_value + "!</span>";
+                    $(".hint").append(hint_text);
                 } else {
-                    console.log('alltoid');
-                    
+                    if (output_id_type == "all") {
+                        var hint_text = "<span>Hint: You are now searching for all " + output_semantic_type + "-centric information related to " + input_id_type + ":" + input_value + "!</span>";
+                        $(".hint").append(hint_text);
+                    } else {
+                        var hint_text = "<span>Hint: You are now searching for all " + output_semantic_type + "s in the form of " + output_id_type + " which are related to " + input_id_type + ":" + input_value + "!</span>";
+                        $(".hint").append(hint_text);
+                    }
+                }
+
+            }
+        } else {
+            $(".hint").css('color', '#f9843b');
+            $(".hint").css('font-size', '1.1rem');
+            if (input_id_type == "all") {
+                if (output_id_type == "all") {
+                    var hint_text = "<span>Hint: You are now searching for paths (chained by at most " + max_api + " APIs) connecting from All available " + input_semantic_type + ' IDs to All available ' + output_semantic_type + ' IDs!</span>';
+                    $(".hint").append(hint_text);
+                } else {
+                    var hint_text = "<span>Hint: You are now searching for paths (chained by at most " + max_api + " APIs) connecting from All available " + input_semantic_type + ' IDs to ' + output_id_type + '!</span>';
+                    $(".hint").append(hint_text);
                 }
             } else {
                 if (output_id_type == "all") {
-                    return "id2semantic"
+                    var hint_text = "<span>Hint: You are now searching for paths (chained by at most " + max_api + " APIs) connecting from " + input_id_type + ' to All available ' + output_semantic_type + ' IDs!</span>';
+                    $(".hint").append(hint_text);
                 } else {
-                    $(".navigation").show();
-                    DirectOutput2Graph(input_id_type, output_id_type, input_value);
+                    var hint_text = "<span>Hint: You are now searching for paths (chained by at most " + max_api + " APIs) connecting from " + input_id_type + ' to ' + output_id_type + '!</span>';
+                    $(".hint").append(hint_text);
                 }
+            }
+        };
+        $(".hint span").css("background-color", "yellow");
+        setTimeout(function() {
+            $(".hint span").css("background-color", "transparent");
+        }, 500);
+    })
+}
+
+
+function validateInputValue(input_id_type, input_value) {
+    var promise = $.ajax({
+        type: "GET",
+        url: "/explorer/api/v2/registry",
+        data: {prefix: input_id_type},
+        datatype: "json"
+    });
+    return promise;
+    promise.done(function(jsonResponse) {
+        var pattern = jsonResponse['pattern'];
+        var example = jsonResponse['example'];
+        if (input_value.match(pattern)) {
+            return 'valid'
+        } else {
+            var error_message = 'Your input value ' + input_value + ' is not valid. A valid example of ' + input_id_type + 'is: ' + example;
+            return error_message
+        }
+    })
+}
+
+LOG_NUM = 1;
+/* Add Record to Log After User Hit Submit */
+function addRecordToLog(input_semantic_type, output_semantic_type, input_id_type, output_id_type, max_api, input_value) {
+    
+    if (input_value) {
+            if (input_id_type == "all") {
+
+            } else {
+                if (output_semantic_type == "all") {
+                    var log_text = "Find all information related to " + input_id_type + ":" + input_value + "!";
+                } else {
+                    if (output_id_type == "all") {
+                        var log_text = "Find all " + output_semantic_type + "-centric information related to " + input_id_type + ":" + input_value + "!";
+                    } else {
+                        var log_text = "Find all " + output_semantic_type + "s in the form of " + output_id_type + " which are related to " + input_id_type + ":" + input_value + "!";
+                    }
+                }
+
             }
         } else {
             if (input_id_type == "all") {
                 if (output_id_type == "all") {
-                    var hint_text = "<p>Hint: You are searching for the wrong path!</p>"
-                    $(".hint").append(hint_text);
+                    var log_text = "Find all paths (chained by at most " + max_api + " APIs) connecting from All available " + input_semantic_type + ' IDs to All available ' + output_semantic_type + ' IDs!';
                 } else {
-                    var hint_text = "<p>Hint: You are now searching for paths (chained by at most " + max_api + " APIs) connecting from All available" + input_semantic_type + ' IDs to ' + output_id_type + '!</p>';
-                    $(".hint").append(hint_text);
+                    var log_text = "Find all paths (chained by at most " + max_api + " APIs) connecting from All available " + input_semantic_type + ' IDs to ' + output_id_type + '!';
                 }
             } else {
                 if (output_id_type == "all") {
-                    var hint_text = "<p>Hint: You are now searching for paths (chained by at most " + max_api + " APIs) connecting from " + input_id_type + ' to All available ' + output_semantic_type + ' IDs!</p>';
-                    $(".hint").append(hint_text);
+                    var log_text = "Find all paths (chained by at most " + max_api + " APIs) connecting from " + input_id_type + ' to All available ' + output_semantic_type + ' IDs!';
                 } else {
-                    var hint_text = "<p>Hint: You are now searching for paths (chained by at most " + max_api + " APIs) connecting from " + input_id_type + ' to ' + output_id_type + '!</p>';
-                    $(".hint").append(hint_text);
+                    var log_text = "Find all paths (chained by at most " + max_api + " APIs) connecting from " + input_id_type + ' to ' + output_id_type + '!';
                 }
             }
 
         }
-    })
+    var record = "<span class='log-record' input_semantic_type=" + input_semantic_type + " output_semantic_type="
+                + output_semantic_type + " input_id_type=" + input_id_type + " output_id_type=" + output_id_type
+                + " max_api=" + max_api + " input_value=" + input_value + ">" + LOG_NUM + ". " + log_text + "</span><hr>";
+    LOG_NUM += 1;
+    $(".log-collapsible-body").append(record);
+    $(".collapsible").collapsible();
 }
 
 
@@ -305,16 +435,20 @@ $(document).ready(function() {
         if ($("#hasidswitch").is(":checked")) {
             // change the forward icon position
             $(".forward-icon").addClass("forward-icon-withid");
+            $("#textarea1").val(null);
             // show the text input area
             $(".div-input-value").show();
             // restructure the search bar grid
             $(".searchbar").addClass("searchbar-withid");
         } else {
+            $(".hint").empty();
+            $("#textarea1").val(null);
             $(".div-input-value").hide();
             $(".searchbar").removeClass("searchbar-withid");
             $(".forward-icon").removeClass("forward-icon-withid");
         }
     });
+
     // change the select of input IDs by changing semantic types
     $("#select-input-semantic").change(function() {
         var _input_semantic = $("#select-input-semantic").find("option:selected").attr('value');
@@ -331,52 +465,20 @@ $(document).ready(function() {
     example4handler();
     example2handler();
     back2examplehandler();
-    // when user switch between semantic type and ID, repopulate the "select" options
-    semanticIDSwitchHandler();
-    // pop up the text input bar when user select they have an ID
-    $('#isIDSelected').click(function() {
-        $(".userinputrow").toggle(this.checked);
-    });
-
-    // hide output select when user chose crawler
-    $("#crawlercheckbox").change(function() {
-        if ($("#crawlercheckbox").is(":checked")) {
-            // when crawler is selected, other options should be disabled
-            $(".select-wrapper-output").hide();
-            $(".userinputrow").toggle(this.checked);
-            $("#isIDSelected").prop('checked', true).attr("disabled", true);
-            $("#synonymcheckbox").prop('checked', true).attr("disabled", true);
-            $("#singleswitchmulti").attr("disabled", true);
-            $("#textarea1").val("");
-            $("#textarea1").prop("placeholder", "A valid ID must be provided to use crawler function. Please type your ID here!");
-            $(".forwardicon").hide();
-            $(".input-field label").css("opacity", "0");
+    // hide output id select and disable max——api when user select "all semantic types"
+    $("#select-output-semantic").change(function() {
+        if ($("#select-output-semantic").find("option:selected").attr("value") == "all") {
+            $(".div-output-id").hide();
+            $("#select-num-api").prop("disabled", "disabled");
         } else {
-            // when crawler is not selected, other options should be re-enabled
-            $(".select-wrapper-output").show();
-            $(".forwardicon").show();
-            $(".userinputrow").prop('checked', false).toggle(this.checked);
-            $("#isIDSelected").prop('checked', false).removeAttr("disabled");
-            $("#synonymcheckbox").prop('checked', false).removeAttr("disabled");
-            $("#singleswitchmulti").removeAttr("disabled");
-            $("#semanticswitchid").removeAttr("disabled");
-            $("#textarea1").val("");
-            $("#textarea1").prop("placeholder", "Type your Input ID or name here");
-            $(".input-field label").css("opacity", "1");
+            $(".div-output-id").show();
+            $("#select-num-api").prop("disabled", false);
         }
     });
 
-
     //handle graph display after user submit query
     $("#explorebutton").click(function() {
-        $(".dropdown-trigger").dropdown();
-        // hide example section temporarily
-        $(".example").hide();
-        // hide all graph display sections temporarily
-        $(".metadata").hide();
-        $(".crawler").hide();
-        $(".navigation").hide();
-        $(".error").hide();
+        // get user input from the search bar
         var input_semantic_type = $("#select-input-semantic").find("option:selected").attr('value');
         var output_semantic_type = $("#select-output-semantic").find("option:selected").attr('value');
         var input_id_type = $("#select-input-id").find("option:selected").attr('value');
@@ -384,39 +486,86 @@ $(document).ready(function() {
         var input_value = $("#textarea1").val();
         var max_api = $("#select-num-api").find("option:selected").attr("value");
         if (input_value) {
-            if (input_id_type == "all") {
-                if (output_id_type == "all") {
-                    return "semantic2semantic"
+            validateInputValue(input_id_type, input_value).done(function(jsonResponse) {
+                var pattern = jsonResponse['pattern'];
+                var example = jsonResponse['example'];
+                if (input_value.match(pattern)) {
+                    $(".example").hide();
+                    $(".log").show();
+                    $(".dropdown-trigger").dropdown();
+                    // hide example section temporarily
+                    // hide all graph display sections temporarily
+                    $(".metadata").hide();
+                    $(".crawler").hide();
+                    $(".navigation").hide();
+                    $(".error").hide();
+                    addRecordToLog(input_semantic_type, output_semantic_type, input_id_type, output_id_type, max_api, input_value);
+                    if (input_id_type == "all") {
+                        if (output_id_type == "all") {
+                            return "semantic2semantic"
+                        } else {
+                            return "semantic2id"
+                        }
+                    } else {
+                        if (output_semantic_type == "all") {
+                            displayCrawlerResults(input_id_type, input_value);
+                        } else {
+                            if (output_id_type == "all") {
+                                return "id2semantic"
+                            } else {
+                                DirectOutput2Graph(input_id_type, output_id_type, input_value);
+                            } 
+                        }
+                    }
                 } else {
-                    return "semantic2id"
+                    $(".download").hide();
+                    $(".example").hide();
+                    $(".metadata").hide();
+                    $(".navigation").hide();
+                    $(".crawler").hide();
+                    $(".back_to_example").show();
+                    $(".error").show();
+                    $(".error").empty();
+                    Plotly.purge('path-plotly');
+                    var error_message = 'Your input value "<b>' + input_value + '</b>" is not valid. A valid example of ' + input_id_type + ' is: ' + example;
+                    $(".error").html('<h2 class="center">' + error_message + '</h2>');
+                    $(".hint").empty();
+                    $(".hint").append('<span>' + error_message + '</span>');
+                    $(".hint span").css("background-color", "red");
+                    $(".hint span").css("font-size", '1.5rem');
+                    setTimeout(function() {
+                        $(".hint span").css("background-color", "transparent");
+                    }, 1000)
                 }
-            } else {
-                if (output_id_type == "all") {
-                    return "id2semantic"
-                } else {
-                    $(".navigation").show();
-                    DirectOutput2Graph(input_id_type, output_id_type, input_value);
-                }
-            }
+            })
         } else {
+            $(".example").hide();
+            $(".log").show();
+            $(".dropdown-trigger").dropdown();
+            // hide example section temporarily
+            // hide all graph display sections temporarily
+            $(".metadata").hide();
+            $(".crawler").hide();
+            $(".navigation").hide();
+            $(".error").hide();
+            addRecordToLog(input_semantic_type, output_semantic_type, input_id_type, output_id_type, max_api, input_value);
             if (input_id_type == "all") {
                 if (output_id_type == "all") {
-                    $(".metadata").show();
                     displaySemanticType(input_semantic_type, output_semantic_type);
                 } else {
-
+                    $(".metadata").show();
+                    displaySemantic2IDTypePath(input_semantic_type, output_id_type, max_api);
                 }
             } else {
                 if (output_id_type == "all") {
 
                 } else {
                     $(".metadata").show();
-                    console.log(max_api);
                     displayIDTypePath(input_id_type, output_id_type, max_api);
                 }
             }
-
         }
+            
         // First handle cases for semantic type metadata exploration
         if ($("#semanticswitchid").is(":checked") == false) {
             //$(".metadata").show();
@@ -449,6 +598,9 @@ $(document).ready(function() {
                     DirectOutput2Graph(_input, _output, _value);
                 }
             }
-        }
+        };
+        logHandler();
     });
+
+
 });

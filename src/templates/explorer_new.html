@@ -49,12 +49,19 @@
     <body>
       <!-- This section is for the header-->
         <head>
+          <div class="topnav" id="myTopnav">
+            <a href="." title="BioThings Explorer" class="active"><img style="border:0px;" width="130" src="http://biothings.io/static/img/biothings-explorer-256.png" alt="Logo 256"/></a>
+            <!--<a href="#home" class="active">Home</a>-->
+            <a href="tutorial" class="inactive">Tutorial</a>
+            <a href="sources" class="inactive">Sources</a>
+            <a href="uri" class="inactive">URI Registry</a>
+            <a href="api" class="inactive">API</a>
+            <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+              <i class="material-icons menu-icon">menu</i>
+            </a>
+          </div>
+          <!--
           <div>
-              <ul id="dropdown1" class="dropdown-content">
-                <li><a href="metadata">Knowledge Map</a></li>
-                <li><a href="crawler">Crawler</a></li>
-                <li><a href="navigator">Navigator</a></li>
-              </ul>
               <ul id="dropdown2" class="dropdown-content">
                 <li><a href="tutorial">Tutorial</a></li>
                 <li><a href="sources">Sources</a></li>
@@ -67,17 +74,17 @@
               <nav>
                   <div class="nav-wrapper black">
                       <div class="col s12">
-                          <a href="#" title="BioThings Explorer"><img style="border:0px;" width="256" src="http://biothings.io/static/img/biothings-explorer-256.png" alt="Logo 256"/></a>
-                          <!-- Dropdown Structure -->
+                          <a href="." title="BioThings Explorer"><img style="border:0px;" width="256" src="http://biothings.io/static/img/biothings-explorer-256.png" alt="Logo 256"/></a>
+                          Dropdown Structure 
                           <ul class="right hide-on-med-and-down">
-                              <li><a class="dropdown-trigger" href="#!" data-target="dropdown2">Docs<i class="material-icons right">arrow_drop_down</i></a></li>
-                              <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Tools<i class="material-icons right">arrow_drop_down</i></a></li>
-                              <li><a class="dropdown-trigger" href="#!" data-target="dropdown3">Developers<i class="material-icons right">arrow_drop_down</i></a></li>
+                              <li><a class="dropdown-trigger" href="#" data-target="dropdown2">Docs<i class="material-icons right">arrow_drop_down</i></a></li>
+                              <li><a class="dropdown-trigger" href="#" data-target="dropdown3">Developers<i class="material-icons right">arrow_drop_down</i></a></li>
                           </ul>
                       </div>
                   </div>
               </nav>
           </div>
+        -->
         </head>
         <section class="form-section">
           <div class="searchbar">
@@ -203,7 +210,7 @@
                 <div class="card-stacked">
                   <div class="card-content">
                     <h3>Finding APIs</h3>
-                    <p>Suppose you are a developer, and you would like to find all available <b><a href="https://en.wikipedia.org/wiki/Application_programming_interface", target="_blank">API</b></a> resources which can take a <a href="https://www.ncbi.nlm.nih.gov/gene">ncbigene</a> ID as input, and returns a <a href="http://disease-ontology.org/", target="_blank"> Disease Ontology</a> ID  as output.</p>
+                    <p>Suppose you are a developer, and you would like to find all available <b><a href="https://en.wikipedia.org/wiki/Application_programming_interface", target="_blank">API</b></a> resources which can take a <b>gene</b> as input, and returns a <b>disease</b> as output.</p>
                   </div>
                   <div class="card-action">
                     <a href="#main" class="blue-text" id="example4-button">Try it out!</a>
@@ -212,6 +219,9 @@
               </div>
             </div>
           </div>
+        </section>
+        <section class="back_to_example" style="display:none">
+          <span class="back_symbol"><a href="#">Back to Examples</a></span>
         </section>
         <section class="metadata" style="display:none">
           <!-- Sankey Plot div -->
@@ -263,8 +273,11 @@
               </div>
               <div id="node_info" class="col s12">
                   <div id="graph-details-info">
-                      <p class="help-text">Click on one of the nodes or edges in the network to view more details...</p>
-                      <img src="./static/img/help-left-arrow.png" width="75">
+                      <img class="left-arrow" src="./static/img/help-left-arrow.png" width="75">
+                      <img class="up-arrow" src="./static/img/help-up-arrow.png" width="75">
+                      <span class="help-text">Click on one of the nodes or edges in the network to view more details...</span>
+                  </div>
+                  <div id="node_info_text">
                   </div>
               </div>
               <div id="edge_info" class="col s12"></div>
@@ -272,31 +285,32 @@
           </div>
         </section>
         <section class="crawler" style="display:none">
-            <div class="preloader-wrapper big active">
-              <div class="spinner-layer spinner-blue">
-                <div class="circle-clipper left">
-                  <div class="circle"></div>
-              </div>
-              <div class="gap-patch">
-                <div class="circle"></div>
-              </div>
-              <div class="circle-clipper right">
-                <div class="circle"></div>
-              </div>
+        <!-- This section is for the data display-->
+          <div class="crawler-display">
+            <ul class="collapsible data-display-list">
+              <li class="active">
+                <div class="collapsible-header"><i class="material-icons">filter_drama</i>Summary</div>
+                <div class="collapsible-body"><div id="radar_chart"></div></div>
+              </li>
+            </ul>
+          </div>
+        </section>
+        <section class="preloader" style="display:none">
+          <div class="wrap">
+            <div class="loading">
+              <div class="bounceball"></div>
+              <div class="text">NOW LOADING</div>
             </div>
           </div>
-            <!-- This section is for the data display-->
-            <div class="row main" style="display: none">
-              <div class="col s12 m9 offset-m1 data-display">
-                <ul class="collapsible data-display-list">
-                  <li class="active">
-                    <div class="collapsible-header"><i class="material-icons">filter_drama</i>Summary</div>
-                    <div class="collapsible-body"><div id="radar_chart"></div></div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </section>
+        </section>
+        <section class="log" style="display:none">
+          <ul class="collapsible log-collapsible">
+            <li>
+              <div class="collapsible-header"><i class="material-icons large">history</i>Your Search History</div>
+              <div class="collapsible-body log-collapsible-body"></span></div>
+            </li>
+          </ul>
+        </section>
         <footer class="page-footer">
             <div class="container">
                 <div class="row">

@@ -15,19 +15,18 @@ function retrieveDirectOutput(input_prefix, input_value, output_prefix){
 
 function DirectOutput2Graph(_input, _output, _value){
     $(".error").hide();
-    $(".preloader-wrapper").show();
+    $(".preloader").show();
     $(".tabs").tabs();
     var instance = M.Tabs.getInstance($(".tabs"));
-    var helper_text = '<div id="graph-details-info"><p class="help-text">Click on one of the nodes or edges in the network to view more details...</p><img src="./static/img/help-left-arrow.png" width="75"></div>'
-    $("#node_info").empty();
+    $("#node_info_text").empty();
     $("#edge_info").empty();
     $("#context_info").empty();
-    $("#node_info").html(helper_text);
-    $("#edge_info").html(helper_text);
-    $("#context_info").html(helper_text);
     instance.select('node_info');
+    $(".back_to_example").show();
     retrieveDirectOutput(_input, _value, _output).done(function(jsonResonse){
-        $(".preloader-wrapper").hide();
+        $("#graph-details-info").show();
+        $(".navigation").show();
+        $(".preloader").hide();
         var results = jsonResonse.data;
         var node_title = 'prefix: ' + _input;
         var nodes = [{'id': 1, 'label': _value, 'title': node_title, 'font': {'color': 'red'}, 'group': 1}];
@@ -52,8 +51,9 @@ function DirectOutput2Graph(_input, _output, _value){
             download_file('bt_explorer_code_directinput2output.py', construct_directinput2output_text(_input, _value, _output), 'text/plain');
         });
     }).fail(function (err) {
-        $("#DownloadCodeButton").hide();
+        $(".download").hide();
         $(".navigation").hide();
+        $(".preloader").hide();
         $(".error").show();
         $(".error").empty();
         $(".error").html('<h2 class="center">' + err.responseJSON['error message'].replace('\n', '<br />') + '</h2>')
@@ -165,14 +165,16 @@ function drawInputOutputGraph(nodes, edges){
     var clicked_edge_id = params.edges;
     var instance = M.Tabs.getInstance($(".tabs"));
     if (clicked_node_id.length > 0) {
+        $("#graph-details-info").hide();
         $("#edge_info").empty();
-        $("#node_info").empty();
+        $("#node_info_text").empty();
         var node_info = nodes.get(params.nodes)[0]['object_info'];
         var node_message = generateNodeTable(node_info);
-        $("#node_info").html(node_message);
+        $("#node_info_text").html(node_message);
         instance.select('node_info');
     } else {
-        $("#node_info").empty();
+        $("#graph-details-info").hide();
+        $("#node_info_text").empty();
         $("#edge_info").empty();
         var target_node_id = edges.get(params.edges)[0]['to'];
         var node_info = nodes.get(target_node_id)['object_info'];
@@ -182,7 +184,7 @@ function drawInputOutputGraph(nodes, edges){
         var edge_message = generateEdgeTable(endpoint_info, edge_info);
         var context_message = generateNodeTable(edges.get(params.edges)[0]['context'])
         $("#edge_info").html(edge_message);
-        $("#node_info").html(node_message);
+        $("#node_info_text").html(node_message);
         $("#context_info").html(context_message);
         instance.select('edge_info');
     }

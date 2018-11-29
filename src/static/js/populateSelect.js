@@ -150,7 +150,7 @@ function populateBioEntity(dropdown_id, default_value=null, semantic_type1=null)
                     bioentity_select2_data.push({id: bioentity_id_list[bioentity_id], text: bioentity_id_list[bioentity_id]})
                 }
             };
-            bioentity_select2_data.push({id: 'all', text: 'All ' + semantic_type1.toUpperCase() + ' IDs', selected: true});
+            bioentity_select2_data.unshift({id: 'all', text: 'All ' + semantic_type1.toUpperCase() + ' IDs', selected: true});
         };
         
         $(dropdown_id).select2({data: bioentity_select2_data});

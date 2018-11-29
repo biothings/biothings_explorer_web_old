@@ -67,8 +67,9 @@ class RegistryParser:
         # turn data frame into a dictionary and store in bioentity_info
         for index, row in data.iterrows():
             self.bioentity_info[row['URI']] = {'description': row['Description'], 'preferred_name': row['Recommended name'], 
-                                               'semantic type': row['Semantic Type'], 'pattern': row['Pattern'], 'prefix': row['Prefix'],
-                                               'example': row['Example'], 'attribute type': row['Attribute Type']}
+                'semantic type': row['Semantic Type'], 
+                'pattern': row['Pattern'], 'prefix': row['Prefix'],
+                'example': row['Example'], 'attribute type': row['Attribute Type']}
         for k, v in self.bioentity_info.items():
             for _k, _v in v.items():
                 if type(_v) != str and math.isnan(_v):

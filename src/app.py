@@ -13,7 +13,7 @@ from tornado.options import define, options
 import requests
 from raven import Client
 
-from handlers.ConnectingPathHandler import FindEdgeLabel, FindOutputHandler, ConnectingPathHandler, ApiMapHandler, ApiMapHandlerSankey, KnowledgeMap, KnowledgeMapPath
+from handlers.ConnectingPathHandler import FindEdgeLabel, FindOutputHandler, ConnectingPathHandler, ApiMapHandler, ApiMapHandlerSankey, KnowledgeMap, KnowledgeMapPath, ConnectingSemanticToIDHandler
 from handlers.entitycrawler import Crawler
 from handlers.basehandler import BaseHandler
 from handlers.DirectPathHandler import DirectPathHandler
@@ -125,6 +125,7 @@ class Application(tornado.web.Application):
             (r"/explorer/api/v2/directoutput", DirectPathHandler),
             (r"/explorer/api/v2/findsynonym", SynonymHandler),
             (r"/explorer/api/v2/directinput2output", DirectInput2OutputHandler),
+            (r"/explorer/api/v2/semantic2id", ConnectingSemanticToIDHandler),
             (r"/explorer/api/v2/findsingleedge", DirectInput2OutputHandler),
             (r"/explorer/api/v2/semanticquery", QuerySemanticsHandler),
             (r"/explorer/api/v2/connectsemantictype", ConnectingSemanticTypesHandler),

@@ -192,7 +192,8 @@ class MetaDataHandler(BaseHandler):
             # group all bioentity ids together based on their semantic type
             bioentity_dict = defaultdict(list)
             for _item in HU.bt_explorer.registry.bioentity_info.values():
-                bioentity_dict[_item['semantic type']].append(_item['prefix'])
+                if _item['attribute type'] == 'ID':
+                    bioentity_dict[_item['semantic type']].append(_item['prefix'])
             for k, v in bioentity_dict.items():
                 bioentity_dict[k] = sorted(v)
             self.write(json_encode({'bioentity': bioentity_dict}))

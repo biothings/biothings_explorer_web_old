@@ -46,10 +46,12 @@ function count_entry_for_each_semantic_type(data) {
  * Given prefix and input_value, display the results
 */
 function update_data_display(prefix, input_value) {
-    $(".data-display-list").empty();
-    $(".preloader-wrapper").show();
+    $(".crawler-display .data-display-list").empty();
+    $(".preloader").show();
+    $(".back_to_example").show();
     fetch_crawler_results(prefix, input_value).done(function(jsonResponse) {
-        $(".preloader-wrapper").hide();
+        $(".preloader").hide();
+        $(".crawler").show();
         $(".data-display-list").append('<li class="active"><div class="collapsible-header"><i class="material-icons">filter_drama</i>Summary</div><div class="collapsible-body"><div id="radar_chart"></div></div></li>');
         var counter = count_entry_for_each_semantic_type(jsonResponse['linkedData']);
         // remove loading status
@@ -68,8 +70,6 @@ function update_data_display(prefix, input_value) {
             height: '100%', 
             width: '100%' 
         });
-        // show div for data display
-        $(".main").show();
         for (var semantic_type in jsonResponse['linkedData']) {
             fill_data_for_single_semantic_type(semantic_type.toUpperCase(), organize_api_output_to_fit_datatable(jsonResponse['linkedData'][semantic_type]), ['id', 'prefix', 'predicate', 'api']);
         };

@@ -78,21 +78,22 @@ def find_edge_label(G, source, target, relation=None):
 # The input is the edges returned from networkx
 # We need to take the input and feed it into plotly sankey plot
 # The output which plotly sankey plot accepts looks like this:
-# Sample Output: 
+# Sample Output:
 # {
-#    "label": ["ncbigene", "MyGene.info/v1/query", 
+#    "label": ["ncbigene", "MyGene.info/v1/query",
 #             "MyVariant.info/v1/query", "hgnc.symbol"],
 #   "source": [0, 0, 1, 2], # represent the index in label
 #    "target": [1, 2, 3, 3],
 #    "value": [1,1,1,1] # edge weight, this doesn't apply for our use case
 # }    
 # Issue: plotly fails to work if there are too many nodes
-###########################################################################    
+###########################################################################
+
+
 def networkx_to_plotly(edges, duplicates_not_allowed=[]):
-    input_list = []
-    output_list = []
     # initialize the output json doc
-    output_json = {'labels': [], 'colors': [], 'source': [], 'target': [], 'value': [], 'edge_labels': []}
+    output_json = {'labels': [], 'colors': [], 'source': [],
+                   'target': [], 'value': [], 'edge_labels': []}
     # loop through each edge, load the first element into source
     # and load the second element into target
     # load all unique elements to the nodes
@@ -107,9 +108,12 @@ def networkx_to_plotly(edges, duplicates_not_allowed=[]):
                 idx += 1
                 output_json['labels'].append(_edge[0])
                 output_json['colors'].append(label2color(_edge[0]))
+        # handle cases where the node is allowed to be duplicate, and
+        # the node has not been included in the input before
         elif _edge[0] not in input_idx:
             input_idx[_edge[0]] = idx
             idx += 1
+            # create a new entry for this node in the plotly graph
             output_json['labels'].append(_edge[0])
             output_json['colors'].append(label2color(_edge[0]))
         output_json['source'].append(input_idx[_edge[0]])
@@ -128,7 +132,7 @@ def networkx_to_plotly(edges, duplicates_not_allowed=[]):
         output_json['target'].append(output_idx[_edge[1]])
         output_json['edge_labels'].append(_edge[2])
         if type(_edge[2]) == list:
-            output_json['value'].append(1*len(_edge[2]))
+            output_json['value'].append(1 * len(_edge[2]))
         else:
             output_json['value'].append(1)
     return output_json
@@ -191,15 +195,95 @@ class ConnectingPathHandler(BaseHandler):
         start = self.get_argument('start')
         end = self.get_argument('end')
         max_api = self.get_argument('max_api')
-        print(start)
-        paths = bt_explorer.find_path(start, end, max_no_api_used=int(max_api), dictformat=False, display_graph=False)
+        paths = bt_explorer.find_path(start,
+                                      end,
+                                      max_no_api_used=int(max_api),
+                                      dictformat=False,
+                                      display_graph=False)
         edges = []
         for _edge in bt_explorer.temp_G.edges():
-            edges.append((_edge[0], _edge[1], find_edge_label(bt_explorer.temp_G, _edge[0], _edge[1])))
+            edges.append((_edge[0],
+                          _edge[1],
+                          find_edge_label(bt_explorer.temp_G,
+                                          _edge[0],
+                                          _edge[1])))
         no_duplicate = [_item['prefix'] for _item in list(bt_explorer.registry.bioentity_info.values())] + list(bt_explorer.registry.endpoint_info.keys())
-        plotly_results = networkx_to_plotly(edges, duplicates_not_allowed=no_duplicate)
+        plotly_results = networkx_to_plotly(edges,
+                                            duplicates_not_allowed=no_duplicate
+                                            )
         if paths:
             self.write(json.dumps({"plotly": plotly_results, "paths": paths}))
+        else:
+            self.set_status(400)
+            self.write(json.dumps({"status": 400, 'error message': "No path could be found connecting from '" + start + "' to '" + end + " using " + max_api + " api!\n Please try other input and output or try multi edge!"}))
+            self.finish
+
+class ConnectingSemanticToIDHandler(BaseHandler):
+    def get(self):
+        start = self.get_argument('start')
+        end = self.get_argument('end')
+        max_api = self.get_argument('max_api')
+        start_ids = self.get_query_argument('start_ids', [])
+        excluded_nodes = self.get_query_argument('excluded_nodes', [])
+        if excluded_nodes:
+            excluded_nodes = json.loads(excluded_nodes)
+        if start_ids:
+            start_ids = json.loads(start_ids)
+        if not start_ids:
+            for _item in bt_explorer.registry.bioentity_info.values():
+                if (_item['semantic type'] == start
+                    and _item['attribute type'] == 'ID'):
+                    start_ids.append(_item['prefix'])
+        edges = []
+        full_paths = []
+        inputs = []
+        predicates = set()
+        apis = set()
+        nodes = set()
+        for _input in start_ids:
+            paths = bt_explorer.find_path(_input,
+                                          end,
+                                          max_no_api_used=int(max_api),
+                                          dictformat=False,
+                                          display_graph=False,
+                                          excluded_nodes=excluded_nodes)
+            if paths:
+                inputs.append(_input)
+                full_paths += paths
+            for _edge in bt_explorer.temp_G.edges():
+                edge_label = find_edge_label(bt_explorer.temp_G,
+                                             _edge[0],
+                                             _edge[1])
+                if _edge[0].startswith('http'):
+                    apis.add(_edge[0])
+                else:
+                    nodes.add(_edge[0])
+                if _edge[1].startswith('http'):
+                    apis.add(_edge[1])
+                else:
+                    nodes.add(_edge[1])
+                # handle cases where there are multiple edge labels
+                if type(edge_label) == list:
+                    edge_label = edge_label[0]
+                if edge_label.startswith("assoc:"):
+                    edge_label = edge_label[6:]
+                edges.append((_edge[0],
+                              _edge[1],
+                              edge_label))
+                if edge_label != "has_input":
+                    predicates.add(edge_label)
+        no_duplicate = [_item['prefix'] for _item in list(bt_explorer.registry.bioentity_info.values())] + list(bt_explorer.registry.endpoint_info.keys())
+        plotly_results = networkx_to_plotly(edges,
+                                            duplicates_not_allowed=no_duplicate
+                                            )
+        if full_paths:
+            self.write(json.dumps({"plotly": plotly_results,
+                                   "paths": full_paths,
+                                   "inputs": inputs,
+                                   "predicates": list(predicates),
+                                   "outputs": [end],
+                                   "nodes": list(nodes),
+                                   "apis": list(apis)}))
         else:
             self.set_status(400)
             self.write(json.dumps({"status": 400, 'error message': "No path could be found connecting from '" + start + "' to '" + end + " using " + max_api + " api!\n Please try other input and output or try multi edge!"}))
