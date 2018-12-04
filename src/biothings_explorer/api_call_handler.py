@@ -69,7 +69,8 @@ class ApiCallHandler:
     def preprocessing_input(self, value, endpoint_name):
         '''
         Based on endpoint info, handle the input given
-        1) If the parameter type for the endpoint is 'array', treat the whole input as a list
+        1) If the parameter type for the endpoint is 'array', treat the whole
+        input as a list
         2) If the parameter is string, treat each item individually
 
         params
@@ -81,17 +82,24 @@ class ApiCallHandler:
 
         '''
         # if the endpoint takes array as input, turn input value into [list]
-        if self.registry.endpoint_info[endpoint_name]['get']['parameters'][0]['schema']['type'] == 'array':
+        if (self.registry.endpoint_info[endpoint_name]['get']['parameters']
+            [0]['schema']['type'] == 'array'):
             if type(value) == list:
                 return [value]
             else:
-                print("Wrong input type error: {} takes list as input, while {} type input is given by the user".format(endpoint_name, type(value)))
-        # if the endpoint takes string as input, turn input value into [string1, string2, string3]
+                print("Wrong input type error: {} takes list as input, \
+                      while {} type input is given by the user".
+                      format(endpoint_name, type(value)))
+        # if the endpoint takes string as input, turn input value into
+        # [string1, string2, string3]
         else:
             if type(value) == list:
-                return value
+                new_value = []
+                for _value in value:
+                    new_value.append(_value.split(':')[-1])
+                return new_value
             else:
-                return [value]
+                return [value.split(":")[-1]]
 
     def call_api(self, uri_value_dict, endpoint_name):
         """
@@ -217,27 +225,36 @@ class ApiCallHandler:
         4) Extract the output based on output_type and predicate
         """
         # remove any input prefix
-        input_value = input_value.split(':')[-1]
+        
+        # convert the input/output prefix into their corresponding URIs
         if _type == 'prefix':
             input_type = self.registry.prefix2uri(input_type)
             output_type = self.registry.prefix2uri(output_type)
-        print(endpoint_name)
-        if not predicate:
-            predicate = self.nh.find_edge_label(endpoint_name, self.registry.bioentity_info[output_type]['prefix'])
-            jsonld_context = self.registry.endpoint_info[endpoint_name]['jsonld_context']
-            with open(jsonld_context) as f:
-                data = f.read()
-                jsonld = json.loads(data)
-            context = self.jh.fetch_properties_for_association_in_jsonld_context_file(jsonld, predicate)
-            if type(predicate) != list:
-                predicate = predicate.replace('assoc:', 'http://biothings.io/explorer/vocab/objects/')
-            else:
-                predicate = [_predicate.replace('assoc:', 'http://biothings.io/explorer/vocab/objects/') for _predicate in predicate]
-        else:
-            predicate = predicate.replace('assoc:', 'http://biothings.io/explorer/vocab/objects/')
-        final_results = []
         # preprocess the input
         processed_input = self.preprocessing_input(input_value, endpoint_name)
+        print(endpoint_name)
+        # fetch the corresponding JSON-LD context
+        jsonld_context = self.registry.endpoint_info[endpoint_name]['jsonld_context']
+        with open(jsonld_context) as f:
+            data = f.read()
+            jsonld = json.loads(data)
+            context = self.jh.fetch_properties_for_association_in_jsonld_context_file(jsonld,
+                                                                        predicate)
+        # if the user doesn't provide predicate, find one
+        if not predicate:
+            predicate = self.nh.find_edge_label(endpoint_name,
+                                                self.registry.bioentity_info
+                                                [output_type]['prefix'])
+            if type(predicate) != list:
+                predicate = predicate.replace('assoc:',
+                                              'http://biothings.io/explorer/vocab/objects/')
+            else:
+                predicate = [_predicate.replace('assoc:',
+                                                'http://biothings.io/explorer/vocab/objects/') for _predicate in predicate]
+        else:
+            predicate = predicate.replace('assoc:',
+                                          'http://biothings.io/explorer/vocab/objects/')
+        final_results = []
         # retrieve json doc
         api_call_params = []
         for _input_value in processed_input:

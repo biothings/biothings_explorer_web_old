@@ -75,21 +75,23 @@ class DirectInput2OutputHandler(BaseHandler):
             else:
                 reorganized_outputs = {'edge_list': [], 'node_list': []}
                 for _output in outputs:
-                    reorganized_outputs['edge_list'].append({'source_id': _output['input'],
-                                                             'target_id': _output['target'],
-                                                             'type': DictQuery(_output).get("predicate"),
-                                                             'api': DictQuery(_output).get("api"),
-                                                             'publications': DictQuery(_output).get("output/edge/publication"),
-                                                             'provided_by': DictQuery(_output).get("output/edge/provided_by"),
-                                                             'relation': DictQuery(_output).get("output/edge/label"),
-                                                             'evidence_type': DictQuery(_output).get("output/edge/evidence"),
-                                                             'qualifier': {'probability': DictQuery(_output).get("output/edge/probability"),
-                                                                           'pvalue': DictQuery(_output).get("output/edge/pvalue"),
-                                                                           'category': DictQuery(_output).get("output/edge/category")}})
-                    reorganized_outputs['node_list'].append({'id': DictQuery(_output).get("target"),
-                                                             'name': DictQuery(_output).get("output/object/label"),
-                                                             'description': DictQuery(_output).get("output/object/description"),
-                                                             'type': output_semantic_type})
+                    reorganized_outputs['edge_list'].append({
+                        'source_id': _output['input'],
+                        'target_id': _output['target'],
+                        'type': DictQuery(_output).get("predicate"),
+                        'api': DictQuery(_output).get("api"),
+                        'publications': DictQuery(_output).get("output/edge/publication"),
+                        'provided_by': DictQuery(_output).get("output/edge/provided_by"),
+                        'relation': DictQuery(_output).get("output/edge/label"),
+                        'evidence_type': DictQuery(_output).get("output/edge/evidence"),
+                        'qualifier': {'probability': DictQuery(_output).get("output/edge/probability"),
+                        'pvalue': DictQuery(_output).get("output/edge/pvalue"),
+                        'category': DictQuery(_output).get("output/edge/category")}})
+                    reorganized_outputs['node_list'].append({
+                        'id': DictQuery(_output).get("target"),
+                        'name': DictQuery(_output).get("output/object/label"),
+                        'description': DictQuery(_output).get("output/object/description"),
+                        'type': output_semantic_type})
                 self.write(json.dumps({'result_list': reorganized_outputs}))
         # handle cases where no output could be extracted!
         else:

@@ -185,7 +185,7 @@ class BioThingsExplorer:
         else:
             return self.paths
 
-    def find_output(self, path, input_value, display_graph=True):
+    def find_output(self, path, input_value, display_graph=True, return_networkx=True):
         """
         Given a user chosen path from input to output, together with
         a user given input_value
@@ -201,7 +201,6 @@ class BioThingsExplorer:
         display_graph:
             whether to display the graph on jupyter notebook or not
             if not, return a networkx multigraph containing all info
-        
         TODO: handle multiple parameters
         Return:
             visJs graph display
@@ -210,26 +209,38 @@ class BioThingsExplorer:
         self.temp_results = {}
         path_input = input_value
         for i, _path in enumerate(path):
-            print('Currently working on path {}. The path connects from {} to {} using {}!!'.format(i, _path['input'], _path['output'], _path['endpoint']))
-            path_output = self.apiCallHandler.input2output(_path['input'], path_input, _path['endpoint'], _path['output'], _path['relation'])
+            print('Currently working on path {}. The path connects from {} to {} using {}!!'.format(i, _path['input'], _path['output'],
+                                     _path['endpoint']))
+            path_output = self.apiCallHandler.input2output(_path['input'],
+                                                           path_input,
+                                                           _path['endpoint'],
+                                                           _path['output'],
+                                                           _path['relation'])
             if path_output:
-                print('yes')
-                self.temp_results.update({i: path_output})
-                path_input = output2input(path_output)
-                print(path_input)
+                if len(path_output) > 20:
+                    self.temp_results.update({i: path_output[:20]})
+                    path_input = output2input(path_output)[:20]
+                else:
+                    self.temp_results.update({i: path_output})
+                    path_input = output2input(path_output)
             else:
-                print('No results could be found for the given path!! The exploration ended!')
+                print('No results could be found for the given path!! The \
+                    exploration ended!')
                 self.temp_G = explore2Graph(self.temp_results)
                 self.graph_id += 1
                 if display_graph:
                     return
-                else:
+                elif return_networkx:
                     return self.temp_G
+                else:
+                    return self.temp_results
             print('Done!!!')
         self.temp_G = explore2Graph(self.temp_results)
         self.graph_id += 1
         if display_graph:
             return
-        else:
+        elif return_networkx:
             return self.temp_G
+        else:
+            return self.temp_results
 

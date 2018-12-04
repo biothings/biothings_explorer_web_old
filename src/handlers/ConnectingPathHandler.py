@@ -260,7 +260,7 @@ class ConnectingSemanticToIDHandler(BaseHandler):
                     nodes.add(_edge[0])
                 if _edge[1].startswith('http'):
                     apis.add(_edge[1])
-                else:
+                elif _edge[1] != end:
                     nodes.add(_edge[1])
                 # handle cases where there are multiple edge labels
                 if type(edge_label) == list:

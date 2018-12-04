@@ -513,7 +513,8 @@ $(document).ready(function() {
                             if (output_id_type == "all") {
                                 return "id2semantic"
                             } else {
-                                DirectOutput2Graph(input_id_type, output_id_type, input_value);
+                                //DirectOutput2Graph(input_id_type, output_id_type, input_value);
+                                MultiEdge2Graph(input_id_type, output_id_type, input_value, max_api);
                             } 
                         }
                     }

@@ -24,6 +24,7 @@ from handlers.MetaDataHandler import ConnectingInputHandler, EndpointHandler, Co
 from handlers.APIStatusHandler import APIStatusHandler, DatabaseStatusHandler
 from handlers.URIHandler import BioThingsURIHandler
 from handlers.RegistryHandler import RegistryHandler
+from handlers.MultiEdgeHandler import MultiEdgeHandler
 
 client = Client('https://9dd387ee33954e9887ef4a6b55c7aa29:d98404d6199a4db1aa9b5a1e9fc3c975@sentry.io/294205')
 
@@ -129,6 +130,7 @@ class Application(tornado.web.Application):
             (r"/explorer/api/v2/findsingleedge", DirectInput2OutputHandler),
             (r"/explorer/api/v2/semanticquery", QuerySemanticsHandler),
             (r"/explorer/api/v2/connectsemantictype", ConnectingSemanticTypesHandler),
+            (r"/explorer/api/v2/multiedge", MultiEdgeHandler),
             (r"/explorer/api/v2/apistatus", APIStatusHandler),
             (r"/explorer/api/v2/databasestatus", DatabaseStatusHandler),
             (r"/explorer/api/v2/registry", RegistryHandler)
