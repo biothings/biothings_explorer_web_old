@@ -128,15 +128,6 @@ def output2input(_output):
     """
     return [_o['target'].split(':')[1] for _o in _output]
 
-def timing(f):
-    def wrap(*args):
-        time1 = time.time()
-        ret = f(*args)
-        time2 = time.time()
-        print('%s function took %0.3f ms' % (f.__name__, (time2-time1)*1000.0))
-        return ret
-    return wrap
-
 
 def autolog(logger, message, logging_level):
     """Automatically log the current function details.
