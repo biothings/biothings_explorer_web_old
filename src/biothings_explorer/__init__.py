@@ -26,38 +26,10 @@ class BioThingsExplorer:
         if loadroadmap:
             self.construct_api_road_map()
 
-    def construct_api_road_map(self):
-        """
-        This function will add all API, endpoint, input/output info
-        as well as the relationship between endpoint and output
-        into the networkx MultiGraph.
 
-        Return
-        ======
-        MultiDiGraph
-        """
-        # add nodes and edges between api and endpoints
-        for _api, _info in self.registry.api_info.items():
-            self.api_map.add_node(_api, type='api', color='red')
-            for _endpoint in _info['endpoints']:
-                self.api_map.add_node(_endpoint, type='endpoint', color='blue')
-                self.api_map.add_edge(_api, _endpoint, label='has_endpoint')
-        # add endpoint and input/output to the graph
-        for _endpoint, _info in self.registry.endpoint_info.items():
-            for _input in _info['input']:
-                prefix = self.registry.bioentity_info[_input]['prefix']
-                self.api_map.add_node(prefix, type='bioentity', color='yellow')
-                self.api_map.add_edge(prefix, _endpoint, label='has_input')
-            for _output in _info['output']:
-                prefix = self.registry.bioentity_info[_output]['prefix']
-                self.api_map.add_node(prefix, type='bioentity', color='yellow')
-                if _output in _info['relation']:
-                    relations = _info['relation'][_output]
-                    for _relation in relations:
-                        self.api_map.add_edge(_endpoint, prefix,
-                                              label=_relation)
-        return self.api_map
-
+"""
+This should be moved to helper function
+"""
     def path_conversion(self, pathList, relation_filter=None):
         """
         converted path from list to dict
