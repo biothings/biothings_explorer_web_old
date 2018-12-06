@@ -26,25 +26,6 @@ class BioThingsExplorer:
         if loadroadmap:
             self.construct_api_road_map()
 
-    def show_available_bioentities(self):
-        """
-        This function displays available IDs in Jupyter Notebook in
-        Tabel format
-        The columns of the table includes Preferred Name, URI,
-        description, Identifier Pattern and Type
-        Each row represents one bioentity ID in the registry
-
-        Return
-        ======
-        Table in Jupyter Notebook Cell
-        """
-        table = [['Preferred Name', 'URI', 'Description',
-                  'Identifier pattern', 'Type']]
-        for uri, info in self.api_handler.bioentity_info.items():
-            table.append([info['prefix'], uri, info['description'],
-                          info['identifier_pattern'], info['type']])
-#return display(HTML(tabulate.tabulate(table, tablefmt='html')))
-
     def construct_api_road_map(self):
         """
         This function will add all API, endpoint, input/output info
