@@ -1,7 +1,6 @@
 from urllib.parse import urljoin
 import networkx as nx
 import os.path
-from collections import defaultdict
 import math
 
 from .utils import readFile
@@ -10,7 +9,7 @@ from .jsonld_processor import JSONLDHelper
 
 
 class RegistryParser:
-    def __init__(self, readmethod, initialize=False):
+    def __init__(self, readmethod="filepath", initialize=False):
         """
         Parse the openapi files and JSON-LD context files located at
         https://github.com/NCATS-Tangerine/translator-api-registry
@@ -67,7 +66,7 @@ class RegistryParser:
         # turn data frame into a dictionary and store in bioentity_info
         for index, row in data.iterrows():
             self.bioentity_info[row['URI']] = {'description': row['Description'], 'preferred_name': row['Recommended name'], 
-                'semantic type': row['Semantic Type'], 
+                'semantic type': row['Semantic Type'],
                 'pattern': row['Pattern'], 'prefix': row['Prefix'],
                 'example': row['Example'], 'attribute type': row['Attribute Type']}
         for k, v in self.bioentity_info.items():
