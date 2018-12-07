@@ -1,28 +1,13 @@
 from pyld import jsonld
 import json
 import re
-import requests
-import grequests
 from collections import defaultdict
 from subprocess import Popen, PIPE, STDOUT
 import multiprocessing
 import time
 
-
-import inspect
-import logging
-import os,sys
-sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-from config import jsonld_log_file
-
-logger = logging.getLogger('jsonld')
-logger.setLevel(logging.DEBUG)
-logger_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logger_handler = logging.FileHandler(jsonld_log_file)
-logger_handler.setLevel(logging.DEBUG)
-logger_handler.setFormatter(logger_formatter)
-logger.addHandler(logger_handler)
-logger.info('number of cpus is %s', multiprocessing.cpu_count())
+from .context import get_logger
+#logger.info('number of cpus is %s', multiprocessing.cpu_count())
 
 from .utils import readFile
 
@@ -31,6 +16,7 @@ class JSONLDHelper:
         self.processor = jsonld.JsonLdProcessor()
         self.temp_attr_id = None
         self.temp_properties = None
+        self.logger, self.logfile = get_logger('jsonld')
 
     def jsonld2nquads_helper(self, jsonld_doc):
         """
