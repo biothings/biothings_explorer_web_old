@@ -129,36 +129,6 @@ def output2input(_output):
     return [_o['target'].split(':')[1] for _o in _output]
 
 
-def autolog(logger, message, logging_level):
-    """Automatically log the current function details.
-    """
-    import inspect
-    # Get the previous frame in the stack, otherwise it would
-    # be this function!!!
-    func = inspect.currentframe().f_back.f_code
-    # Dump the message + the name of this function to the log.
-    if logging_level == 'warn':
-        logger.warn("%s: %s in %s:%i" % (
-            message, 
-            func.co_name, 
-            func.co_filename, 
-            func.co_firstlineno
-        ))
-    elif logging_level == 'debug':
-        logger.debug("%s: %s in %s:%i" % (
-            message, 
-            func.co_name, 
-            func.co_filename, 
-            func.co_firstlineno
-        ))
-    elif logging_level == 'error':
-        logger.error("%s: %s in %s:%i" % (
-            message, 
-            func.co_name, 
-            func.co_filename, 
-            func.co_firstlineno
-        ))
-
 
 property_uri_2_prefix_dict = {'http://biothings.io/explorer/vocab/attributes/id': 'object.id',
                               'http://biothings.io/explorer/vocab/attributes/secondary-id': 'object.secondary-id',
