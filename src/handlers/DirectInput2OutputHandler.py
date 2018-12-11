@@ -41,7 +41,7 @@ class DirectInput2OutputHandler(BaseHandler):
         output_prefix = self.get_query_argument('output_prefix')
         output_format = self.get_query_argument('format', None)
         output_semantic_type = ah.registry.prefix2semantictype(output_prefix)
-        #endpoint = self.get_query_argument('endpoint', None)
+        # endpoint = self.get_query_argument('endpoint', None)
 
         # convert from prefix to uri
         input_uri = ah.registry.prefix2uri(input_prefix)
