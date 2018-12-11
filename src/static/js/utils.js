@@ -66,6 +66,15 @@ function construct_semantic_connect_text(_input, _output) {
     return final_string
 };
 
+function construct_id_connect_text(_input, _output, max_api) {
+    var final_string = COMMENT_LINE + '#This code is for finding the endpoints which can connect from input "{input}" to output "{output}"\n'.replace('{input}', _input).replace('{output}', _output) + COMMENT_LINE + REQUEST_LINE + COMMENT_CALL_BIOTHINGS
+    var query = "doc = requests.get('http://biothings.io/explorer/api/v2/findpath', params={'input': '{input}', 'output': '{output}', 'max_api': '{max_api}''})\n"
+    final_string += query.replace('{input}', _input).replace('{output}', _output).replace('{max_api}', max_api)
+    final_string += COMMENT_EXTRACT_JSON
+    final_string += EXTRACT_JSON_LINE
+    return final_string
+};
+
 function construct_directinput2output_text(_input, _value, _output) {
     var final_string = COMMENT_LINE + '#This code is for finding the output "{output}" which can be connected from {input}:{input_value}\n'.replace('{input}', _input).replace('{output}', _output).replace('{input_value', _value) + COMMENT_LINE + REQUEST_LINE + COMMENT_CALL_BIOTHINGS
     var query = "doc = requests.get('http://biothings.io/explorer/api/v2/directinput2output', params={'input_prefix': '{input}', 'output_prefix': '{output}', 'input_value': '{input_value}'})\n"

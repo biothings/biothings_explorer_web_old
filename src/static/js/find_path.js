@@ -15,6 +15,16 @@ function findStartEndConnection(_start, _end, _max_api=3){
   return promise;
 };
 
+function findSemantic2IDConnection(_start, _end, _max_api=3){
+  var promise = $.ajax({
+    type:"GET",
+    url: "/explorer/api/v2/semantic2id",
+    data: {start: _start, end: _end, "max_api": _max_api},
+    datatype: "json"
+  });
+  return promise;
+};
+
 /**
  * Find the output given an input bioentity_type
  * @param {String} _input

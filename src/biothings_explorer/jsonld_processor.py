@@ -1,28 +1,13 @@
 from pyld import jsonld
 import json
 import re
-import requests
-import grequests
 from collections import defaultdict
 from subprocess import Popen, PIPE, STDOUT
 import multiprocessing
 import time
 
-
-import inspect
-import logging
-import os,sys
-sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-from config import jsonld_log_file
-
-logger = logging.getLogger('jsonld')
-logger.setLevel(logging.DEBUG)
-logger_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logger_handler = logging.FileHandler(jsonld_log_file)
-logger_handler.setLevel(logging.DEBUG)
-logger_handler.setFormatter(logger_formatter)
-logger.addHandler(logger_handler)
-logger.info('number of cpus is %s', multiprocessing.cpu_count())
+from .context import get_logger
+#logger.info('number of cpus is %s', multiprocessing.cpu_count())
 
 from .utils import readFile
 
@@ -31,6 +16,7 @@ class JSONLDHelper:
         self.processor = jsonld.JsonLdProcessor()
         self.temp_attr_id = None
         self.temp_properties = None
+        self.logger, self.logfile = get_logger('jsonld')
 
     def jsonld2nquads_helper(self, jsonld_doc):
         """
@@ -39,79 +25,34 @@ class JSONLDHelper:
         Params
         ======
         jsonld_doc: jsonld document containing both JSON and the context file
-
-        TODO
-        ======
-        Currently it relies on the JSONLD ruby client to convert to nquads
-        When the JSONLD Python client is ready to adapt to 1.1, 
-        should switch to the Python client
-        """
-        """
-        No longer need JSON-LD Ruby Client
-        PyLD for 1.1 json-ld version is available
-        # the following 6 lines use JSON-LD Ruby client to convert
-        # JSON-LD document into NQuads format
-        cmd = 'jsonld --validate --format nquads'
-        p = Popen(cmd.split(), stdout=PIPE, stdin=PIPE, stderr=STDOUT)
-        p.stdin.write(doc.encode('utf-8'))
-        stdout_data = p.communicate()[0]
-        p.stdin.close()
-        _response = stdout_data.decode()
         """
         # convert from jsonld doc to nquads format
-        nquads = jsonld.to_rdf(jsonld_doc, {'format': "application/nquads"})
-        """
-        No longer need to deal with ruby error message
-        if _response.startswith(('Error', 'ERROR')):
-            logger.error("An error occured when JSON-LD Ruby client tries to parse the JSON-LD. \
-                         The first 100 chars of the JSON document is %s", jsonld_doc[:100])
-            return None
-        # deal with cases when JSON-LD Ruby client returns empty resutls
-        elif _response.startswith('\nParsed 0 statements'):
-            logger.warning("0 statements is found when JSON-LD Ruby client tries to parse the JSON-LD input.\
-                           The first 100 chars of the JSON document is %s", jsonld_doc[:100])
-        else:
-        """
         try:
+            nquads = jsonld.to_rdf(jsonld_doc, {'format': "application/nquads"})
             return self.processor.parse_nquads(nquads)
         except Exception as e:
-            logger.error("Something Unexpected happend when JSON-LD Python client tries to parse the JSON-LD. \
-                         The first 100 chars of the JSON document is %s", json.dumps(jsonld_doc)[:100])
-            logger.error(e, exc_info=True)
+            (self.logger.error("Something Unexpected happend when JSON-LD Python client tries to parse the JSON-LD.\
+                         The first 100 chars of the JSON document is %s", json.dumps(jsonld_doc)[:100]))
+            self.logger.error(e, exc_info=True)
             return None
 
     def jsonld2nquads(self, jsonld_docs, alwayslist=False):
         """
         Given a JSON-LD annotated document,
-        Fetch it's corresponding NQUADs file from JSON-LD playground
-        'http://jsonld.biothings.io/?action=nquads'
-
-        TODO: Currently, PyLD hasn't been updated to match JSON-LD v 1.1
-        So we are using the JSON-LD playground API, which is built upon
-        JSON-LD ruby client for 1.1 version. When PyLD has been updated to
-        match 1.1, we should switch back to PyLD.
+        Fetch it's corresponding NQUADs file
 
         Params
         ======
-        jsonld_doc: (dict)
-            JSON-LD annotated document
+        jsonld_docs: (dict or list of dicts)
+            A single or a list of JSON-LD annotated document(s)
         """
         # handle cases where input is a list of JSON documents
         # in this case, the results will also be a list of NQuads parsing results
         if type(jsonld_docs) == list and type(jsonld_docs[0]) == dict:
             #results = Parallel(n_jobs=multiprocessing.cpu_count())(delayed(self.jsonld2nquads_helper)(_doc) for _doc in jsonld_docs)
             results = []
-            """
-            # parallel code
-            pool = multiprocessing.Pool(multiprocessing.cpu_count())
-            results = pool.map(self.jsonld2nquads_helper, jsonld_docs)
-            pool.close() 
-            """
-            # non parallel code
             for i, _doc in enumerate(jsonld_docs):
-                start = time.time()
                 results.append(self.jsonld2nquads_helper(_doc))
-                logger.info("processing %s took: %s seconds", str(i), time.time() - start)
             if len(results) == 1 and alwayslist == False:
                 return results[0]
             else:
@@ -119,11 +60,6 @@ class JSONLDHelper:
         # handle cases where input is a single JSON object document
         # in this case, the results will be a single NQuads parsing result
         elif type(jsonld_docs) == dict:
-            """
-            jsonld_docs = [jsonld_docs]
-            results = Parallel(n_jobs=multiprocessing.cpu_count())(delayed(self.jsonld2nquads_helper)(_doc) for _doc in jsonld_docs)
-            return results[0]
-            """
             if alwayslist == False:
                 return self.jsonld2nquads_helper(jsonld_docs)
             else:
@@ -131,8 +67,7 @@ class JSONLDHelper:
         # if the input is neither list of json_docs nor single json_doc
         # log error message and return None
         else:
-            logger.warning("The input of the jsonld2nquads function should be a list of JSON docs or a single JSON dictionary doc. \
-                           You input is %s. The first 100 chars of the input is %s", type(jsonld_docs), json.dumps(jsonld_doc)[:100])
+            self.logger.error("jsonld2nquads only takes a single or list of JSON doc(s). You input is %s. The first 100 chars of the input is %s" %(type(jsonld_docs), json.dumps(jsonld_docs)[:100]))
             return None
 
     def json2jsonld(self, json_docs, jsonld_context_path):
@@ -337,173 +272,3 @@ class JSONLDHelper:
             self.organized_properties = {}
             self.organize_properties_in_jsonld_context_file(self.temp_properties)
             return self.organized_properties
-
-t = jsonld.JsonLdProcessor()
-
-def process_jsonld(doc):
-    # cmd = 'ruby jsonld_test_cli.rb -a compact'
-    doc = json.dumps(doc)
-    logger.debug('The JSONLD file after json.dumps is %s', doc)
-    RUBY_JSONLD_CMD = 'jsonld'
-    cmd = RUBY_JSONLD_CMD + ' '
-    cmd += '--validate --format nquads'
-    p = Popen(cmd.split(), stdout=PIPE, stdin=PIPE, stderr=STDOUT)
-    p.stdin.write(doc.encode('utf-8'))
-    # stdout_data = p.communicate(input=doc.encode('utf-8'))[0]
-    stdout_data = p.communicate()[0]
-    p.stdin.close()
-    _response = stdout_data.decode()
-    if 'Parsed' in _response:
-        _nquad = re.sub('Parsed .*second.\n', '', _response)
-        return t.parse_nquads(_nquad)
-    else:
-        return None
-
-def json2jsonld(json_doc, jsonld_context_path):
-    """
-
-    """
-    doc = json.dumps(doc).replace(' ', '')
-    cmd = 'jsonld --validate --format nquads'
-    p = Popen(cmd.split(), stdout=PIPE, stdin=PIPE, stderr=STDOUT)
-    p.stdin.write(doc.encode('utf-8'))
-    stdout_data = p.communicate()[0]
-    p.stdin.close()
-    _response = stdout_data.decode()
-    # check if startswith 'ERROR'
-    # check if return nquads
-    # check if the nquads is empty
-    # if parsing error
-    if 'Parsed' in _response:
-        _nquad = re.sub('Parsed .*second.\n', '', _response)
-        return t.parse_nquads(_nquad)
-    else:
-        return None
-
-'''
-def jsonld2nquads(jsonld_doc, mode='batch'):
-    """
-    Given a JSON-LD annotated document,
-    Fetch it's corresponding NQUADs file from JSON-LD playground
-    'http://jsonld.biothings.io/?action=nquads'
-
-    TODO: Currently, PyLD hasn't been updated to match JSON-LD v 1.1
-    So we are using the JSON-LD playground API, which is built upon
-    JSON-LD ruby client for 1.1 version. When PyLD has been updated to
-    match 1.1, we should switch back to PyLD.
-
-    Params
-    ======
-    jsonld_doc: (dict)
-        JSON-LD annotated document
-    """
-    # need to skip html escapes
-    if mode != 'batch':
-        nquads = requests.post('http://jsonld.biothings.io/?action=nquads', data={'doc': json.dumps(jsonld_doc).replace('>', "&gt;").replace(' ', '')})
-        if nquads.status_code != 413:
-            # remove the log line from the nquads
-            nquads = re.sub('Parsed .*second.\n', '', nquads.json()['output'])
-            return t.parse_nquads(nquads)
-    elif mode == 'batch':
-        responses = []
-        for _jsonld_doc in jsonld_doc:
-            responses.append(grequests.post('http://jsonld.biothings.io/?action=nquads', data={'doc': json.dumps(_jsonld_doc).replace('>', "&gt;").replace(' ', '')}))
-        responses = grequests.map(iter(responses))
-        results = []
-        for _response in responses:
-            if _response.status_code != 413:
-                nquads = re.sub('Parsed .*second.\n', '', _response.json()['output'])
-                results.append(t.parse_nquads(nquads))
-            else:
-                results.append(None)
-        return results
-'''
-
-
-
-def fetchvalue(nquads, object_uri, predicate=None):
-    """
-    Given a NQUADS together with (URI/subject, predicate) pair
-    Extract the object value
-
-    Params
-    ======
-    nquads: (list)
-        NQUADS doc
-    object_uri: (str)
-        URI subject
-    predicate:
-        NQUADS predicate. If None is specified, return all objects matching the subject
-    """
-    results = []
-    # check if it's a valid nquads
-    if nquads and '@default' in nquads:
-        for _nquad in nquads['@default']:
-            if predicate and object_uri in _nquad['object']['value'] and _nquad['predicate']['value'].split('/')[-1] == predicate.split(':')[-1]:
-                results.append((_nquad['object']['value'].split(object_uri)[1], _nquad['predicate']['value'].split('/')[-1]))
-            elif not predicate and object_uri in _nquad['object']['value']:
-                results.append((_nquad['object']['value'].split(object_uri)[1], _nquad['predicate']['value'].split('/')[-1]))
-    elif nquads:
-        logger.warn('This is a invalid nquads, missing "@default"!!!')
-    else:
-        logger.warn('The nquads is empty')
-    # if results is empty, it could be either nquads is empty or object_uri could not be found in nuqads
-    if results:
-        return list(set(results))
-    else:
-        return
-
-def find_base(d, relation=defaultdict(set)):
-    """
-    Iterative function
-    Given a JSON-LD context file as Python Dictionary,
-    return all bio-entity URIs in that context file
-    together with the relationship(s) as a set
-    e.g. {'http://identifiers.org/pdb/': {'ont:has3DStructure'}}
-
-    Params
-    ======
-    d: (dict)
-        JSON-LD context
-    relation: (dict)
-        temporarily store relation info
-    """
-    for k, v in d.items():
-        if isinstance(v, dict) and "@context" in v and "@base" in v["@context"]:
-            relation[v["@context"]["@base"]].add(v["@id"])
-        # if v is a dict and doesnt have @base, then reiterative the process
-        elif isinstance(v, dict):
-            find_base(v, relation=relation)
-    return relation
-
-def json2nquads(json_doc, context_file_path, output_type, predicate=None):
-    """
-    Given a JSON document, perform the following actions
-    1) Find the json-ld context file based on endpoint_name
-    2) Add JSON-LD context file to JSON doc
-    3) Convert the JSON-LD doc into N-quads format
-
-    Params
-    ======
-    json_doc: (dict)
-        JSON document fetched from API calls
-    endpoint_name: (str)
-        the endpoint which the JSON doc comes from
-    output: (str)
-        URI subject
-    predicate:
-        NQUADS predicate, default is None
-    """
-    context_file = readFile(context_file_path)
-    for _json_doc in json_doc:
-        _json_doc.update(context_file)
-    nquads = jsonld2nquads(json_doc)
-    results = []
-    for _nquad in nquads:
-        output = fetchvalue(_nquad, output_type, predicate=predicate)
-        if output:
-            outputs = list(set(output))
-            results.append(outputs)
-        else:
-            results.append(None)
-    return results

@@ -1,7 +1,6 @@
 from urllib.parse import urljoin
 import networkx as nx
 import os.path
-from collections import defaultdict
 import math
 
 from .utils import readFile
@@ -10,7 +9,7 @@ from .jsonld_processor import JSONLDHelper
 
 
 class RegistryParser:
-    def __init__(self, readmethod, initialize=False):
+    def __init__(self, readmethod="filepath", initialize=True):
         """
         Parse the openapi files and JSON-LD context files located at
         https://github.com/NCATS-Tangerine/translator-api-registry
@@ -41,8 +40,6 @@ class RegistryParser:
             self.id_mapping_path = FILE_PATHS['id_mapping']['file']
         elif readmethod:
             print('Invalid readmethod {}!!!. Please choose either http or filepath'.format(readmethod))
-        else:
-            print('Please specify a readmethod. It could be either http or filepath!')
         if initialize:
             # read in all biological entity info
             self.bioentity_info = self.read_id_mapping_file()
@@ -66,8 +63,9 @@ class RegistryParser:
         data = readFile(self.id_mapping_path)
         # turn data frame into a dictionary and store in bioentity_info
         for index, row in data.iterrows():
-            self.bioentity_info[row['URI']] = {'description': row['Description'], 'preferred_name': row['Recommended name'], 
-                                               'semantic type': row['Semantic Type'], 'pattern': row['Pattern'], 'prefix': row['Prefix'],
+            self.bioentity_info[row['URI']] = {'description': row['Description'], 'preferred_name': row['Recommended name'],
+                                               'semantic type': row['Semantic Type'],
+                                               'pattern': row['Pattern'], 'prefix': row['Prefix'],
                                                'example': row['Example'], 'attribute type': row['Attribute Type']}
         for k, v in self.bioentity_info.items():
             for _k, _v in v.items():
@@ -208,7 +206,9 @@ class RegistryParser:
             for _assoc in relation.values():
                 associations = associations | _assoc
             associations = [_assoc.replace("assoc:", "http://biothings.io/explorer/vocab/objects/") for _assoc in associations]
-            parsed_result['endpoints'][endpoint_name].update({'output': _output, 'relation': relation, 'associations': associations, 'input': _input, 'api': data['info']['title'], 'server': data['servers'][0]['url']})
+            parsed_result['endpoints'][endpoint_name].update({'output': _output, 'relation': relation,
+                                                              'associations': associations, 'input': _input,
+                                                              'api': data['info']['title'], 'server': data['servers'][0]['url']})
             parsed_result['api'][api_name]['endpoints'].append(data['servers'][0]['url'] + _name)
         return parsed_result
 

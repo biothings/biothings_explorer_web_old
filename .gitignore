@@ -13,6 +13,9 @@ config.py
 
 src/jupyter_notebooks
 
-**/.DS_Store
+.DS_Store
 
 **/ENV
+
+openapi_specs
+.DS_Store

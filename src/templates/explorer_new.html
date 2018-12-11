@@ -1,0 +1,342 @@
+<html>
+   <head>
+        <meta property="og:locale" content="en_US">
+        <meta property="og:url" content="http://biothings.io/explorer/">
+        <meta property="og:site_name" content="BioThings Explorer">
+        <meta property="og:title" content="BioThings Explorer | Exploring Biological Data Through Linked API Services">
+        <meta name="description" content="BioThings Explorer utilize JSON-LD and SmartAPI Specifications to link biological API for knowledge exploration. Users could get metadata information about APIs as well as fetching linked biological data through BioThings Explorer.">
+        <meta property="og:type" content="website">
+        <meta property="og:description" content="BioThings Explorer utilize JSON-LD and SmartAPI Specifications to link biological API for knowledge exploration. Users could get metadata information about APIs as well as fetching linked biological data through BioThings Explorer.">
+        <meta property="og:image" content="http://biothings.io/static/img/biothings-explorer-64.png">
+        <meta property="og:image:type" content="image/png">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
+        <title>BioThings Explorer</title>
+        <meta name = "viewport" content = "width = device-width, initial-scale = 1">      
+        <link rel="shortcut icon"  href="http://biothings.io/static/img/biothings-explorer-64.png" title="BioThings Explorer">
+        <link rel = "stylesheet"
+         href = "https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.3/css/materialize.min.css">
+        <link href="./static/css/vis-network.min.css" rel="stylesheet" type="text/css">
+        <script type="text/javascript" src="./static/js/cytoscape.js"></script>
+        <script type="text/javascript" src="./static/js/vis.js"></script> 
+        <script type="text/javascript" src="./static/js/data2Cytoscape.js"></script>
+        <script type="text/javascript" src="./static/js/populateSelect.js"></script>
+        <script type="text/javascript" src="./static/js/utils.js"></script>
+        <script type="text/javascript" src="./static/js/find_path.js"></script>
+        <script type="text/javascript" src="./static/js/drawSankey.js"></script>
+        <script type="text/javascript" src="./static/js/direct_input_output_new.js"></script>
+        <script type="text/javascript" src="./static/js/semantic_input2output_new.js"></script>
+        <script type="text/javascript" src="./static/js/crawler_new1.js"></script>
+        <script type="text/javascript" src="./static/js/multiedge.js"></script>
+        <script type = "text/javascript"
+         src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.3/js/materialize.min.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+        <link href="./static/css/select2-materialize.css" rel="stylesheet" type="text/css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+        <script src="http://d3js.org/d3.v3.min.js"></script>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <link href="./static/css/explorer_new.css" rel="stylesheet" />
+        <!-- script for data table-->
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+        <!-- script for zingchart used to create radar chart here-->
+        <script src= "https://cdn.zingchart.com/zingchart.min.js"></script>
+        <script> zingchart.MODULESDIR = "https://cdn.zingchart.com/modules/";
+        ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9","ee6b7db5b51705a13dc2339db3edaf6d"];</script>
+    </head>
+    <body>
+      <!-- This section is for the header-->
+        <head>
+          <div class="topnav" id="myTopnav">
+            <a href="." title="BioThings Explorer" class="active"><img style="border:0px;" width="130" src="http://biothings.io/static/img/biothings-explorer-256.png" alt="Logo 256"/></a>
+            <!--<a href="#home" class="active">Home</a>-->
+            <a href="tutorial" class="inactive">Tutorial</a>
+            <a href="sources" class="inactive">Sources</a>
+            <a href="uri" class="inactive">URI Registry</a>
+            <a href="api" class="inactive">API</a>
+            <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+              <i class="material-icons menu-icon">menu</i>
+            </a>
+          </div>
+          <!--
+          <div>
+              <ul id="dropdown2" class="dropdown-content">
+                <li><a href="tutorial">Tutorial</a></li>
+                <li><a href="sources">Sources</a></li>
+                <li><a href="uri">URI Registry</a></li>
+              </ul>
+              <ul id="dropdown3" class="dropdown-content">
+                <li><a href="api">API</a></li>
+                <li><a href="https://pypi.org/project/biothings-explorer/">Python</a></li>
+              </ul>
+              <nav>
+                  <div class="nav-wrapper black">
+                      <div class="col s12">
+                          <a href="." title="BioThings Explorer"><img style="border:0px;" width="256" src="http://biothings.io/static/img/biothings-explorer-256.png" alt="Logo 256"/></a>
+                          Dropdown Structure 
+                          <ul class="right hide-on-med-and-down">
+                              <li><a class="dropdown-trigger" href="#" data-target="dropdown2">Docs<i class="material-icons right">arrow_drop_down</i></a></li>
+                              <li><a class="dropdown-trigger" href="#" data-target="dropdown3">Developers<i class="material-icons right">arrow_drop_down</i></a></li>
+                          </ul>
+                      </div>
+                  </div>
+              </nav>
+          </div>
+        -->
+        </head>
+        <section class="form-section">
+          <div class="searchbar">
+              <div class="select-wrapper div-num-api search-item">
+                  <select id="select-num-api">
+                    <option value="1">1 API Call</option>
+                    <option value="2">2 API Calls</option>
+                    <option value="3">3 API Calls</option>
+                  </select>
+              </div>
+              <div class="div-has-id">
+                <p>
+                  <label>
+                    <input type="checkbox" id="hasidswitch"/>
+                    <span>I have an ID</span>
+                  </label>
+                </p>
+              </div>
+              <div class="input-logo">
+                <p> INPUT </p>
+              </div>
+              <div class="select-wrapper div-input-semantic input">
+                <label for="select-input-semantic">
+                    Input Semantic Type
+                  <select id="select-input-semantic" class="search-item"></select>
+                </label>
+              </div>
+              <div class="select-wrapper div-input-id input">
+                <label for="select-input-id">
+                    Input ID
+                  <select id="select-input-id" class="search-item"></select>
+                </label>
+              </div>
+              <div class="div-input-value">
+                <textarea id="textarea1" class="materialize-textarea search-item"></textarea>
+                <label for="textarea1">Please specify your input ID here.</label>
+              </div>
+              <div class="output-logo">
+                <p> OUTPUT </p>
+              </div>
+              <div class="select-wrapper div-output-semantic output">
+                <label for="select-output-semantic">
+                    Output Semantic Type
+                  <select id="select-output-semantic" class="search-item"></select>
+                </label>
+              </div>
+              <div class="select-wrapper div-output-id output">
+                <label for="select-output-id">
+                    Output ID
+                  <select id="select-output-id" class="search-item"></select>
+                </label>
+              </div>
+              <div class="forward-icon">
+                <i class="material-icons large white-text">import_export</i>
+              </div>
+              <div class="hint">
+              </div>
+              <div class="submit-button">
+                <button class="btn waves-effect waves-light #ff4081" type="submit" name="action" id="explorebutton">Submit
+                <i class="material-icons right">send</i>
+                </button>
+              </div>
+            </div>
+        </section>
+        <section class="example-section">
+          <div class="example">
+            <div class="instruction">
+              <h2>Some examples to help you get started!</h2>
+            </div>
+            <div class="example1">
+              <div class="card horizontal">
+                <div class="card-image">
+                  <img src="./static/img/drugs.jpeg">
+                </div>
+                <div class="card-stacked">
+                  <div class="card-content">
+                    <h3>Gene -> Chemical</h3>
+                    <p>Suppose I have a gene symbol in mind, e.g. <i>CXCR4</i>, I want to find all <b>drugs/chemicals</b> which are known to target this <b>gene or its gene product</b></p>
+                  </div>
+                  <div class="card-action">
+                    <a href="#main" class="blue-text" id="example1-button">Try it out!</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="example2">
+              <div class="card horizontal">
+                <div class="card-image">
+                  <img src="./static/img/gene.jpg">
+                </div>
+                <div class="card-stacked">
+                  <div class="card-content">
+                    <h3>Crawling Gene Related Information</h3>
+                    <p>My research focus is on gene <i>CDK7</i>, and I want to know everything related to this <b>gene</b>, e.g. phenotypes, dieseases, chemicals, literatures, variants, etc.</p>
+                  </div>
+                  <div class="card-action">
+                    <a href="#main" class="blue-text" id="example2-button">Try it out!</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="example3">
+              <div class="card horizontal">
+                <div class="card-image">
+                  <img src="./static/img/disease.jpeg">
+                </div>
+                <div class="card-stacked">
+                  <div class="card-content">
+                    <h3>Disease -> Phenotype</h3>
+                    <p>Suppose you are a clinician, and you would like to retrieve all <b>phenotypes</b> which are related to the <b>disease</b> <a href="https://en.wikipedia.org/wiki/Wolfram_syndrome", target="_blank">Wolfram syndrome 1</a> (MONDO:0009101).</p>
+                  </div>
+                  <div class="card-action">
+                    <a href="#main" class="blue-text" id="example3-button">Try it out!</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="example4">
+              <div class="card horizontal">
+                <div class="card-image">
+                  <img src="./static/img/developer.png">
+                </div>
+                <div class="card-stacked">
+                  <div class="card-content">
+                    <h3>Finding APIs</h3>
+                    <p>Suppose you are a developer, and you would like to find all available <b><a href="https://en.wikipedia.org/wiki/Application_programming_interface", target="_blank">API</b></a> resources which can take a <b>gene</b> as input, and returns a <b>disease</b> as output.</p>
+                  </div>
+                  <div class="card-action">
+                    <a href="#main" class="blue-text" id="example4-button">Try it out!</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="back_to_example" style="display:none">
+          <span class="back_symbol"><a href="#">Back to Examples</a></span>
+        </section>
+        <section class="metadata" style="display:none">
+          <!-- Sankey Plot div -->
+            <div id="plotly-filter">
+              <div class="filter-input">
+                <p> Inputs </p>
+                <div class="filters">
+                </div>
+                <hr>
+              </div>
+              <div class="filter-output">
+                <p> Outputs </p>
+                <div class="filters">
+                </div>
+                <hr>
+              </div>
+              <div class="filter-api">
+                <p> APIs </p>
+                <div class="filters">
+                </div>
+                <hr>
+              </div>
+              <div class="filter-predicate">
+                <p> Predicates </p>
+                <div class="filters">
+                </div>
+              </div>
+            </div>
+            <div id="path-plotly"></div>
+
+        </section>
+        <section class="error" style="display:none">
+        </section>
+        <div class="fixed-action-btn download" style="display:none">
+            <a class="btn-floating btn-large red tooltipped" id="DownloadCodeButton" data-position="left" data-tooltip="Download Python Code">
+                <i class="large material-icons">code</i>
+            </a>
+        </div>
+        <section class="navigation" style="display:none">
+          <div id="cy">
+          </div>
+          <div id="node_edge_description">
+              <div>
+                  <ul class="tabs">
+                      <li class="tab col s4" id="node_tab"><a class="active" href="#node_info">Node</a></li>
+                      <li class="tab col s4" id="edge_tab"><a href="#edge_info" id="edge_tabs">Edge</a></li>
+                      <li class="tab col s4" id="context_tab"><a href="#context_info">Context</a></li>
+                  </ul>
+              </div>
+              <div id="node_info" class="col s12">
+                  <div id="graph-details-info">
+                      <img class="left-arrow" src="./static/img/help-left-arrow.png" width="75">
+                      <img class="up-arrow" src="./static/img/help-up-arrow.png" width="75">
+                      <span class="help-text">Click on one of the nodes or edges in the network to view more details...</span>
+                  </div>
+                  <div id="node_info_text">
+                  </div>
+              </div>
+              <div id="edge_info" class="col s12"></div>
+              <div id="context_info" class="col s12"></div>
+          </div>
+        </section>
+        <section class="crawler" style="display:none">
+        <!-- This section is for the data display-->
+          <div class="crawler-display">
+            <ul class="collapsible data-display-list">
+              <li class="active">
+                <div class="collapsible-header"><i class="material-icons">filter_drama</i>Summary</div>
+                <div class="collapsible-body"><div id="radar_chart"></div></div>
+              </li>
+            </ul>
+          </div>
+        </section>
+        <section class="preloader" style="display:none">
+          <div class="wrap">
+            <div class="loading">
+              <div class="bounceball"></div>
+              <div class="text">NOW LOADING</div>
+            </div>
+          </div>
+        </section>
+        <section class="log" style="display:none">
+          <ul class="collapsible log-collapsible">
+            <li>
+              <div class="collapsible-header"><i class="material-icons large">history</i>Your Search History</div>
+              <div class="collapsible-body log-collapsible-body"></span></div>
+            </li>
+          </ul>
+        </section>
+        <footer class="page-footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col l6 s12">
+                        <h5 class="white-text">BioThings Explorer</h5>
+                        <p class="grey-text text-lighten-4">Utilizing JSON-LD and SmartAPI Specifications to link biological APIs for knowledge exploration.</p>
+                    </div>
+                    <div class="col l4 offset-l2 s12">
+                        <h5 class="white-text">Useful Links</h5>
+                        <ul>
+                            <li><a class="grey-text text-lighten-3" href="http://biothings.io/#" target="_blank">BioThings API</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://smart-api.info/" target="_blank">SmartAPI Specification</a></li>
+                            <li><a class="grey-text text-lighten-3" href="https://json-ld.org/" target="_blank">JSON-LD</a></li>
+                            <li><a class="grey-text text-lighten-4" href="http://wulab.io/" target="_blank">The Wu Lab</a></li>
+                            <li><a class="grey-text text-lighten-4" href="http://sulab.org/" target="_blank">The Su Lab</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                <div class="container">
+                    Copyright © 2017-2018 The Su/Wu Lab.</p>
+                </div>
+            </div>
+        </footer>
+    <script src="./static/js/explorer_new.js"></script>
+    </body>
+</html>

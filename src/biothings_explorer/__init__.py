@@ -2,6 +2,7 @@ import networkx as nx
 import os, sys
 
 from .api_call_handler import ApiCallHandler
+from .api_registry_parser import RegistryParser
 from .visjupyter_helper import find_edge_label, path2Graph, explore2Graph
 from .utils import output2input
 
@@ -13,70 +14,21 @@ formatter = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 #logging.basicConfig(level=logging.DEBUG, filename=os.path.join(LOG_FOLDER, 'debug.log'), format=formatter)
 
 class BioThingsExplorer:
-    def __init__(self, loadroadmap=True):
+    def __init__(self):
         self.graph_id = 1
         self.apiCallHandler = ApiCallHandler()
-        self.registry = self.apiCallHandler.registry
-        self.api_map = nx.MultiDiGraph()
+        self.registry = RegistryParser()
+        self.api_map = self.registry.api_map
         self.temp_G = nx.MultiDiGraph()
         self.paths = None
         self.selected_path = None
         self.graph_id = 0
         self.temp_results = {}
-        if loadroadmap:
-            self.construct_api_road_map()
 
-    def show_available_bioentities(self):
-        """
-        This function displays available IDs in Jupyter Notebook in
-        Tabel format
-        The columns of the table includes Preferred Name, URI,
-        description, Identifier Pattern and Type
-        Each row represents one bioentity ID in the registry
 
-        Return
-        ======
-        Table in Jupyter Notebook Cell
-        """
-        table = [['Preferred Name', 'URI', 'Description',
-                  'Identifier pattern', 'Type']]
-        for uri, info in self.api_handler.bioentity_info.items():
-            table.append([info['prefix'], uri, info['description'],
-                          info['identifier_pattern'], info['type']])
-#return display(HTML(tabulate.tabulate(table, tablefmt='html')))
-
-    def construct_api_road_map(self):
-        """
-        This function will add all API, endpoint, input/output info
-        as well as the relationship between endpoint and output
-        into the networkx MultiGraph.
-
-        Return
-        ======
-        MultiDiGraph
-        """
-        # add nodes and edges between api and endpoints
-        for _api, _info in self.registry.api_info.items():
-            self.api_map.add_node(_api, type='api', color='red')
-            for _endpoint in _info['endpoints']:
-                self.api_map.add_node(_endpoint, type='endpoint', color='blue')
-                self.api_map.add_edge(_api, _endpoint, label='has_endpoint')
-        # add endpoint and input/output to the graph
-        for _endpoint, _info in self.registry.endpoint_info.items():
-            for _input in _info['input']:
-                prefix = self.registry.bioentity_info[_input]['prefix']
-                self.api_map.add_node(prefix, type='bioentity', color='yellow')
-                self.api_map.add_edge(prefix, _endpoint, label='has_input')
-            for _output in _info['output']:
-                prefix = self.registry.bioentity_info[_output]['prefix']
-                self.api_map.add_node(prefix, type='bioentity', color='yellow')
-                if _output in _info['relation']:
-                    relations = _info['relation'][_output]
-                    for _relation in relations:
-                        self.api_map.add_edge(_endpoint, prefix,
-                                              label=_relation)
-        return self.api_map
-
+    """
+    This should be moved to helper function
+    """
     def path_conversion(self, pathList, relation_filter=None):
         """
         converted path from list to dict
@@ -185,7 +137,7 @@ class BioThingsExplorer:
         else:
             return self.paths
 
-    def find_output(self, path, input_value, display_graph=True):
+    def find_output(self, path, input_value, display_graph=True, return_networkx=True):
         """
         Given a user chosen path from input to output, together with
         a user given input_value
@@ -201,7 +153,6 @@ class BioThingsExplorer:
         display_graph:
             whether to display the graph on jupyter notebook or not
             if not, return a networkx multigraph containing all info
-        
         TODO: handle multiple parameters
         Return:
             visJs graph display
@@ -210,26 +161,38 @@ class BioThingsExplorer:
         self.temp_results = {}
         path_input = input_value
         for i, _path in enumerate(path):
-            print('Currently working on path {}. The path connects from {} to {} using {}!!'.format(i, _path['input'], _path['output'], _path['endpoint']))
-            path_output = self.apiCallHandler.input2output(_path['input'], path_input, _path['endpoint'], _path['output'], _path['relation'])
+            print('Currently working on path {}. The path connects from {} to {} using {}!!'.format(i, _path['input'], _path['output'],
+                                     _path['endpoint']))
+            path_output = self.apiCallHandler.input2output(_path['input'],
+                                                           path_input,
+                                                           _path['endpoint'],
+                                                           _path['output'],
+                                                           _path['relation'])
             if path_output:
-                print('yes')
-                self.temp_results.update({i: path_output})
-                path_input = output2input(path_output)
-                print(path_input)
+                if len(path_output) > 20:
+                    self.temp_results.update({i: path_output[:20]})
+                    path_input = output2input(path_output)[:20]
+                else:
+                    self.temp_results.update({i: path_output})
+                    path_input = output2input(path_output)
             else:
-                print('No results could be found for the given path!! The exploration ended!')
+                print('No results could be found for the given path!! The \
+                    exploration ended!')
                 self.temp_G = explore2Graph(self.temp_results)
                 self.graph_id += 1
                 if display_graph:
                     return
-                else:
+                elif return_networkx:
                     return self.temp_G
+                else:
+                    return self.temp_results
             print('Done!!!')
         self.temp_G = explore2Graph(self.temp_results)
         self.graph_id += 1
         if display_graph:
             return
-        else:
+        elif return_networkx:
             return self.temp_G
+        else:
+            return self.temp_results
 

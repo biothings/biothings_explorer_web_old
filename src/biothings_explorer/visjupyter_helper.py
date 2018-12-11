@@ -131,7 +131,7 @@ def explore2Graph(exploreresults):
     for layer, results in exploreresults.items():
         for _result in results:
             if 'input' in _result:
-                _input = _result['input'][1] + ':' + _result['input'][0]
+                _input = _result['input']
                 if layer == 0:
                     G.add_node(_input, type='bioentity', color=color_schema[layer])
                 if 'output' in _result:
