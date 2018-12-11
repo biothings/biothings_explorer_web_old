@@ -27,10 +27,13 @@ class ApiCallHandler:
     def check_if_exists_multiple_params(self, endpoint_name):
         """
         Some API endpoints takes more than one required input
-        e.g. humanbase API ('http://hb.flatironinstitute.org/api') specifies 'tissue'
+        e.g. humanbase API ('http://hb.flatironinstitute.org/api') specifies
+        'tissue'
         and 'geneid' as two required input parameters
-        Thus, this function checks whether there exists multiple required parameters
-        It returns True when there exists >1 parameters, False if only 1 parameter is required
+        Thus, this function checks whether there exists multiple required
+        parameters
+        It returns True when there exists >1 parameters, False if only 1
+        parameter is required
 
         Params
         ======
