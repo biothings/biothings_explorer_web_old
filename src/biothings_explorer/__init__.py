@@ -2,6 +2,7 @@ import networkx as nx
 import os, sys
 
 from .api_call_handler import ApiCallHandler
+from .api_registry_parser import RegistryParser
 from .visjupyter_helper import find_edge_label, path2Graph, explore2Graph
 from .utils import output2input
 
@@ -13,23 +14,21 @@ formatter = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 #logging.basicConfig(level=logging.DEBUG, filename=os.path.join(LOG_FOLDER, 'debug.log'), format=formatter)
 
 class BioThingsExplorer:
-    def __init__(self, loadroadmap=True):
+    def __init__(self):
         self.graph_id = 1
         self.apiCallHandler = ApiCallHandler()
-        self.registry = self.apiCallHandler.registry
-        self.api_map = nx.MultiDiGraph()
+        self.registry = RegistryParser()
+        self.api_map = self.registry.api_map
         self.temp_G = nx.MultiDiGraph()
         self.paths = None
         self.selected_path = None
         self.graph_id = 0
         self.temp_results = {}
-        if loadroadmap:
-            self.construct_api_road_map()
 
 
-"""
-This should be moved to helper function
-"""
+    """
+    This should be moved to helper function
+    """
     def path_conversion(self, pathList, relation_filter=None):
         """
         converted path from list to dict
