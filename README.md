@@ -1,7 +1,10 @@
 # biothings_explorer_web
 
+## This is the development branch of this project
+
 ### Project Website: 
     http://biothings.io/explorer/
+
 ### Project Demo:
     https://goo.gl/sx34T2
     
