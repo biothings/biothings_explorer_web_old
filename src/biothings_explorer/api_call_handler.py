@@ -9,6 +9,7 @@ from .output_organizer import OutputOrganizor
 from .networkx_helper import NetworkxHelper
 from .utils import int2str
 
+
 class ApiCallHandler:
     def __init__(self):
         """
