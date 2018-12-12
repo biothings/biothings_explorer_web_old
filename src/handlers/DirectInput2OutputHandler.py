@@ -56,7 +56,7 @@ class DirectInput2OutputHandler(BaseHandler):
             self.finish()
 
         # Step 1: Find all endpoints which could connect from input_type to output_type
-        endpoints = ah.api_endpoint_locator(input_uri, output_uri)
+        endpoints = ah.registry.api_endpoint_locator(input_uri, output_uri)
         if not endpoints:
             self.set_status(400)
             self.write(json.dumps({"status": 400, "error message": "No endpoints could be found to connect " + input_prefix + " to " + output_prefix + "!"}))
