@@ -6,7 +6,8 @@ from .api_registry_parser import RegistryParser
 from .jsonld_processor import JSONLDHelper
 from .output_organizer import OutputOrganizor
 from .networkx_helper import NetworkxHelper
-from .utils import int2str
+from .utils import int2str, removeprefix, str2list
+from .context import get_logger
 
 
 class ApiCallHandler:
@@ -19,6 +20,7 @@ class ApiCallHandler:
         4) Extract Output from API call results
         """
         self.registry = RegistryParser(readmethod='filepath', initialize=True)
+        self.logger, self.logfile = get_logger('api_call_handler')
         self.jh = JSONLDHelper()
         self.oo = OutputOrganizor()
         self.nh = NetworkxHelper()
@@ -39,11 +41,18 @@ class ApiCallHandler:
         endpoint_name: (str)
             The endpoint name to check
         """
-        required_paras = sum([1 for _para in self.registry.endpoint_info[endpoint_name]['get']['parameters'] if _para['required']])
-        if required_paras > 1:
-            return True
+        if endpoint_name not in self.registry.endpoint_info:
+            self.logger.debug('KeyError, Given endpoint %s not found in registry', endpoint_name)
+            raise KeyError
+        try:
+            required_paras = sum([1 for _para in self.registry.endpoint_info[endpoint_name]['get']['parameters'] if _para['required']])
+        except KeyError as e:
+            self.logger.debug('KeyError, failed to retrieve required parameters information from registry for endpoint %s', endpoint_name)
         else:
-            return False
+            if required_paras > 1:
+                return True
+            else:
+                return False
 
     def preprocessing_input(self, value, endpoint_name):
         '''
@@ -51,6 +60,7 @@ class ApiCallHandler:
         1) If the parameter type for the endpoint is 'array', treat the whole
         input as a list
         2) If the parameter is string, treat each item individually
+        3）Remove all prefix if present
 
         params
         ======
@@ -72,13 +82,15 @@ class ApiCallHandler:
         # if the endpoint takes string as input, turn input value into
         # [string1, string2, string3]
         else:
-            if type(value) == list:
-                new_value = []
-                for _value in value:
-                    new_value.append(_value.split(':')[-1])
-                return new_value
+            try:
+                processed_input = removeprefix(value)
+            except TypeError as e:
+                self.logger.debug("removeprefix function only accepts str or list of str, your input is {}".format(value))
+                raise TypeError("invalid input type")
             else:
-                return [value.split(":")[-1]]
+                return str2list(processed_input)
+
+
 
     def call_api(self, uri_value_dict, endpoint_name):
         """
