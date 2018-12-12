@@ -1,15 +1,25 @@
 import unittest
-import sys
 
 from .context import BioThingsExplorer
 
+ah = BioThingsExplorer().apiCallHandler
+
 
 class TestFunctionsInAPICallHandler(unittest.TestCase):
-	def __init__(self):
-		self.ah = BioThingsExplorer().apiCallHandler
 
-	def test_endpoint_locator(self):
-		self.assertEqual(len(self.ah.api_endpoint_locator("wrong", "wrong"), 0))
+    def test_check_if_exists_multiple_params(self):
+        # test if raise keyerror when given an invalid endpoint name
+        #self.assertRaises(KeyError,
+                          #ah.check_if_exists_multiple_params(1))
+        #self.assertRaises(KeyError,
+                          #ah.check_if_exists_multiple_params('1'))
+        #self.assertRaises(KeyError,
+        #                  ah.check_if_exists_multiple_params('http://mygene.info/'))
+        with self.assertRaises(KeyError):
+            ah.check_if_exists_multiple_params(1)
+        self.assertFalse(ah.check_if_exists_multiple_params('http://mygene.info/v3/querypathway'))
+        self.assertFalse(ah.check_if_exists_multiple_params('http://mygene.info/v3/querygo'))
+
 
 if __name__ == "__main__":
     unittest.main()
