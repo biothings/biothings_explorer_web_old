@@ -50,7 +50,7 @@ async def get_json_helper(_endpoint, input_type, input_value, session):
         logger.info('Start making API calls to {}'.format(_endpoint))
         async with session.get(api_call_params[0], params=api_call_params[1], headers={'Accept': 'application/json'}) as response:
             json_response = await response.json()
-            data = bt_explorer.apiCallHandler.preprocess_json_doc(json_response, _endpoint)
+            data = bt_explorer.apiCallHandler.preprocess_json_doc(json_response)
             logger.info('Finished making API calls to %s, took %s', _endpoint, time.time() - start)
             return {'endpoint': _endpoint, 'data': data}
     except:
@@ -84,7 +84,7 @@ async def get_json(paths):
     # use grequest to make asynchronized API calls
     rs = (grequests.get(u, params=v, headers={'Accept': 'application/json'}) for (u,v) in api_call_params)
     # get JSON output
-    responses = [bt_explorer.apiCallHandler.preprocess_json_doc(api_call_response.json(), endpoint_name)
+    responses = [bt_explorer.apiCallHandler.preprocess_json_doc(api_call_response.json())
     if api_call_response.status_code == 200 else {} for api_call_response in grequests.map(rs)]
     """
     """

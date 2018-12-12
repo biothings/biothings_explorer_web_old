@@ -124,7 +124,7 @@ class DirectPathHelper:
         params = self.ah.call_api({input_type: input_value}, _endpoint)
         response = requests.get(params[0], params=params[1], headers={'Accept': 'application/json'})
         if response.status_code == 200:
-            return self.ah.preprocess_json_doc(response.json(), _endpoint)
+            return self.ah.preprocess_json_doc(response.json())
         else:
             return {}
 

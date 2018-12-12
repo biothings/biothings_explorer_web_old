@@ -76,7 +76,7 @@ class ApiCallHandler:
             if type(value) == list:
                 return [value]
             else:
-                print("Wrong input type error: {} takes list as input, \
+                self.logger.debug("Wrong input type error: {} takes list as input, \
                       while {} type input is given by the user".
                       format(endpoint_name, type(value)))
         # if the endpoint takes string as input, turn input value into
@@ -85,7 +85,7 @@ class ApiCallHandler:
             try:
                 processed_input = removeprefix(value)
             except TypeError as e:
-                self.logger.debug("removeprefix function only accepts str or list of str, your input is {}".format(value))
+                self.logger.debug("removeprefix function only accepts str or list of str, your input is {}, endpoint_name is {}".format(value, endpoint_name))
                 raise TypeError("invalid input type")
             else:
                 return str2list(processed_input)
@@ -153,10 +153,11 @@ class ApiCallHandler:
         """
         return (endpoint_name, results)
 
-    def preprocess_json_doc(self, json_doc, endpoint_name):
+    def preprocess_json_doc(self, json_doc):
         """
         Preprocessing json doc, including following steps:
         1) Convert all integers in the json_doc into string
+        2) If json_doc happens to be a list, make it a dict
 
         """
         if type(json_doc) == list:
@@ -261,7 +262,7 @@ class ApiCallHandler:
             rs = (grequests.get(u, params=v, headers={'Accept': 'application/json'}) for (u,v) in api_call_params)
             responses = grequests.map(rs)
             #api_call_response = self.call_api(uri_value, endpoint_name)
-        valid_responses = [self.preprocess_json_doc(api_call_response.json(), endpoint_name) if api_call_response.status_code == 200 else {} for api_call_response in responses]
+        valid_responses = [self.preprocess_json_doc(api_call_response.json()) if api_call_response.status_code == 200 else {} for api_call_response in responses]
         print('Time used in making API calls: {:.2f} seconds'.format(time.time() - start))
         start = time.time()
         if type(predicate) != list:

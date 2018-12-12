@@ -49,7 +49,7 @@ class SemanticQueryHelper:
         except:
             return []
         
-        json_response = self.ah.preprocess_json_doc(json_response, 1)
+        json_response = self.ah.preprocess_json_doc(json_response)
         final_results = []
         processed_input = self.ah.preprocessing_input(input_value, endpoint_name)
         if type(predicate) != list:
