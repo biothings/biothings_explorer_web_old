@@ -112,6 +112,34 @@ def str2list(_input):
     else:
         return [_input]
 
+
+def removeprefix(_input):
+    """
+    This function removes all prefix for input
+    e.g. DOID:1234 ==> 1234
+    e.g. ["DOID:1234", "DOID:233"] ==> ["1234", "233"]
+
+    Params
+    ======
+    _input: (str or list)
+    """
+    if type(_input) == str:
+        return _input.split(':')[-1]
+    elif type(_input) == list:
+        modified_input = []
+        for _item in _input:
+            if type(_item) != str:
+                print("removeprefix function only accepts str or list of str, your input {} contains type {}".format(_item, type(_item)))
+                raise TypeError
+            else:
+                modified_input.append(_item.split(':')[-1])
+        return modified_input
+    else:
+        # if the input is neither string or list, will raise an TypeError
+        print("removeprefix function only accepts str or list, your input {} is of type {}".format(_input, type(_input)))
+        raise TypeError
+
+
 def output2input(_output):
     """
     This function modifies the output,
