@@ -438,7 +438,7 @@ class KnowledgeMap(BaseHandler):
                     for _relate in _relation:
                         triples.append({'subject': {'prefix': _input_curie, 'semantic_type': _input_type}, 
                                        'object': {'prefix': _output_curie, 'semantic_type': _output_type}, 
-                                       'predicate': _relate.split(':')[-1], 'endpoint': _endpoint})
+                                       'predicate': _relate.split(':')[-1], 'endpoint': _endpoint, 'api': _endpoint_info['api']})
         temp_output = triples
         END_OUTPUT = False
         # check if user want to filter for a specific field or combination of fields
