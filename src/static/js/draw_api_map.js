@@ -138,6 +138,7 @@ function constructSemanticMap(){
 
 
 $(document).ready(function(){
+  $('.tabs').tabs();
   //drawApiLevelMap();
   constructAPIMap();
   constructSemanticMap();
