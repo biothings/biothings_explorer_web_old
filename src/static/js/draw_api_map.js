@@ -88,30 +88,18 @@ function constructSemanticMap(){
     jsonResponse['associations'].forEach(function(assoc) {
       if (!(assoc['subject']['semantic_type'] in nodes_dict)) {
         nodes_dict[assoc['subject']['semantic_type']] = node_id;
-        nodes.push({'group': 'type', 'id': node_id, 'label': assoc['subject']['semantic_type']});
+        nodes.push({'id': node_id, 'label': assoc['subject']['semantic_type']});
         node_id += 1;
       };
-      if (!(assoc['api'] in api_dict)) {
-        api_dict[assoc['api']] = node_id;
-        nodes.push({'group': 'api', 'id': node_id, 'label': assoc['api']});
-        node_id += 1;
-      }
       if (!(assoc['object']['semantic_type'] in nodes_dict)) {
         nodes_dict[assoc['object']['semantic_type']] = node_id;
-        nodes.push({'group': 'type', 'id': node_id, 'label': assoc['object']['semantic_type']});
+        nodes.push({'id': node_id, 'label': assoc['object']['semantic_type']});
         node_id += 1;
       };
-      edge = nodes_dict[assoc['subject']['semantic_type']] + 'hasInput' + api_dict[assoc['api']];
+      edge = nodes_dict[assoc['subject']['semantic_type']] + nodes_dict[assoc['predicate'] + assoc['object']['semantic_type'];
       if (!(edge_list.includes(edge))) {
         edges.push({'from': nodes_dict[assoc['subject']['semantic_type']],
-                    'to': api_dict[assoc['api']],
-                    'label': 'hasInput'});
-        edge_list.push(edge);
-      };
-      edge = api_dict[assoc['api']] + nodes_dict[assoc['object']['prefix']] + assoc['semantic_type'];
-      if (!(edge_list.includes(edge))) {
-        edges.push({'from': api_dict[assoc['api']],
-                    'to': nodes_dict[assoc['object']['semantic_type']],
+                    'to': api_dict[assoc['object']['semantic_type'],
                     'label': assoc['predicate']});
         edge_list.push(edge);
       };
