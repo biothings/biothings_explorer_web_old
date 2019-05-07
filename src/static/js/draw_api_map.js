@@ -68,7 +68,8 @@ function constructAPIMap(){
         font: {
           size:5,
           align: 'middle'
-        }
+        },
+        arrows: 'to'
       },
       layout:{randomSeed:3}
     };
@@ -88,12 +89,12 @@ function constructSemanticMap(){
     jsonResponse['associations'].forEach(function(assoc) {
       if (!(assoc['subject']['semantic_type'] in nodes_dict)) {
         nodes_dict[assoc['subject']['semantic_type']] = node_id;
-        nodes.push({'id': node_id, 'label': assoc['subject']['semantic_type']});
+        nodes.push({'group': node_id, 'id': node_id, 'label': assoc['subject']['semantic_type']});
         node_id += 1;
       };
       if (!(assoc['object']['semantic_type'] in nodes_dict)) {
         nodes_dict[assoc['object']['semantic_type']] = node_id;
-        nodes.push({'id': node_id, 'label': assoc['object']['semantic_type']});
+        nodes.push({'group': node_id, 'id': node_id, 'label': assoc['object']['semantic_type']});
         node_id += 1;
       };
       edge = assoc['subject']['semantic_type'] + assoc['predicate'] + assoc['object']['semantic_type'];
@@ -109,7 +110,6 @@ function constructSemanticMap(){
       nodes: nodes,
       edges: edges
     };
-    console.log(data);
     var options = {
       nodes: {
         shape: 'box',
@@ -128,6 +128,7 @@ function constructSemanticMap(){
           align: 'middle'
         }
       },
+      arrows: 'to',
       layout:{randomSeed:3}
     };
     var network_api = new vis.Network(container, data, options);
