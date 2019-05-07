@@ -96,7 +96,7 @@ function constructSemanticMap(){
         nodes.push({'id': node_id, 'label': assoc['object']['semantic_type']});
         node_id += 1;
       };
-      edge = nodes_dict[assoc['subject']['semantic_type']] + nodes_dict[assoc['predicate'] + assoc['object']['semantic_type'];
+      edge = assoc['subject']['semantic_type'] + assoc['predicate'] + assoc['object']['semantic_type'];
       if (!(edge_list.includes(edge))) {
         edges.push({'from': nodes_dict[assoc['subject']['semantic_type']],
                     'to': api_dict[assoc['object']['semantic_type'],
