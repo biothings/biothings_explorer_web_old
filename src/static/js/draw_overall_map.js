@@ -6,7 +6,7 @@
 function retrieveKnowledgeMap(){
   var promise = $.ajax({
     type:"GET",
-    url: "/explorer/api/v2/knowledgemap",
+    url: "/explorer_beta/api/v2/knowledgemap",
     datatype: "json"
   });
   return promise;
@@ -84,21 +84,21 @@ function drawIdLevelMap(nodes_id, edges_id){
 
 function convertKnowledgeMapToVisJsGraph(){
     //initialize nodes, edges
-	var semantic_nodes = [];
-	var semantic_edges = [];
-	var semantic_node_id = 1;
-	var semantic_nodes_dict = {};
-	var entity_nodes = [];
-	var entity_edges = [];
-	var entity_node_id = 1;
+  var semantic_nodes = [];
+  var semantic_edges = [];
+  var semantic_node_id = 1;
+  var semantic_nodes_dict = {};
+  var entity_nodes = [];
+  var entity_edges = [];
+  var entity_node_id = 1;
     var entity_nodes_dict = {};
-	var api_nodes = []
-	var api_edges = []
-	var api_node_id = 1
+  var api_nodes = []
+  var api_edges = []
+  var api_node_id = 1
     var api_nodes_dict = {};
-	retrieveKnowledgeMap().done(function(jsonResonse){
-		var map = jsonResonse.associations;
-		map.forEach(function(triple){
+  retrieveKnowledgeMap().done(function(jsonResonse){
+    var map = jsonResonse.associations;
+    map.forEach(function(triple){
             if (!(triple['object']['prefix'] in entity_nodes_dict)) {
                 entity_nodes_dict[triple['object']['prefix']] = entity_node_id;
                 entity_nodes.push({'id': entity_node_id, 'label': triple['object']['prefix'], 'group': entity_node_id});
@@ -121,12 +121,12 @@ function convertKnowledgeMapToVisJsGraph(){
             };
             entity_edges.push({'from': entity_nodes_dict[triple['subject']['prefix']], 'to': entity_nodes_dict[triple['object']['prefix']], 'label': triple['predicate'], 'endpoint': triple['endpoint']});
             semantic_edges.push({'from': semantic_nodes_dict[triple['subject']['semantic_type']], 'to': semantic_nodes_dict[triple['object']['semantic_type']], 'label': triple['predicate'], 'endpoint': triple['endpoint']});
-		});
+    });
         console.log(semantic_edges);
         console.log(semantic_nodes);
         drawSemanticMap(semantic_nodes, semantic_edges);
         drawIdLevelMap(entity_nodes, entity_edges);
         return semantic_edges;
-	});
+  });
     //return (entity_edges, semantic_edges)
 };
