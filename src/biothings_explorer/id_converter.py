@@ -2,7 +2,6 @@ import requests
 from collections import defaultdict
 
 from .api_registry_parser import RegistryParser
-from .utils import autolog
 
 import logging
 import os,sys
@@ -105,7 +104,6 @@ class IDConverter:
             params = self.mygene_params_template.replace('{input_value}', str(input_value)).replace('{input_type}', MYGENE_FIELDNAME2QUERYNAME[input_type])
         except KeyError:
             error_message = input_type + ' is not in MYGENE_FIELDNAME2QUERYNAME'
-            autolog(logger, error_message, 'warn')
             return
         # make requests to mygene
         mygene_docs = requests.post(self.mygene_url, params=params, headers=self.header).json()

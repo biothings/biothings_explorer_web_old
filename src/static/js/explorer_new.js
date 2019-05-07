@@ -152,14 +152,14 @@ function semanticIDSwitchHandler() {
 
 function setSelectedOption(input_semantic_type, output_semantic_type, input_id_type, output_id_type, max_api, input_value) {
     $("#select-input-semantic").val(input_semantic_type).trigger('change');
+    $("#select-output-semantic").val(output_semantic_type).trigger('change');
     setTimeout(function() {
         $("#select-input-id").val(input_id_type).trigger("change");
     }, 100);
-    $("#select-output-semantic").val(output_semantic_type).trigger('change');
     $("#select-num-api").val(max_api).trigger('change');
     setTimeout(function() {
         $("#select-output-id").val(output_id_type).trigger('change');
-    }, 200);
+    }, 100);
     console.log(input_semantic_type, output_semantic_type, input_id_type, output_id_type);
     if (input_value) {
         $("#hasidswitch").prop('checked', true);
