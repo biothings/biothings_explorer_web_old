@@ -105,7 +105,7 @@ function constructSemanticMap(){
         edge_list.push(edge);
       };
     });
-    var container = document.getElementById('api_view');
+    var container = document.getElementById('semantic_view');
     var data = {
       nodes: nodes,
       edges: edges
@@ -139,7 +139,7 @@ function constructSemanticMap(){
 
 $(document).ready(function(){
   //drawApiLevelMap();
-  //constructAPIMap();
+  constructAPIMap();
   constructSemanticMap();
 });
 

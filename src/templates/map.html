@@ -47,9 +47,16 @@
             <i class="material-icons menu-icon">menu</i>
           </a>
       </div>
-      <div class="row">
-        <div id="api_view"></div>
-      </div>
+        <div class="row">
+          <div class="col s12">
+            <ul class="tabs">
+              <li class="tab col s3"><a class="active" href="#api_view">BioEntity Map</a></li>
+              <li class="tab col s3"><a href="#semantic_view">ID Map</a></li>
+            </ul>
+          </div>
+          <div id="api_view" class="col s12"></div>
+          <div id="semantic_view" class="col s12"></div>
+        </div>
     <script type="text/javascript" src="./static/js/draw_api_map.js"></script>
   </body>
 </html>
