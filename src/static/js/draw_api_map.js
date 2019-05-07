@@ -126,9 +126,9 @@ function constructSemanticMap(){
         font: {
           size:5,
           align: 'middle'
-        }
+        },
+        arrows: 'to'
       },
-      arrows: 'to',
       layout:{randomSeed:3}
     };
     var network_api = new vis.Network(container, data, options);
