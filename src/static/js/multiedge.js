@@ -6,7 +6,7 @@
 function retrieveMultiEdgeOutput(input_prefix, input_value, output_prefix, max_api){
   var promise = $.ajax({
     type:"GET",
-    url: "/explorer/api/v2/multiedge",
+    url: "/explorer_beta/api/v2/multiedge",
     data: {'input_prefix': input_prefix, 'output_prefix': output_prefix, 'input_value': input_value, 'max_api': max_api},
     datatype: "json"
   });

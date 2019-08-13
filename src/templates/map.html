@@ -1,0 +1,56 @@
+<html>
+   <head>
+        <meta property="og:locale" content="en_US">
+        <meta property="og:url" content="http://biothings.io/explorer/">
+        <meta property="og:site_name" content="BioThings Explorer">
+        <meta property="og:title" content="BioThings Explorer | Exploring Biological Data Through Linked API Services">
+        <meta name="description" content="BioThings Explorer utilize JSON-LD and SmartAPI Specifications to link biological API for knowledge exploration. Users could get metadata information about APIs as well as fetching linked biological data through BioThings Explorer.">
+        <meta property="og:type" content="website">
+        <meta property="og:description" content="BioThings Explorer utilize JSON-LD and SmartAPI Specifications to link biological API for knowledge exploration. Users could get metadata information about APIs as well as fetching linked biological data through BioThings Explorer.">
+        <meta property="og:image" content="http://biothings.io/static/img/biothings-explorer-64.png">
+        <meta property="og:image:type" content="image/png">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
+        <title>BioThings Explorer</title>
+        <meta name = "viewport" content = "width = device-width, initial-scale = 1">      
+        <link rel="shortcut icon"  href="http://biothings.io/static/img/biothings-explorer-64.png" title="BioThings Explorer">      
+      <link rel = "stylesheet"
+         href = "https://fonts.googleapis.com/icon?family=Material+Icons">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <!-- script for data table-->
+      <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+      <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+        <!-- Compiled and minified CSS -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css">
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+
+      <!-- Compiled and minified JavaScript -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
+
+      
+      <link href="./static/css/sources.css" rel="stylesheet" />
+   </head>
+   <body> 
+      <!-- This section is for the header-->
+      <div class="topnav" id="myTopnav">
+          <a href="../" title="BioThings Explorer" class="active"><img style="border:0px;" width="130" src="http://biothings.io/static/img/biothings-explorer-256.png" alt="Logo 256"/></a>
+          <!--<a href="#home" class="active">Home</a>-->
+          <a href="../tutorial" class="inactive">Tutorial</a>
+          <a href="../sources" class="inactive">Sources</a>
+          <a href="../uri" class="inactive">URI Registry</a>
+          <a href="../api" class="inactive">API</a>
+          <a href="../map" class="inactive">MAP</a>
+          <a href="javascript:void(0);" class="icon" onclick="responsiveNav()">
+            <i class="material-icons menu-icon">menu</i>
+          </a>
+      </div>
+      <div class="row">
+        <div id="api_view"></div>
+      </div>
+    <script type="text/javascript" src="./static/js/draw_api_map.js"></script>
+  </body>
+</html>
+

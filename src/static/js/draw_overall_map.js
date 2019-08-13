@@ -6,7 +6,7 @@
 function retrieveKnowledgeMap(){
   var promise = $.ajax({
     type:"GET",
-    url: "/explorer/api/v2/knowledgemap",
+    url: "/explorer_beta/api/v2/knowledgemap",
     datatype: "json"
   });
   return promise;

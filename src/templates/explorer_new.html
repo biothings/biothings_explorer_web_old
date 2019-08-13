@@ -57,6 +57,7 @@
             <a href="sources" class="inactive">Sources</a>
             <a href="uri" class="inactive">URI Registry</a>
             <a href="api" class="inactive">API</a>
+            <a href="../map" class="inactive">MAP</a>
             <a href="javascript:void(0);" class="icon" onclick="myFunction()">
               <i class="material-icons menu-icon">menu</i>
             </a>
@@ -88,69 +89,46 @@
         -->
         </head>
         <section class="form-section">
-          <div class="searchbar">
-              <div class="select-wrapper div-num-api search-item">
-                  <select id="select-num-api">
-                    <option value="1">1 API Call</option>
-                    <option value="2">2 API Calls</option>
-                    <option value="3">3 API Calls</option>
-                  </select>
-              </div>
-              <div class="div-has-id">
-                <p>
-                  <label>
-                    <input type="checkbox" id="hasidswitch"/>
-                    <span>I have an ID</span>
-                  </label>
-                </p>
-              </div>
-              <div class="input-logo">
-                <p> INPUT </p>
-              </div>
-              <div class="select-wrapper div-input-semantic input">
-                <label for="select-input-semantic">
-                    Input Semantic Type
-                  <select id="select-input-semantic" class="search-item"></select>
-                </label>
-              </div>
-              <div class="select-wrapper div-input-id input">
-                <label for="select-input-id">
-                    Input ID
-                  <select id="select-input-id" class="search-item"></select>
-                </label>
-              </div>
-              <div class="div-input-value">
-                <textarea id="textarea1" class="materialize-textarea search-item"></textarea>
-                <label for="textarea1">Please specify your input ID here.</label>
-              </div>
-              <div class="output-logo">
-                <p> OUTPUT </p>
-              </div>
-              <div class="select-wrapper div-output-semantic output">
-                <label for="select-output-semantic">
-                    Output Semantic Type
-                  <select id="select-output-semantic" class="search-item"></select>
-                </label>
-              </div>
-              <div class="select-wrapper div-output-id output">
-                <label for="select-output-id">
-                    Output ID
-                  <select id="select-output-id" class="search-item"></select>
-                </label>
-              </div>
-              <div class="forward-icon">
-                <i class="material-icons large white-text">import_export</i>
-              </div>
-              <div class="hint">
-              </div>
-              <div class="submit-button">
-                <button class="btn waves-effect waves-light #ff4081" type="submit" name="action" id="explorebutton">Submit
-                <i class="material-icons right">send</i>
-                </button>
-              </div>
+          <div class="row form-div">
+            <div class="input-div select-div col s10 offset-s1 m5 offset-m1 l3 offset-l1">
+              <p>Input</p>
             </div>
+            <div class="icon-div col s1 offset-s8 m1 l1">
+              <i class="medium material-icons">import_export</i>
+            </div>
+            <div class="output-div select-div col s10 offset-s1 m5 l3">
+              <p>Output</p>
+            </div>
+            <div class="switch switch-div col s4 offset-s1 m3 offset-m3 l2">
+              <label>
+                Find API
+                <input type="checkbox">
+                <span class="lever"></span>
+                Find Data
+              </label>
+            </div>
+            <div class="input-field text-input-div col s3 m4 l2">
+              <input value="Fill in the ID here" id="first_name2" type="text" class="validate">
+            </div>
+            <div class="submit-button col s3 m3 offset-m5 l1">
+              <button class="btn waves-effect waves-light #ff4081" type="submit" name="action" id="explorebutton">Submit
+              </button>
+            </div>
+          </div>
         </section>
-        <section class="example-section">
+        <section class="introduction row intro">
+          <div class="introduction-video col s12 l6">
+            <iframe src="https://player.vimeo.com/video/328244537" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+          </div>
+          <div class="introduction-text col s12 l6">
+            <div class="intro-text">
+              <h3>The Biological Knowledge<br> Retrieval & Discovery Engine</h3>
+              <p>BioThings Explorer helps researchers find <br>answers to biological questons by traversing <br>the network of APIs covering biomedical knowledge.</p>
+            </div>
+          </div>
+          </div>
+        </section>
+        <section class="example-section intro">
           <div class="example">
             <div class="instruction">
               <h2>Some examples to help you get started!</h2>
@@ -333,7 +311,7 @@
             </div>
             <div class="footer-copyright">
                 <div class="container">
-                    Copyright © 2017-2018 The Su/Wu Lab.</p>
+                    Copyright © 2017-2019 The Su/Wu Lab.</p>
                 </div>
             </div>
         </footer>

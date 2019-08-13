@@ -249,6 +249,7 @@ class KnowledgeMap(BaseHandler):
         input_object_type = self.get_query_argument('object.semantic_type', None)
         # load all association information into KNOWLEDGE_MAP
         temp_output = KNOWLEDGE_MAP
+        print(temp_output)
         END_OUTPUT = False
         # check if user want to filter for a specific field or combination of fields
         if input_endpoint:

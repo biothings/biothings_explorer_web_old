@@ -6,7 +6,7 @@
 function retrieveSemanticOutput(input_prefix, input_value, output_prefix){
   var promise = $.ajax({
     type:"GET",
-    url: "/explorer/api/v2/semanticquery",
+    url: "/explorer_beta/api/v2/semanticquery",
     data: {'input_prefix': input_prefix, 'output_prefix': output_prefix, 'input_value': input_value},
     datatype: "json"
   });

@@ -25,4 +25,6 @@ h2 {
 .landing-page p {
 	font-family: "Ubuntu";
 	font-size: 1.8rem;
-}
+li:first-child a {
+   color:red; !important
+ }

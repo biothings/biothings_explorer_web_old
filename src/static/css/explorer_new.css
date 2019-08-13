@@ -62,280 +62,147 @@ body {
 }
 /**********************************************************************************************/
 /* CSS for the Form SearchBar */
-
-/* CSS for select display overall */
-.select-wrapper {
-    width: 80% !important;
-    margin: 0 auto !important;
+.form-div {
+  background-color: #1967d2;
+  margin: 2%;
+  border-radius: 25px;
 }
-.select2-selection__rendered {
-    text-align: center !important;
-    font-size: 1.3rem;
-}
-
-.select2 {
-    width: 100% !important;
+.select-div {
+  height: 80px;
+  margin-top: 2%;
 }
 
-.select2-container--default .select2-selection--multiple, .select2-container--default .select2-selection--single, .select2-container--default.select2-container--focus .select2-selection--multiple {
-    border-radius: 10px !important;
+.input-div {
+  background-color: #f1f4f7;
+  border-radius: 25px;
 }
 
-.input label {
-    color: #e2ed4b;
-    font-size: 1.1rem;
-    margin-left: 5%;
-    line-height: 2;
+.output-div {
+  background-color: #f1f4f7;
+  border-radius: 25px;
 }
 
-.output label {
-    color: #f9f9ef;
-    font-size: 1.1rem;
-    margin-left: 5%;
-    line-height: 2;
-}
-
-/* CSS for modifying the select display for Num API */
-
-.div-num-api {
-    margin-left: 20% !important;
-}
-
-.div-num-api .select2-container--default .select2-selection--multiple, .div-num-api .select2-container--default .select2-selection--single, .div-num-api .select2-container--default.select2-container--focus .select2-selection--multiple {
-    border-radius: 0px !important;
-    background: transparent;
-    height: 20px;
-}
-
-.div-num-api .select2-container--default .select2-selection--single {
-    border-bottom: 0px solid transparent;
-}
-
-
-.div-num-api .select2-container--default .select2-selection--single .select2-selection__arrow b {
-    border-color: white transparent transparent;
-}
-
-.div-num-api .select2-container--default .select2-selection--single .select2-selection__rendered {
-    line-height: 15px;
-    color: white;
-}
-
-.div-num-api .select2-container--default .select2-selection--single .select2-selection__arrow {
-    height: 12px;
-}
-
-.div-num-api .select2 {
-    width: 100px !important;
-}
-
-/* CSS for modifying the textera default value */
-textarea.materialize-textarea {
-    border: 1px solid white;
-    background-color: white;
-    border-radius: 10px;
-    width: 80%;
-    height: 40px !important;
-    margin-left: 10%;
-    margin-top: 5%;
-    text-align: center;
-    font-size: 1.5rem;
-}
-
-textarea.materialize-textarea:focus {
-    border: 1px solid #26a69a;
-    background-color: white;
-    border-radius: 10px;
-    width: 80%;
-    text-align: center;
-}
-
-
-.div-input-value label {
-    display: block;
-    color: white;
-    margin-left: 10%;
-}
-
-/* CSS for the submit button */
-.submit-button {
+.icon-div {
   position: absolute;
-  bottom: -20px;
-  width: 100px;
-  left: calc(50% - 50px);
-  text-align: center;
+  top: 14%;
+}
+.icon-div i{
+  color: #696e7a;
+  background-color: #e3e5e8;
+  border-width: 5px;
+  border-color: #1967d2;
+  border-style: solid;
+}
+
+.switch-div {
+  margin-top: 5%;
+}
+
+.text-input-div {
+  margin-top: 4%;
+}
+
+.submit-button {
+  margin-top: 3%;
+  margin-left: 1% !important;
 }
 
 #explorebutton {
-    border-radius: 10px;
-    background-color: #ff4081;
+  float: right;
 }
 
-/* CSS for the exchange icon */
+@media only screen and (min-width: 600px) {
+  .output-div {
+    margin-left: 1% !important;
+  }
 
-.forward-icon {
-    width: 40px;
-    height: 40px;
+  .icon-div {
+    top: calc(21% - 25px);
+    left: calc(50% - 29px) !important;
+    transform: rotate(270deg);
+  }
+
+  .switch-div {
+    margin-top: 3%;
+    margin-bottom: 8%;
+  }
+
+  .text-input-div {
+    margin-top: 2.5%;
+  }
+
+  .submit-button {
     position: absolute;
-    top: 180px;
-    right: calc(50% - 20px);
+    top: calc(18% + 65px);
+    width: 100px;
+    left: calc(50% - 50px) !important;
+  }
 }
 
-.forward-icon-withid {
-    top: 250px;
-}
+@media only screen and (min-width: 992px) {
+  .icon-div {
+    top: calc(21% - 25px);
+    left: calc(32% - 24px) !important;
+    transform: rotate(270deg);
+  }
 
-.input-logo {
-    grid-area: input-logo;
-    position: relative;
-    display: none;
-}
+  .switch-div {
+    margin-top: 5%;
+    margin-bottom: 8%;
+  }
 
-.input-logo p {
+  .text-input-div {
+    margin-top: 4%;
+  }
+
+  .submit-button {
     position: absolute;
-    bottom: -10px;
+    top: calc(18% + 65px);
+    width: 100px;
+    left: calc(50% - 50px) !important;
+  }
+}
+/* CSS for select display overall */
+
+/**********************************************************************************************/
+
+/* CSS for the Example Section */
+
+.introduction-video {
+  margin: 0 auto;
+  width: 500px;
+  height: 400px;
+}
+
+iframe {
+  width: 100%;
+  height: 100%;
+}
+
+
+.intro-text {
+  width: 400px;
+  height: 200px;
+  margin: 0 auto;
+  text-align: center;
+  font-size: 1.7rem;
+}
+
+@media only screen and (min-width: 1000px) {
+  .intro-text {
+    width: 500px;
+    margin: 120 auto;
+  }
+
+  .intro-text h3 {
+    font-size: 3.2rem;
+  }
+
+  .intro-text p {
     font-size: 2rem;
-    left: 40%;
-    color: white;
-}
-
-.output-logo {
-    grid-area: output-logo;
-    position: relative;
-    display: none;
-}
-
-.output-logo p {
-    position: absolute;
-    bottom: -20px;
-    font-size: 2rem;
-    left: 35%;
-    color: white;
-}
-
-.div-num-api {
-    grid-area: num-api;
-}
-
-.div-input-semantic {
-    grid-area: input-semantic;
-}
-
-.div-input-id {
-    grid-area: input-id;
-}
-
-.div-input-value {
-    grid-area: input-value;
-    display: none;
-}
-
-.div-output-semantic {
-    grid-area: output-semantic;
-}
-
-.div-output-id {
-    grid-area: output-id;
-}
-
-.div-has-id {
-    grid-area: has-id;
-    align-self: end;
-    justify-self: start;
-}
-
-.div-has-id label{
-    color: white;
-}
-
-.hint {
-  grid-area: hint;
-  text-align:center;
-  font-size:1.1rem;
-  color: #f9843b;
-  position: relative;
-}
-
-.hint span {
-  margin-top: 2%;
-  position: absolute;
-  top: 20%;
-  left: 10%;
-  right: 10%;
-}
-
-
-.searchbar {
-  margin-top: 2%;
-  margin-left: 2%;
-  margin-right: 2%;
-  display: grid;
-  grid-gap: 10px;
-  border: 2px solid #1967d2;
-  border-radius: 10px;
-  background: #1967d2;
-  position: relative;
-  margin-bottom: 30px;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-areas: ". ." "num-api has-id" "input-semantic input-semantic" "input-id input-id" ". ." "output-semantic output-semantic" "output-id output-id" "hint hint" ". .";
-  grid-auto-rows: 5px 30px 55px 55px 30px 55px 55px 40px 30px;
-}
-
-.searchbar-withid {
-  margin-top: 2%;
-  margin-left: 2%;
-  margin-right: 2%;
-  display: grid;
-  grid-gap: 10px;
-  border: 2px solid #1967d2;
-  border-radius: 10px;
-  background: #1967d2;
-  position: relative;
-  margin-bottom: 30px;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-areas: ". ." "num-api has-id" "input-semantic input-semantic" "input-id input-id" "input-value input-value" ". ." "output-semantic output-semantic" "output-id output-id" "hint hint" ". .";
-  grid-auto-rows: 5px 30px 55px 55px 65px 30px 55px 55px 40px 30px;
-}
-
-
-
-@media only screen and (min-width: 660px) {
-  .searchbar {
-    grid-template-columns: repeat(6, 1fr);
-    grid-template-areas: ". . . . . ." ". num-api has-id . . ." "input-logo input-semantic input-semantic input-id input-id ."  ". . . . . . " "output-logo output-semantic output-semantic output-id output-id ." ". hint hint hint hint ." ". . . . . .";
-    grid-auto-rows: 5px 30px 55px 30px 55px 40px 30px;
   }
-
-  .searchbar-withid {
-    grid-template-areas: ". . . . . ." ". num-api has-id . . ." "input-logo input-semantic input-semantic input-id input-id input-value"  ". . . . . . " "output-logo output-semantic output-semantic output-id output-id ." ". hint hint hint hint ." ". . . . . .";
-    grid-auto-rows: 5px 30px 55px 30px 55px 40px 30px;
-  }
-
-  textarea.materialize-textarea {
-    width: 80%;
-    margin-top: 22px;
-    margin-right: 8%;
-  }
-
-  .forward-icon {
-    top: 105px;
-    left: calc(8.3% - 23px);
-  }
-
-  .forward-icon-withid {
-    top: 105px;
-  }
-  .div-num-api {
-    margin-left: 20% !important;
-  }
-  .input-logo {
-    display: block;
-  }
-  .output-logo {
-    display: block;
-  }
-
 }
+
 
 
 /**********************************************************************************************/

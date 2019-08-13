@@ -162,8 +162,14 @@ class ApiCallHandler:
         """
         if type(json_doc) == list:
             json_doc = {'data': json_doc}
-        int2str(json_doc)
-        return json_doc
+            int2str(json_doc)
+            return json_doc
+        elif type(json_doc) == dict:
+            int2str(json_doc)
+            return json_doc
+        else:
+            self.logger.debug('Invalid json doc: {}'.format(json_doc))
+            raise TypeError
 
     def extract_output(self, json_doc, endpoint_name, output_uri, predicate):
         """

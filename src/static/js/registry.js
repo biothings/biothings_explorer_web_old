@@ -1,7 +1,7 @@
 function fetch_registry(){
   var promise = $.ajax({
       type:"GET",
-      url: "/explorer/api/v2/registry",
+      url: "/explorer_beta/api/v2/registry",
       datatype: "json"
   });
   return promise;

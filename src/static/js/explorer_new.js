@@ -159,7 +159,7 @@ function setSelectedOption(input_semantic_type, output_semantic_type, input_id_t
     $("#select-num-api").val(max_api).trigger('change');
     setTimeout(function() {
         $("#select-output-id").val(output_id_type).trigger('change');
-    }, 200);
+    }, 110);
     console.log(input_semantic_type, output_semantic_type, input_id_type, output_id_type);
     if (input_value) {
         $("#hasidswitch").prop('checked', true);
@@ -183,7 +183,7 @@ Example 1 event handler
 function example1handler() {
     $("#example1-button").click(function() {
         setSelectedOption('gene', 'chemical', 'hgnc.symbol', 'chembl.compound', '1', 'CXCR4');
-        $(".example").hide();
+        $(".intro").hide();
         DirectOutput2Graph('hgnc.symbol', 'chembl.compound', 'CXCR4');
     });
 };
@@ -194,7 +194,7 @@ Example 2 event handler
 function example2handler() {
     $("#example2-button").click(function() {
         setSelectedOption('gene', 'all', 'hgnc.symbol', 'all', '1', 'CDK7');
-        $(".example").hide();
+        $(".intro").hide();
         displayCrawlerResults("hgnc.symbol", "CDK7");
     });
 };
@@ -205,7 +205,7 @@ Example 3 event handler
 function example3handler() {
     $("#example3-button").click(function() {
         setSelectedOption('disease', 'phenotype', 'mondo', 'hp', '1', 'MONDO:0009101');
-        $(".example").hide();
+        $(".intro").hide();
         DirectOutput2Graph('mondo', 'hp', 'MONDO:0009101');
     });
 };
@@ -217,7 +217,7 @@ Example 4 event handler
 function example4handler() {
     $("#example4-button").click(function() {
         setSelectedOption("gene", "chemical", "all", "all", "1", null);
-        $(".example").hide();
+        $(".intro").hide();
         displaySemanticType("gene", "chemical");
     });
 };
@@ -231,7 +231,7 @@ function back2examplehandler() {
         $(".back_to_example").hide();
         $(".metadata").hide();
         $(".navigation").hide();
-        $(".example").show();
+        $(".intro").show();
         $(".crawler").hide();
         $(".error").hide();
     })
@@ -244,7 +244,7 @@ function logHandler() {
     $(".log-record").click(function() {
         $(".dropdown-trigger").dropdown();
         // hide example section temporarily
-        $(".example").hide();
+        $(".intro").hide();
         // hide all graph display sections temporarily
         $(".metadata").hide();
         $(".crawler").hide();
@@ -357,7 +357,7 @@ function displayHint(hint_text) {
 function validateInputValue(input_id_type, input_value) {
     var promise = $.ajax({
         type: "GET",
-        url: "/explorer/api/v2/registry",
+        url: "/explorer_beta/api/v2/registry",
         data: {prefix: input_id_type},
         datatype: "json"
     });
@@ -490,7 +490,7 @@ $(document).ready(function() {
                 var pattern = jsonResponse['pattern'];
                 var example = jsonResponse['example'];
                 if (input_value.match(pattern)) {
-                    $(".example").hide();
+                    $(".intro").hide();
                     $(".log").show();
                     $(".dropdown-trigger").dropdown();
                     // hide example section temporarily
@@ -520,7 +520,7 @@ $(document).ready(function() {
                     }
                 } else {
                     $(".download").hide();
-                    $(".example").hide();
+                    $(".intro").hide();
                     $(".metadata").hide();
                     $(".navigation").hide();
                     $(".crawler").hide();
@@ -540,7 +540,7 @@ $(document).ready(function() {
                 }
             })
         } else {
-            $(".example").hide();
+            $(".intro").hide();
             $(".log").show();
             $(".dropdown-trigger").dropdown();
             // hide example section temporarily

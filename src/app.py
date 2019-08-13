@@ -34,6 +34,11 @@ class MainHandler(tornado.web.RequestHandler):
     def get(self):
         self.render("explorer_new.html", messages=None)
 
+class MapHandler(tornado.web.RequestHandler):
+    @tornado.web.addslash
+    def get(self):
+        self.render("map.html", messages=None)
+
 class APIHandler(tornado.web.RequestHandler):
     @tornado.web.addslash
     def get(self):
@@ -90,6 +95,7 @@ class Application(tornado.web.Application):
             (r"/explorer_beta/?", MainHandler),
             (r"/explorer_beta/new/?", ExplorerNewHandler),
             (r"/explorer_beta/tutorial/?", TutorialHandler),
+            (r"/explorer_beta/map/?", MapHandler),
             (r"/explorer_beta/api/?", APIHandler),
             (r"/explorer_beta/explorer/?", ExplorerHandler),
             (r"/explorer_beta/new/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
@@ -103,6 +109,7 @@ class Application(tornado.web.Application):
             (r"/explorer_beta/uri/?", RegistryWebHandler),
             (r"/explorer_beta/metadata/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
             (r"/explorer_beta/uri/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
+            (r"/explorer_beta/map/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
             (r"/explorer_beta/sources/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),
             (r"/explorer_beta/navigator/?", NavigatorHandler),
             (r"/explorer_beta/navigator/static/(.*)", tornado.web.StaticFileHandler, {'path': settings['static_path']}),

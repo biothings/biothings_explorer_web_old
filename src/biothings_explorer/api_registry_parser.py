@@ -129,6 +129,32 @@ class RegistryParser:
             if v['semantic type'] == semantic_type:
                 yield v['prefix']
 
+    def api_endpoint_locator(self, _input, _output):
+        """
+        This function fullfill task 1 of the class ApiCallHandler
+        Given an input/output pair, return the endpoint(s) which could do the transformation
+
+        Params
+        ======
+        input: (str)
+            In the form of URI. Should be part of an endpoint's x-valueType
+        output: (str)
+            In the form of URI. Should be part of an endpoint's x-responeType
+
+        """
+        if (_input not in self.registry.bioentity_info or _output not in self.registry.bioentity_info):
+            raise TypeError
+        endpoint_list = []
+        # loop through each API endpoint, compare its input/output with the input/output given by the user
+        # if hits, append to the list
+        for _endpoint, _info in self.registry.endpoint_info.items():
+            if _input in _info['input'] and _output in _info['output']:
+                endpoint_list.append(_endpoint)
+        # check if endpoint is found
+        if not endpoint_list:
+            print('Could not find an API endpoint which takes the desired input: {} and return the desired output: {}'.format(_input, _output))
+        return endpoint_list
+
     def read_api_list_file(self):
         """
         read in the API_LIST.yml file

@@ -63,6 +63,25 @@ class TestFunctionsInAPICallHandler(unittest.TestCase):
             ah.preprocessing_input([1111, '12323'],
                                    'http://mygene.info/v3/querygene')
 
+    def test_preprocess_json_doc(self):
+        # check if input is a list
+        json_doc = ['a', 'b', 'c']
+        self.assertEqual(ah.preprocess_json_doc(json_doc), {'data': json_doc})
+        # check if input is a dict with integers
+        json_doc = {'a': 1}
+        self.assertEqual(ah.preprocess_json_doc(json_doc), {'a': '1'})
+        # check if input is a dict without integers
+        json_doc = {'a': '1'}
+        self.assertEqual(ah.preprocess_json_doc(json_doc), json_doc)
+        # check if input is not dict or list
+        json_doc = 1
+        with self.assertRaises(TypeError):
+            ah.preprocess_json_doc(json_doc)
+        # check if input is a string
+        json_doc = 'string'
+        with self.assertRaises(TypeError):
+            ah.preprocess_json_doc(json_doc)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -23,7 +23,7 @@ function addOptionFromMetaData(metadata, metadata_type, dropdown_id){
 function getMetaData(metadata_type){
   var promise = $.ajax({
     type:"GET",
-    url: "/explorer/api/v2/metadata/" + metadata_type,
+    url: "/explorer_beta/api/v2/metadata/" + metadata_type,
     datatype: "json"
   });
   return promise;
@@ -35,7 +35,7 @@ function getMetaData(metadata_type){
 function getEndpointsBasedOnInput(_input) {
     var promise = $.ajax({
         type: "POST",
-        url: "/explorer/input2endpoint",
+        url: "/explorer_beta/input2endpoint",
         data: {input: _input},
         datatype: "json"
     });

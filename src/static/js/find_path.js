@@ -8,7 +8,7 @@
 function findStartEndConnection(_start, _end, _max_api=3){
   var promise = $.ajax({
     type:"GET",
-    url: "/explorer/path",
+    url: "/explorer_beta/path",
     data: {start: _start, end: _end, "max_api": _max_api},
     datatype: "json"
   });
@@ -18,7 +18,7 @@ function findStartEndConnection(_start, _end, _max_api=3){
 function findSemantic2IDConnection(_start, _end, _max_api=3){
   var promise = $.ajax({
     type:"GET",
-    url: "/explorer/api/v2/semantic2id",
+    url: "/explorer_beta/api/v2/semantic2id",
     data: {start: _start, end: _end, "max_api": _max_api},
     datatype: "json"
   });
@@ -33,7 +33,7 @@ function findSemantic2IDConnection(_start, _end, _max_api=3){
 function findOutputTypeBasedOnInputType(_input){
     var promise = $.ajax({
         type: "GET",
-        url: "/explorer/api/v2/input",
+        url: "/explorer_beta/api/v2/input",
         data: {input: _input, format: 'plotly'},
         datatype: "json"
     });
@@ -48,7 +48,7 @@ function findOutputTypeBasedOnInputType(_input){
 function findInputTypeBasedOnOutputType(_output){
     var promise = $.ajax({
         type: "GET",
-        url: "/explorer/api/v2/output",
+        url: "/explorer_beta/api/v2/output",
         data: {output: _output, format: 'plotly'},
         datatype: "json"
     });
@@ -63,7 +63,7 @@ function findInputTypeBasedOnOutputType(_output){
 function findInputOutputBasedOnEndpoint(endpoint_name) {
     var promise = $.ajax({
         type: "GET",
-        url: "/explorer/api/v2/endpoint",
+        url: "/explorer_beta/api/v2/endpoint",
         data: {endpoint: endpoint_name, format: 'plotly'},
         datatype: "json"
     });
@@ -79,7 +79,7 @@ function findInputOutputBasedOnEndpoint(endpoint_name) {
 function findPathBetweenTwoSemanticTypes(input_semantic_type, output_semantic_type) {
     var promise = $.ajax({
         type: "GET",
-        url: "/explorer/api/v2/connectsemantictype",
+        url: "/explorer_beta/api/v2/connectsemantictype",
         data: {input: input_semantic_type, output: output_semantic_type, format: 'plotly'},
         datatype: "json"
     });
@@ -95,7 +95,7 @@ function findPathBetweenTwoSemanticTypes(input_semantic_type, output_semantic_ty
 function findOutputBasedOnInputAndPath(input_value, _path, _level) {
     var promise = $.ajax({
         type: "GET",
-        url: "/explorer/findoutput",
+        url: "/explorer_beta/findoutput",
         data: {path: JSON.stringify(_path), input: JSON.stringify(input_value), level: _level},
         datatype: "json"
     });

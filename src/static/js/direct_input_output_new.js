@@ -6,7 +6,7 @@
 function retrieveDirectOutput(input_prefix, input_value, output_prefix){
   var promise = $.ajax({
     type:"GET",
-    url: "/explorer/api/v2/directinput2output",
+    url: "/explorer_beta/api/v2/directinput2output",
     data: {'input_prefix': input_prefix, 'output_prefix': output_prefix, 'input_value': input_value},
     datatype: "json"
   });
