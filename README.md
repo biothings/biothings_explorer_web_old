@@ -1,5 +1,7 @@
 # biothings_explorer_web
 
+**NOTE: This repo has been archived 2019-11-07**
+
 ### Project Website: 
     http://biothings.io/explorer/
 ### Project Demo:
